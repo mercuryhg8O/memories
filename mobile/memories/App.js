@@ -1,11 +1,28 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useState, useEffect} from 'react';
+import MapView from 'react-native-maps';
+import MyMap from './common/components/myMap.component';
+import ParseMemoriesDetails from './common/helpers';
+import { StyleSheet, View } from 'react-native';
+
+
 
 export default function App() {
+  
+  [memory_locations, setMemoryLocations] = useState([]);
+  
+
+
+  useEffect(() => {
+
+    const { memories, error } = ParseMemoriesDetails();
+    setMemoryLocations(memories)
+  }, []);
+
+
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <MyMap style={{flex:2}} memory_locations={memory_locations}/>
     </View>
   );
 }
@@ -13,8 +30,9 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+  },
+  map: {
+    width: '100%',
+    height: '100%',
   },
 });

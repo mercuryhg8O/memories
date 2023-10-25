@@ -64,6 +64,16 @@ _The following steps allow a new developer to install the main repository and be
    ```sh
    npm install
    ```
+3. Install yarn package manager
+    ```
+    npm install -g yarn
+    ```
+4. Install react native maps package:
+   ```
+    npx expo install react-native-maps
+    ```
+
+### Note: alternatively can use yarn instead of npx
 
 
 <h2> Project Description </h2> <br>
