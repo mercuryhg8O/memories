@@ -3,19 +3,20 @@ import { StyleSheet, Text, View } from 'react-native';
 import Map from './common/components/Map';
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      <Map/>
-    </View>
-  );
+	return (
+		<View style={styles.container}>
+			<StatusBar style="auto" />
+			<Map/>
+		</View>
+	);
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+	container: {
+		flex: 1,
+	},
+	map: {
+		width: '100%',
+		height: '100%',
+	},
 });

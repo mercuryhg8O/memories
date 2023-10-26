@@ -1,42 +1,40 @@
 import React from 'react';
-import MapView, { Marker } from 'react-native-maps';
-import { StyleSheet, View } from 'react-native';
+import MapView, { Marker, Polyline } from 'react-native-maps';
+import { StyleSheet, View, Text } from 'react-native';
 
-const coordinate = {
-    latitude: 42.7298488,
-    longitude: -73.6764863,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.01,
-  };
 
-export default function Map() {
-    return (
-        <View style={styles.container}>
-            <MapView style={styles.map}
-                // initialRegion={{
-                //     latitude: 37.78825,
-                //     longitude: -122.4324,
-                //     latitudeDelta: 0.0922,
-                //     longitudeDelta: 0.0421,
-                // }}
-            >
-                <Marker 
-                    coordinate={coordinate}
-                    pinColor='purple'
-                />
-            </MapView>
-        </View>
-    );
-}
+const Map = ({ memory_locations }) => {
+  const initialRegion = {
+    latitude: 42.729268,
+    longitude: -73.681227,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  }
+
+  return <View style={styles.container}>
+    <MapView
+      initialRegion={initialRegion}
+      style={styles.map}>
+
+    {/* Draw Memories on map*/
+        memory_locations.map((marker) =>
+        (<Marker
+          coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
+          title={marker.title}
+        />))
+        }
+    </MapView>
+  </View>
+};
 
 const styles = StyleSheet.create({
-    container: {
-        ...StyleSheet.absoluteFillObject,
-        flex: 1,
-    },
-    map: {
-        ...StyleSheet.absoluteFillObject,
-        width: '100%',
-        height: '100%',
-    },
+  container: {
+    flex: 3,
+  },
+  map: {
+    width: '100%',
+    height: '100%',
+  },
 });
+
+export default Map;
