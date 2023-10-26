@@ -1,6 +1,6 @@
 import React from 'react';
 import MapView, { Marker } from 'react-native-maps';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 
 const Map = () => {
@@ -23,9 +23,13 @@ const Map = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 3,
+    ...StyleSheet.absoluteFillObject,
+    flex: 1, //the container will fill the whole screen.
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
   map: {
+    ...StyleSheet.absoluteFillObject,
     width: '100%',
     height: '100%',
   },

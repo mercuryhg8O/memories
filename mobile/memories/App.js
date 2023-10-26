@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet,  View } from 'react-native';
 import Map from './common/components/Map';
 import Profile from './common/components/Profile';
 
