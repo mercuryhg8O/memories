@@ -1,30 +1,24 @@
 import React from 'react';
-import MapView, { Marker, Polyline } from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import { StyleSheet, View, Text } from 'react-native';
 
 
-const Map = ({ memory_locations }) => {
-  const initialRegion = {
-    latitude: 42.729268,
-    longitude: -73.681227,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  }
+const Map = () => {
+  const coordinate = {
+    latitude: 42.7298488,
+    longitude: -73.6764863
+  };
 
-  return <View style={styles.container}>
-    <MapView
-      initialRegion={initialRegion}
-      style={styles.map}>
-
-    {/* Draw Memories on map*/
-        memory_locations.map((marker) =>
-        (<Marker
-          coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
-          title={marker.title}
-        />))
-        }
-    </MapView>
-  </View>
+  return (
+    <View style={styles.container}>
+      <MapView style={styles.map}>
+          <Marker 
+              coordinate={coordinate}
+              pinColor='purple'
+          />
+      </MapView>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({

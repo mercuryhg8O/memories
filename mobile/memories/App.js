@@ -1,14 +1,16 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Map from './common/components/Map';
+import Profile from './common/components/Profile';
 
 export default function App() {
-	return (
-		<View style={styles.container}>
-			<StatusBar style="auto" />
-			<Map/>
-		</View>
-	);
+  return (
+    <View style={styles.container}>
+      <StatusBar style="auto" />
+      <Map/>
+      <Profile/>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
