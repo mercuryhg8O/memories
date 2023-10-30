@@ -1,6 +1,7 @@
 import { useState, useEffect} from 'react';
 import MapView from 'react-native-maps';
 import MyMap from './common/components/myMap.component';
+import RegisterPage from './common/components/registerPage.component';
 import ParseMemoriesDetails from './common/helpers';
 import { StyleSheet, View } from 'react-native';
 
