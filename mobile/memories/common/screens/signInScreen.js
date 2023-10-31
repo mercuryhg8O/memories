@@ -7,8 +7,12 @@ import {CurrentUserContext} from '../context/contexts'
 const SignInScreen = ({ navigation }) => {
     const { setIsLoggedIn, isLoggedIn } = useContext(CurrentUserContext);
 
-    // handle log in functionaility and only pass up the user name
-    
+
+    // handle log in functionality and only pass up the user name
+    [userNameAttempt, setUserNameAttempt] = useState('');
+    [passwordAttempt, SetPasswordAttempt] = useState('');
+
+
 
     return <View style={styles.container}>
 
@@ -33,10 +37,10 @@ const SignInScreen = ({ navigation }) => {
             {console.log(isLoggedIn)}
 
             <View /* Registration container */ style={styles.input_fields}>
-                <CustomInput placeholder={'username'}/>
-                <CustomInput placeholder={'password'}/>
+                <CustomInput placeholder={'username'} setValue={setUserNameAttempt}/>
+                <CustomInput placeholder={'password'} setValue={SetPasswordAttempt}/>
                 <CustomButton placeholder={'Forgot Password'} button_type={styles.button_type3} text_type={{color: '#858585'}}/>
-                <CustomButton placeholder={'Login'} onPress={() => setIsLoggedIn(true)} button_type={styles.button_type1}/>
+                <CustomButton placeholder={'Login'} onPress={() => navigation.navigate('MapScreen')} button_type={styles.button_type1}/>
                 <CustomButton placeholder={'Sign Up'} button_type={styles.button_type2} />
                 
             </View>
