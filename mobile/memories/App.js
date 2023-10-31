@@ -1,30 +1,41 @@
-import { useState, useEffect} from 'react';
+import { useState, useEffect, createContext, useContext, } from 'react';
 import MapView from 'react-native-maps';
 import MyMap from './common/components/myMap.component';
-import RegisterPage from './common/components/registerPage.component';
 import ParseMemoriesDetails from './common/helpers';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text, Button } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import AuthStack from './common/navigation/AuthStack';
+import AppStack from './common/navigation/AppStack';
+import {CurrentUserContext, AuthContextProvider} from './common/context/contexts';
+import NavStack from './common/navigation/NavStack';
 
+
+// const CurrentUserContext = createContext({ isLoggedIn: false, currentUserID: '' });
+// function AuthContextProvider({ children }) {
+//   const [currentUserID, setCurrentUser] = useState(null);
+//   const [isLoggedIn, setIsLoggedIn] = useState(false);
+//   return (
+//     <CurrentUserContext.Provider
+//       value={{
+//         isLoggedIn,
+//         setIsLoggedIn,
+//         currentUserID,
+//         setCurrentUser
+//       }}>
+//       {children}
+//     </CurrentUserContext.Provider>
+//   );
+// }
 
 
 export default function App() {
-  
-  [memory_locations, setMemoryLocations] = useState([]);
-  
-
-
-  useEffect(() => {
-
-    const { memories, error } = ParseMemoriesDetails();
-    setMemoryLocations(memories)
-  }, []);
-
-
-
   return (
-    <View style={styles.container}>
-      <MyMap style={{flex:2}} memory_locations={memory_locations}/>
-    </View>
+    <AuthContextProvider>
+      <NavigationContainer>
+        <NavStack/>
+      </NavigationContainer>
+    </AuthContextProvider>
   );
 }
 

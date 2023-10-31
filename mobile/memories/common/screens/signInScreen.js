@@ -1,10 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, createContext, useContext, } from 'react';
 import { StyleSheet, View, Text, SafeAreaView, Image } from 'react-native';
-import CustomInput from './customInput.component';
-import CustomButton from './customButton.component';
+import CustomInput from '../components/customInput.component';
+import CustomButton from '../components/customButton.component';
+import {CurrentUserContext} from '../context/contexts'
 
+const SignInScreen = ({ navigation }) => {
+    const { setIsLoggedIn, isLoggedIn } = useContext(CurrentUserContext);
 
-const RegisterPage = () => {
+    // handle log in functionaility and only pass up the user name
+    
+
     return <View style={styles.container}>
 
         <SafeAreaView >
@@ -25,13 +30,13 @@ const RegisterPage = () => {
                 </View>
                 
             </View>
+            {console.log(isLoggedIn)}
 
             <View /* Registration container */ style={styles.input_fields}>
-
                 <CustomInput placeholder={'username'}/>
                 <CustomInput placeholder={'password'}/>
                 <CustomButton placeholder={'Forgot Password'} button_type={styles.button_type3} text_type={{color: '#858585'}}/>
-                <CustomButton placeholder={'Login'} button_type={styles.button_type1}/>
+                <CustomButton placeholder={'Login'} onPress={() => setIsLoggedIn(true)} button_type={styles.button_type1}/>
                 <CustomButton placeholder={'Sign Up'} button_type={styles.button_type2} />
                 
             </View>
@@ -118,4 +123,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default RegisterPage;
+export default SignInScreen;
