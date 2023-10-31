@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 
 const MockResponse = {
   "memories": [
@@ -26,6 +28,34 @@ const ParseMemoriesDetails = () => {
 }
 
 
+const baseUrl = 'https://reqres.in'; // unify this endpoint with other hardcoded baseUrl in codebase.
+axios({
+  method: 'get',
+  url: `${baseUrl}/api/users/1`,
+}).then((response) => {
+  console.log(response.data);
+});
+
+const fetchData = (URI) => {
+// Invoking the get method to perform a GET request
+axios.get(`${baseUrl}` + URI).then((response) => {
+  console.log(response.data);
+  if(response.status == 200){
+    return response.data
+  }else{
+    console.warn('An error occurred in the fetchData function with the URI: ' + URI);
+    return null;
+  }
+});
 
 
-export { ParseMemoriesDetails };
+
+
+}
+
+
+
+
+export { ParseMemoriesDetails, fetchData };
+
+export default ParseMemoriesDetails;

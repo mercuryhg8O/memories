@@ -2,15 +2,34 @@ import { useState, useEffect, createContext, useContext, } from 'react';
 import { StyleSheet, View, Text, SafeAreaView, Image } from 'react-native';
 import CustomInput from '../components/customInput.component';
 import CustomButton from '../components/customButton.component';
-import {CurrentUserContext} from '../context/contexts'
+import { CurrentUserContext } from '../context/contexts';
+import axios from 'axios';
+import fetchData from '../helpers';
 
 const SignInScreen = ({ navigation }) => {
-    const { setIsLoggedIn, isLoggedIn } = useContext(CurrentUserContext);
-
+    const { baseUrl, setIsLoggedIn, isLoggedIn, setCurrentUser } = useContext(CurrentUserContext);
 
     // handle log in functionality and only pass up the user name
     [userNameAttempt, setUserNameAttempt] = useState('');
     [passwordAttempt, SetPasswordAttempt] = useState('');
+
+    const attemptLogin = () => {
+
+        if (userNameAttempt === '' || passwordAttempt === '') {
+            console.warn('enter username and password.');
+        }else{
+            
+            const responseData = fetchData('/api/login?username=' + userNameAttempt + '&password=' + passwordAttempt);
+
+            if(true){ // valid login (replace with request)
+                
+                navigation.navigate('MapScreen'); // navigate to map
+                setCurrentUser(userNameAttempt); // save username for future requests
+            }else{
+                console.warn('no account exists with that username & password.')
+            }
+        }
+    }
 
 
 
@@ -25,26 +44,26 @@ const SignInScreen = ({ navigation }) => {
                     }}
                 />
                 <View style={styles.logo_text}>
-                    <Text style={{fontSize: 20}}>
+                    <Text style={{ fontSize: 20 }}>
                         Welcome to
                     </Text>
-                    <Text style={{fontSize: 40}}>
+                    <Text style={{ fontSize: 40 }}>
                         Memories
                     </Text>
                 </View>
-                
+
             </View>
             {console.log(isLoggedIn)}
 
             <View /* Registration container */ style={styles.input_fields}>
-                <CustomInput placeholder={'username'} setValue={setUserNameAttempt}/>
-                <CustomInput placeholder={'password'} setValue={SetPasswordAttempt}/>
-                <CustomButton placeholder={'Forgot Password'} button_type={styles.button_type3} text_type={{color: '#858585'}}/>
-                <CustomButton placeholder={'Login'} onPress={() => navigation.navigate('MapScreen')} button_type={styles.button_type1}/>
+                <CustomInput placeholder={'username'} setValue={setUserNameAttempt} />
+                <CustomInput placeholder={'password'} setValue={SetPasswordAttempt} />
+                <CustomButton placeholder={'Forgot Password'} button_type={styles.button_type3} text_type={{ color: '#858585' }} />
+                <CustomButton placeholder={'Login'} onPress={() => attemptLogin()} button_type={styles.button_type1} />
                 <CustomButton placeholder={'Sign Up'} button_type={styles.button_type2} />
-                
+
             </View>
-            
+
         </SafeAreaView>
     </View>
 };

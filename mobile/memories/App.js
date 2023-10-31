@@ -11,24 +11,6 @@ import {CurrentUserContext, AuthContextProvider} from './common/context/contexts
 import NavStack from './common/navigation/NavStack';
 
 
-// const CurrentUserContext = createContext({ isLoggedIn: false, currentUserID: '' });
-// function AuthContextProvider({ children }) {
-//   const [currentUserID, setCurrentUser] = useState(null);
-//   const [isLoggedIn, setIsLoggedIn] = useState(false);
-//   return (
-//     <CurrentUserContext.Provider
-//       value={{
-//         isLoggedIn,
-//         setIsLoggedIn,
-//         currentUserID,
-//         setCurrentUser
-//       }}>
-//       {children}
-//     </CurrentUserContext.Provider>
-//   );
-// }
-
-
 export default function App() {
   return (
     <AuthContextProvider>

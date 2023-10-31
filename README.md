@@ -76,6 +76,7 @@ _The following steps allow a new developer to install the main repository and be
     ```
     yarn add @react-navigation/native
     yarn add @react-navigation/native-stack
+    yarn add axios
     npx expo install react-native-screens react-native-safe-area-context
     ```
 
