@@ -20,7 +20,7 @@ The Memories application relies on the following:
 
 ### Get Started (Back-End)
 
-1. Nagviate to backend directory
+1. Navigate to backend directory
    ```sh
     cd memories_back_end
     ```
