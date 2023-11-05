@@ -72,6 +72,13 @@ _The following steps allow a new developer to install the main repository and be
    ```
     npx expo install react-native-maps
     ```
+5. Install navigator package(s):
+    ```
+    yarn add @react-navigation/native
+    yarn add @react-navigation/native-stack
+    yarn add axios
+    npx expo install react-native-screens react-native-safe-area-context
+    ```
 
 ### Note: alternatively can use yarn instead of npx
 
