@@ -32,24 +32,37 @@ export class MemoryController {
 
   @UseGuards(AuthenticatedGuard)
   @Get(':memoryId')
-  async findOneById(id = memory._id) {
-    const memory = await this.memoryService.findOneById(id);
-    if (!memory) {
-      throw new NotFoundException();
-    }
-    return memory;
+  @Bind(Param())
+  @Bind(Req())
+  async findOneById(params, request) {
+    const memory = await this.memoryService.getMemory(params.memoryId, request.account._id);
+    
   }
 
   @UseGuards(AuthenticatedGuard)
   @Post(':memory/like')
-  async addLike(id = memory._id, uid = req.account._id) {
-    await this.memoryService.addLike(id, uid);
+  @Bind(Param())
+  @Bind(Req())
+  async addLike(params, request) {
+    const memory = await this.memoryService.addLike(params.memoryId, request.account._id);
+    if (memory != true) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   @UseGuards(AuthenticatedGuard)
   @Post(':memory/unlike')
-  async removeLike(id = memory._id, uid = req.account._id) {
+  @Bind(Param())
+  @Bind(Req())
+  async removeLike(params, request) {
+    const memory = await this.memoryService.removeLike(params.memoryId, request.account._id)
     await this.groupsService.removeLike(id, uid);
-    return group;
+    if (memory != true) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }

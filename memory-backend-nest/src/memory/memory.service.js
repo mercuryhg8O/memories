@@ -12,10 +12,9 @@ export class MemoryService {
             bodyText: bodyText,
             accountId: account._id,
             tags: tags,
-            location: Location,
-            likes: 0,
-            photos: Image,
-            visibility: Visibility,
+            location: location,
+            photo: photos,
+            visibility: visibility,
         });
         await createdMemory.save();
         return createdMemory;
@@ -35,10 +34,11 @@ export class MemoryService {
         } else {
             memory.likes++;
             await memory.save();
-            this.UserService.likeMemory(id, uid);
+            this.AccountService.likeMemory(id, uid);
         }
-        user.likedMemories.push(id);
-        await user.save();
+        account.likedMemories.push(id);
+        await account.save();
+        return true;
     }
 
     async removeLike(id, uid) {
@@ -61,6 +61,25 @@ export class MemoryService {
 
     async findMemoryById(id) {
         const memory = await this.memoryModel.findById(id);
+        return memory;
+    }
+
+    async getMemory(id, uid) {
+        const memory = await this.findMemoryById(id);
+        if (!memory) {
+         throw new NotFoundException();
+        }  
+        if (memory.visibility == 'Private') {
+            if (uid != memory.account) {
+                throw new BadRequestException
+            }
+        } else if (memory.visibility == 'Public') {
+            if (uid) {
+            }
+        } else if (memory.visibility == 'Mutual') {
+            if (uid) {
+            }
+        }
         return memory;
     }
 }
