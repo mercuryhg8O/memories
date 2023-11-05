@@ -17,8 +17,9 @@ const MyMap = ({ memory_locations }) => {
       style={styles.map}>
 
     {/* Draw Memories on map*/
-        memory_locations.map((marker) =>
+        memory_locations.map((marker, index) =>
         (<Marker
+          key={index}
           coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
           title={marker.title}
         />))

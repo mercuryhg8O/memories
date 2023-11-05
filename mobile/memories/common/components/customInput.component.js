@@ -1,9 +1,9 @@
 import React from 'react';
 import {View, Text, TextInput, StyleSheet} from 'react-native';
 
-const CustomInput = ({value, setValue, placeholder}) => {
+const CustomInput = ({value, setValue, placeholder, isMuliLine}) => {
     return (
-        <View style={styles.container}>
+        <View style={isMuliLine ? styles.multiline_container: styles.singleline_container}>
             <TextInput 
                 value={value}
                 onChangeText={setValue}
@@ -15,7 +15,7 @@ const CustomInput = ({value, setValue, placeholder}) => {
 };
 
 const styles = StyleSheet.create({
-    container: {
+    singleline_container: {
         backgroundColor: 'white',
         width: '80%',
 
@@ -26,8 +26,19 @@ const styles = StyleSheet.create({
 
         paddingHorizontal: 10,
         paddingVertical: 10,
-        
-        
+    },
+
+    multiline_container: {
+        backgroundColor: 'white',
+        width: '80%',
+
+        borderColor: '#e8e8e8',
+        borderWidth: 1,
+        borderRadius: 5,
+        height: 110,
+
+        paddingHorizontal: 10,
+        paddingVertical: 10,
     },
 
     input: {},
