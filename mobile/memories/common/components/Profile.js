@@ -30,8 +30,9 @@ export class Profile extends Component {
         </TouchableOpacity>
         <View style={styles.modal}>
           <View style={styles.content}>
-            <Image
-              style={styles.icon}/>
+            <Image style={styles.icon}/>
+            <Text style={styles.name}>Name #1234</Text>
+            <Text>Bio</Text>
           </View>
         </View>
       </Modal>
@@ -52,13 +53,18 @@ const styles = StyleSheet.create({
     backgroundColor:'white'
   },
   content: {
-    marginTop: 10
+    marginTop: 10,
+    display: 'flex',
+    flexDirection: 'row'
   },
   icon: {
     backgroundColor: 'purple',
     width: 75, height: 75, // make sure these values are the same
     borderRadius: 50,
     margin: 15
+  },
+  name: {
+    // display: 'inline-flex'
   }
 });
 
