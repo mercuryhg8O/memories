@@ -15,20 +15,25 @@ import {
   import { LoginAuthGuard } from './login.guard';
   import { SignupAuthGuard } from './signup.guard';
   import { AuthenticatedGuard } from './authenticated.guard';
-  
+  import { AccountService } from 'src/account/account.service';
+  import { LoginStrategy } from './login.strategy';
   @Controller()
   export class AuthController {
     constructor(private authService: AuthService) {}
   
     //@UseGuards(LoginAuthGuard)
     @Get('login')
-    async login(req) {
-      return req;
+    async login(@Query() query) {
+      const loginStrategy = new LoginStrategy(this.authService);
+      const user = loginStrategy.validate(query.email,query.password);
+      return user;
     }
   
     //@UseGuards(SignupAuthGuard)
     @Get('createaccount')
-    async signup(@Query() query) {
+    async signup( @Query() query) {
+      const accountService = new AccountService();
+      accountService.createAccount( query.username, query.password, query.email, query.bio);
       return query;
     }
   }

@@ -22,7 +22,7 @@ const Account = new mongoose.Schema({
     label : String
 })
 
-export const AccountModel = mongoose.model('accounts', Account);
+export const AccountModel = mongoose.model('accounts', Account, 'accounts');
 
 
 

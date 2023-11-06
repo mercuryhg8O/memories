@@ -5,25 +5,41 @@ import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
 import { AccountModel } from 'src/schemas/account.schema';
 
+
 @Injectable()
 export class AccountService {
-  private _accountModel;
-  accountModel: any;
+  private accountModel;
   constructor() {
     this.accountModel = new AccountModel();
   }
 
   async findOneById(id) {
-    const user = await this._accountModel.findById(id);
+    const user = await this.accountModel.findById(id);
     return user;
   }
 
-  async findOneByUsername(username) {
-    const user = await this.accountModel.findOne({
-      username: username,
+  async findOneByAccountID(id){
+    const user = await AccountModel.findOne({
+      accountId: id,
     });
     return user;
   }
+
+  async findOneByUsername(username1) {
+    const user = await AccountModel.findOne({
+      username: username1,
+    });
+    return user;
+  }
+
+  async findOneByEmail(email1) {
+    const user = await AccountModel.findOne({
+      email : email1,
+    });
+    console.log(user);
+    return user;
+  }
+
 
   async createAccount(username, password, email, bio) {
     //const user = await this.findOneByUsername(username);
@@ -34,7 +50,8 @@ export class AccountService {
       username: username,
       password: password,
       email: email,
-      bio: bio
+      bio: bio,
+      accountId: Math.ceil(Math.random()*1000),
     });
     await createdUser.save();
     return createdUser;
