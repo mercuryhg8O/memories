@@ -5,6 +5,7 @@ import {UsersModule} from './account/account.module.js';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 
+
 @Module({
   imports: [UsersModule,
     ServeStaticModule.forRoot({

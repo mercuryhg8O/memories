@@ -17,7 +17,7 @@ import {
   
   @Controller('auth')
   export class AuthController {
-    constructor(authService) {}
+    constructor(private authService: AuthService) {}
   
     @UseGuards(LoginAuthGuard)
     @Post('login')
