@@ -24,17 +24,19 @@ import {
       return data;
     }
   
- //   @UseGuards(AuthenticatedGuard)
+    //@UseGuards(AuthenticatedGuard)
     @Get(':username')
     async findOneByUsername(username) {
       const user = await this._accountService.findOneByUsername(username);
       return user;
     }
 
-    @Get()
-    async createAccount(username, password, email, label){
-      const creation = await this._accountService.createAccount(username,password,email,label);
-      return creation;
+    @Get('user')
+    async findOneById(ID){
+      const split = ID.split('=')
+      const user = await this._accountService.findOneById(split[split.length() - 1]);
+      return user;
     }
+
   }
   
