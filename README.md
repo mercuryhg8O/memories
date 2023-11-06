@@ -60,10 +60,11 @@ _The following steps allow a new developer to install the main repository and be
    ```sh
    git clone https://github.com/mercuryhg31/memories.git
    ```
-2. Install NPM packages in the memories folder
+2. Install NPM packages in the memories folder(Has to be done for both front-end and back-end separately)
    ```sh
    npm install
    ```
+   
 
 
 <h2> Project Description </h2> <br>
