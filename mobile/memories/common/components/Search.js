@@ -6,7 +6,7 @@ export class Search extends Component {
   constructor(props) { // need to display information for user with userid
     super(props);
     this.state = {
-      visible: true,
+      visible: false,
     };
   }
 

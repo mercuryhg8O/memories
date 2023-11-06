@@ -1,71 +1,87 @@
-import React, { Component } from 'react';
-import { Text, View, StyleSheet, Modal, TouchableOpacity, Image } from 'react-native';
+import React, { Component, useState, useEffect, useContext } from 'react';
+import { Text, View, StyleSheet, Image, SafeAreaView, Dimensions } from 'react-native';
+import { CurrentUserContext } from '../context/contexts';
+import axios from 'axios';
 
-export class Profile extends Component {
-  constructor(props, userid) { // need to display information for user with userid
-    super(props);
-    this.state = {
-      visible: true,
-    };
-  }
+const Profile = () => {
 
-  setVisible(v) {
-    this.setState({visible: v});
-  }
+    {/* Once the  */}
+    const [userName, setUserName] = useState('');
+    const [userBio, setUserBio] = useState('');
+    const { displayUser, targetUserUID, endpointURL } = useContext(CurrentUserContext);
+    useEffect(()=>{}, [userName]);
 
-  render() {
-    return (
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={this.state.visible}
-        onRequestClose={() => {
-          this.setVisible(false);
-        }}>
-        <TouchableOpacity
-          style={styles.tO}
-          onPress={() => {
-            this.setVisible(!this.state.visible);
-          }}>
-        </TouchableOpacity>
-        <View style={styles.modal}>
-          <View style={styles.content}>
-            <Image style={styles.icon}/>
-            <Text style={styles.name}>Name #1234</Text>
-            <Text>Bio</Text>
-          </View>
-        </View>
-      </Modal>
+    // once a new userUID is selected, then a request should be made to gather data about the user
+    useEffect(()=>{}, [targetUserUID]);
+    const requestUserData = async () => {
+        // creates a request for the user data once 
+        const query_string = `userdetails/?username=${targetUserUID}`
+        const response = await axios.get(endpointURL + query_string).catch((err) => {
+            console.log('error during retrieval of when getting response: ', err);
+            return true;
+        });
+
+        const userName = response.data.username;
+        const userBio = response.data.bio;
+        setUserName(userName);
+        setUserBio(userBio);
+    }
+
+
+    // ternary expression:
+    //  T -> show user modal
+    //  F -> return empty view
+    return (displayUser ?
+        <SafeAreaView style={styles.modal}>
+            <View style={styles.content}>
+                <View style={styles.iconnname}>
+                    <Image style={styles.icon} />
+                    <Text style={styles.name}>{targetUserUID + userName}</Text>
+                </View>
+                <SafeAreaView style={styles.bioview}>
+                    <Text>{userBio}</Text>
+                </SafeAreaView>
+            </View>
+        </SafeAreaView> : <View></View>
     );
-  }
 };
 
+const vw = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
-  tO: {
-    opacity: 0,
-    backgroundColor: 'white',
-    height: '100%',
-  },
-  modal: {
-    height: '50%',
-    marginTop: 'auto',
-    backgroundColor:'white'
-  },
-  content: {
-    marginTop: 10,
-    display: 'flex',
-    flexDirection: 'row'
-  },
-  icon: {
-    backgroundColor: 'purple',
-    width: 75, height: 75, // make sure these values are the same
-    borderRadius: 50,
-    margin: 15
-  },
-  name: {
-    // display: 'inline-flex'
-  }
+    modal: {
+        height: '30%',
+        width: '100%',
+        marginTop: 'auto',
+        backgroundColor: 'white',
+    },
+    content: {
+        marginTop: 10,
+        display: 'flex',
+        flexDirection: 'column'
+    },
+    iconnname: {
+        left: .08 * vw,
+        top: .05 * vw,
+        flexDirection: 'row'
+    },
+    icon: {
+        backgroundColor: 'purple',
+        width: .20 * vw, height: .20 * vw, // make sure these values are the same
+        borderRadius: 50,
+    },
+    name: {
+        fontSize: 30,
+        top: 40,
+        left: 10
+    },
+    bioview: {
+        left: .28 * vw + 10,
+        top: 30,
+        width: .70 * vw - 30,
+        flexGrow: 1,
+        flexDirection: 'row'
+    }
 });
 
 export default Profile;
