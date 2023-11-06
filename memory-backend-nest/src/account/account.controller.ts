@@ -32,8 +32,8 @@ import {
     }
 
     @Get()
-    async createAccount(username, password, email, label){
-      const creation = await this._accountService.createAccount(username,password,email,label);
+    async createAccount(username, password, email, bio){
+      const creation = await this._accountService.createAccount(username,password,email,bio);
       return creation;
     }
   }

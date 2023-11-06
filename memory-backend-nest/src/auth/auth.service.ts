@@ -11,10 +11,10 @@ export class AuthService {
     if (user) {
       const result = await bcrypt.compare(password, user.password);
       if (result) {
-        return user;
+        return true;
       }
     }
-    return null;
+    return false;
   }
 
   async createUser(username, email, password, label) {
