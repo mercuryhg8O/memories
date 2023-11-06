@@ -89,24 +89,29 @@ const SignUpScreen = ({ navigation }) => {
                 <CustomInput
                     placeholder={'username'}
                     setValue={setUserName}
+                    label={'Username input field'}
                     />
                 <CustomInput
                     placeholder={'email'}
                     setValue={SetEmail}
+                    label={'Email input field'}
                     />
                 <CustomInput
                     placeholder={'password'}
                     setValue={SetPassword}
+                    label={'Password input field'}
                     />
                 <CustomInput
                     placeholder={'[optional]Bio  '}
                     setValue={setBio}
                     isMuliLine={true}
+                    label={'Bio input field'}
                     />
                 <CustomButton
                     placeholder={'Create Account'}
                     onPress={() => attemptSignUp()}
                     button_type={styles.createAccountBtn}
+                    label={'Create account button'}
                     />
 
             </View>
