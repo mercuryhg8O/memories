@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as mongoose from 'mongoose';
 
-const url = `mongodb+srv://MemoriesUser42:RYplRI3sbvyjHTNi@memoriescluster.tyrwq3x.mongodb.net/?retryWrites=true&w=majority`;
+const url = `mongodb+srv://MemoriesUser42:RYplRI3sbvyjHTNi@memoriescluster.tyrwq3x.mongodb.net/?retryWrites=true&w=majority/test`;
 
     
 async function bootstrap() {

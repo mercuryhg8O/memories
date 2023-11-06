@@ -18,12 +18,12 @@ export class SignupStrategy extends PassportStrategy(Strategy, 'signup') {
     });
   }
 
-  async validate(req, _username, _password) {
+  async validate(query) {
     const signupDto = new SignupDto();
-    signupDto.username = req.body.username;
-    signupDto.email = req.body.email;
-    signupDto.password = req.body.password;
-    signupDto.label = req.body.label;
+    signupDto.username = query.username;
+    signupDto.email = query.email;
+    signupDto.password = query.password;
+    signupDto.bio = query.bio;
     const errors = await validate(signupDto);
     if (errors.length > 0) {
       throw new BadRequestException();
@@ -33,7 +33,7 @@ export class SignupStrategy extends PassportStrategy(Strategy, 'signup') {
       signupDto.username,
       signupDto.password,
       signupDto.email,
-      signupDto.label
+      signupDto.bio
     );
     if (!user) {
       return false;

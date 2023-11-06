@@ -8,11 +8,13 @@ import {
     Delete,
     UseGuards,
     Request,
+    Query,
   } from '@nestjs/common';
   import { AccountService } from './account.service';
   import { MeService } from './me.service'
-  
-  @Controller('account')
+
+
+  @Controller()
   export class AccountController {
     constructor(private _accountService: AccountService, private meService: MeService ) {
     }
@@ -38,10 +40,8 @@ import {
     }
 
     @Get('user')
-    async findOneById(ID){
-      const split = ID.split('=')
-      const user = await this._accountService.findOneById(split[split.length() - 1]);
+    async findOneById(@Query() query){
+      const user = await this._accountService.findOneByAccountID(query.userid as number);
       return user;
     }
-
   }

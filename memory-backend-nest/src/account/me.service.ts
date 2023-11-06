@@ -1,7 +1,7 @@
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { AccountModel } from '../schemas/account.schema';
+import { AccountModel } from 'src/schemas/account.schema';
 
 @Injectable()
 export class MeService {
