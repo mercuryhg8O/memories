@@ -4,10 +4,10 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  constructor(accountService) {}
+  constructor(private accountService: AccountService) {}
 
   async validateUser(username, password) {
-    const user = await this.usersService.findOneByUsername(username);
+    const user = await this.accountService.findOneByUsername(username);
     if (user) {
       const result = await bcrypt.compare(password, user.password);
       if (result) {
@@ -18,7 +18,7 @@ export class AuthService {
   }
 
   async createUser(username, email, password, label) {
-    const user = await this.accountService.createUser(
+    const user = await this.accountService.createAccount(
       username,
       email,
       password,

@@ -12,7 +12,7 @@ import { validate } from 'class-validator';
 
 @Injectable()
 export class SignupStrategy extends PassportStrategy(Strategy, 'signup') {
-  constructor(authService) {
+  constructor(private authService: AuthService) {
     super({
       passReqToCallback: true,
     });

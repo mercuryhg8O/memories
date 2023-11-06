@@ -1,20 +1,24 @@
 import mongoose, { Model } from 'mongoose';
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Account } from '../schemas/account.schema';
+import { AccountModel } from '../schemas/account.schema';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AccountService {
-  constructor(_acccountModel) {}
+  
+  private _accountModel;
+  constructor() {
+    this._accountModel = new AccountModel();
+  }
 
   async findOneById(id) {
-    const user = await this.accountModel.findById(id);
+    const user = await this._accountModel.findById(id);
     return user;
   }
 
   async findOneByUsername(username) {
-    const user = await this.accountModel.findOne({
+    const user = await this._accountModel.findOne({
       username: username,
     });
     return user;
@@ -25,7 +29,7 @@ export class AccountService {
     if (user) {
       throw new BadRequestException();
     }
-    const createdUser = new this.accountModel({
+    const createdUser = new this._accountModel({
       username: username,
       password: password,
       email: email,
