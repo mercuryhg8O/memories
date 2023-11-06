@@ -17,16 +17,23 @@ The Memories application relies on the following:
 |                               | CSS                               |
 |                               | HTML5                             |
 
+### Prerequisites
+
+To avoid issues with cloning and testing the repository, ensure the following technologies are up to date:
+1. npm
+    ```sh
+    npm install npm@latest -g
+    ```
 
 ### Get Started (Back-End)
 
-1. Nagviate to backend directory
+1. Navigate to backend directory
    ```sh
-    cd memories_back_end
+    cd memory-backend-nest
     ```
 2. To start the node server
     ```sh
-    node app.js
+    nest start
     ```
 3. Navigate to http://localhost:3000/URI for testing
 
@@ -44,14 +51,6 @@ The Memories application relies on the following:
 3. Scan QR Code on phone
 
 
-### Prerequisites
-
-To avoid issues with cloning and testing the repository, ensure the following technologies are up to date:
-1. npm
-    ```sh
-    npm install npm@latest -g
-    ```
-
 ### Installation
 
 _The following steps allow a new developer to install the main repository and begin testing locally._
@@ -60,7 +59,7 @@ _The following steps allow a new developer to install the main repository and be
    ```sh
    git clone https://github.com/mercuryhg31/memories.git
    ```
-2. Install NPM packages in the memories folder
+2. Install NPM packages in the memories folder(Has to be done for both front-end and back-end separately)
    ```sh
    npm install
    ```
