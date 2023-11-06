@@ -1,26 +1,46 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import MyMap from '../components/myMap.component';
-import { useState, useEffect} from 'react';
-import { StyleSheet, View, Text, Button } from 'react-native';
-import {ParseMemoriesDetails} from '../helpers/helpers';
+import { useState, useEffect, useContext } from 'react';
+import { StyleSheet, View, Text, Button, TouchableOpacity } from 'react-native';
+import { ParseMemoriesDetails } from '../helpers/helpers';
+import { StatusBar } from 'expo-status-bar';
+import SearchButton from '../components/SearchButton.js';
+import TestingProfileButton from '../components/TestingProfileButton.js';
+import Map from '../components/Map';
+import Search from '../components/Search';
+import Profile from '../components/Profile';
+import { CurrentUserContext } from '../context/contexts';
 
+
+// Main page
 function MainScreen({ navigation }) {
 
-    // // TODO: Move memory locations from component state to context state.
-    // useEffect(() => {
+    const { displayUser, setDisplayUser } = useContext(CurrentUserContext);
 
-    //     const { memories, error } = ParseMemoriesDetails();
-    //     setMemoryLocations(memories)
-    // }, []);
+    useEffect(() => {
+        const { memories, error } = ParseMemoriesDetails();
+        setMemoryLocations(memories)
+    }, []);
+    [memory_locations, setMemoryLocations] = useState([]);
 
-    // [memory_locations, setMemoryLocations] = useState([]);
+    const displayUserModal = () => {
+        console.log('sleep, my bestie');
+        setDisplayUser(true);
+    }
+
     return (
         <View style={styles.container}>
             <StatusBar style="auto" />
-            <SearchButton/>
-            <Map/>
-            <Search/>
+            {/* Buttons for interim demo only */}
+            <View style={{backgroundColor: 'black', width: '100%', flexDirection: 'row'}}>
+                {/* need to hardcode real user ids from the database once we have those */}
+                <TestingProfileButton navigation={navigation} userId={4321}/>
+                <TestingProfileButton navigation={navigation} userId={1234}/>
+                <TestingProfileButton navigation={navigation} userId={1234}/>
+                <TestingProfileButton navigation={navigation} userId={1234}/>
+                <Text style={{color: 'white', top: 10, left: 10}}>For demo only</Text>
+            </View>
+            <Map memory_locations={memory_locations} />
             <Profile/>
         </View>
     );

@@ -1,9 +1,12 @@
 import { useState, useEffect, createContext, useContext, } from 'react';
-import { StyleSheet, View, Text, SafeAreaView, Image } from 'react-native';
+import { StyleSheet, View, Text, SafeAreaView, Alert, Image, TouchableOpacity, Dimensions } from 'react-native';
 import CustomInput from '../components/customInput.component';
 import CustomButton from '../components/customButton.component';
 import { CurrentUserContext } from '../context/contexts';
-import axios from 'axios';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { createUserSuccessful } from '../helpers/requestHelpers';
+
+import * as ImagePicker from 'expo-image-picker';
 
 const SignUpScreen = ({ navigation }) => {
     const { setCurrentUser } = useContext(CurrentUserContext);
@@ -16,38 +19,107 @@ const SignUpScreen = ({ navigation }) => {
 
     const attemptSignUp = () => {
 
-        if (userName === '' || password === '') {
-            console.warn('enter username and password.');
-        }else{
-            if(true){ // valid login (replace with request)
-                navigation.navigate('MapScreen'); // navigate to map
+        if(userName === ''){
+            Alert.alert('Enter userName', 'login requires userName', [
+                {text: 'OK'},                
+              ]);
+        } else if(email === ''){
+            Alert.alert('Enter email', 'login requires email', [
+                {text: 'OK'},                
+              ]);
+        } else if(password === ''){
+            Alert.alert('Enter password', 'login requires password', [
+                {text: 'OK'},                
+              ]);
+        } else{
+
+            // create and login user if possible
+            createUserSuccessful(userName, email, password, bio).then((userLoginStatus) => {
+                if(userLoginStatus){ // valid login
+
+                    // should parse request for userid to make future requests
+                    setCurrentUser(email); // save email for future requests (temporary solution)
+                    navigation.navigate('MainScreen'); // navigate to map
+                }else{
+                    console.warn('no account exists with that email & password.');
+                }
+            }).catch(
+                (err) => {console.log(err)});
+
+            if (true){ // valid login (replace with request)
+                navigation.navigate('MainScreen'); // navigate to map
                 setCurrentUser(userName); // save username for future requests
-            }else{
+            } else{
                 console.warn('cannot create an account with that information.')
                 // TODO: parse to provide informative error of why account creation didn't succeed
             }
         }
     }
 
+    const [userIcon, setUserIcon] = useState('https://cdn-icons-png.flaticon.com/512/3177/3177440.png');
+    
+    // const ImagePicker = async () => {
+    //     let options = {
+    //         storageOptions: {
+    //             path: "image"
+    //         }
+    //     }
 
+    //     launchImageLibrary(options, (response)=>{
+    //         setUserIcon(response.assets[0].uri);
+    //     }).then(console.log('it was a dark and stormy night')).catch(alert('u suck'));
+    // }
+
+    const pickImageAsync = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            allowsEditing: true,
+            quality: 1
+        });
+
+        if (!result.canceled) {
+            setUserIcon(result.assets[0].uri);
+        } else {
+            alert("pick an image dude");
+        }
+    };
 
     return <View style={styles.container}>
 
         <SafeAreaView >
             <View /* Logo container */ style={styles.logo_container}>
-                <Image
-                    style={styles.logo}
-                    source={{
-                        uri: 'https://cdn-icons-png.flaticon.com/512/3177/3177440.png',
-                    }}/>
+                <TouchableOpacity onPress={pickImageAsync}>
+                    <Image
+                        style={styles.logo}
+                        source={{
+                            uri: userIcon,
+                        }}
+                    />
+                </TouchableOpacity>
             </View>
 
-            <View /* Registration container */ style={styles.input_fields}>
-                <CustomInput placeholder={'username'} setValue={setUserName} />
-                <CustomInput placeholder={'email'} setValue={SetEmail} />
-                <CustomInput placeholder={'password'} setValue={SetPassword} />
-                <CustomInput placeholder={'Bio'} setValue={SetPassword} isMuliLine={true}/>
-                <CustomButton placeholder={'Create Account'} onPress={() => attemptSignUp()} button_type={styles.button_type1} />
+            <View /* Registration container */ style={styles.inputContainer}>
+                <CustomInput
+                    placeholder={'username'}
+                    setValue={setUserName}
+                    />
+                <CustomInput
+                    placeholder={'email'}
+                    setValue={SetEmail}
+                    />
+                <CustomInput
+                    placeholder={'password'}
+                    setValue={SetPassword}
+                    />
+                <CustomInput
+                    placeholder={'[optional]Bio  '}
+                    setValue={SetPassword}
+                    isMuliLine={true}
+                    />
+                <CustomButton
+                    placeholder={'Create Account'}
+                    onPress={() => attemptSignUp()}
+                    button_type={styles.createAccountBtn}
+                    />
 
             </View>
 
@@ -55,82 +127,40 @@ const SignUpScreen = ({ navigation }) => {
     </View>
 };
 
-export default SignUpScreen;
+const vh = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#c5effc',
     },
-
     safe_container: {
         flex: 1,
         flexDirection: 'column',
-        justifyContent: 'center'
     },
     logo_container: {
-        justifyContent: 'center',
         alignItems: "center",
-        paddingTop: 80,
+        paddingTop: .05*vh,
     },
     logo: {
-        padding: 80,
-        width: 100,
-        height: 100,
-        borderRadius: 100,
+        width: .25*vh, height: .25*vh,
+        borderRadius: 100
     },
-    logo_text: {
-        justifyContent: 'center',
+    inputContainer: {
+        paddingTop: .05*vh,
         alignItems: "center",
-        paddingTop: 20,
-    },
-    input_fields: {
-        paddingTop: 50,
-        justifyContent: 'center',
-        alignItems: "center",
-        gap: 40,
+        gap: 0.025*vh,
     },
 
-    button_type1: { // login button
+    createAccountBtn: {
         backgroundColor: '#45d9a8',
         width: '80%',
-
         borderColor: '#57ab8f',
         borderWidth: 1,
         borderRadius: 5,
-        height: 40,
-
-        paddingHorizontal: 10,
         paddingVertical: 10,
-
-        justifyContent: 'center',
-        alignItems: "center",
-    },
-
-    button_type2: { // sign up button
-        backgroundColor: '#5ba1e3',
-        width: '80%',
-
-        borderColor: '#57ab8f',
-        borderWidth: 1,
-        borderRadius: 5,
-        height: 40,
-
-        paddingHorizontal: 10,
-        paddingVertical: 10,
-
-        justifyContent: 'center',
-        alignItems: "center",
-    },
-
-    button_type3: { // forgot password button
-        width: '80%',
-        height: 40,
-
-        paddingHorizontal: 10,
-        paddingVertical: 10,
-
-        justifyContent: 'center',
         alignItems: "center",
     },
 });
+
+export default SignUpScreen;

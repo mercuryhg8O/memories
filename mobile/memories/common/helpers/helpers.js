@@ -4,14 +4,18 @@ import axios from 'axios';
 const MockResponse = {
   "memories": [
     {
-      "title": "Place 1",
+      "id": 1,
+      "title": "Memory 1",
       "latitude": 42.72975825494276,
-      "longitude": -73.67830944235584
+      "longitude": -73.67830944235584,
+      "description": "This is description 1",
     },
     {
-      "title": "Union",
+      "id": 2,
+      "title": "Memory 2",
       "latitude": 42.72993893531263,
-      "longitude": -73.676754972665
+      "longitude": -73.676754972665,
+      "description": "This is description 1",
     },
   ]
 }

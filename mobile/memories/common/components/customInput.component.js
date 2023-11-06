@@ -1,16 +1,19 @@
 import React from 'react';
-import {View, Text, TextInput, StyleSheet} from 'react-native';
+import {View, Text, TextInput, StyleSheet, KeyboardAvoidingView} from 'react-native';
 
 const CustomInput = ({value, setValue, placeholder, isMuliLine}) => {
     return (
-        <View style={isMuliLine ? styles.multiline_container: styles.singleline_container}>
+        <KeyboardAvoidingView 
+            style={isMuliLine ? styles.multiline_container: styles.singleline_container}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            >
             <TextInput 
                 value={value}
                 onChangeText={setValue}
                 placeholder={placeholder} 
-                style={styles.input} 
+                style={styles.input}
                 />
-        </View>
+        </KeyboardAvoidingView>
     );
 };
 
