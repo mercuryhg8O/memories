@@ -1,29 +1,26 @@
-import mongoose from 'mongoose';
-const { Schema } = mongoose;
+const mongoose = require('mongoose');
 
-@Schema()
-export class Memory {
-    @Prop()
-    bodyText;
 
-    @Prop()
-    account;
+const Memory = new mongoose.Schema({
 
-    @Prop()
-    tags;
+    bodyText :{
+        type : String,
+        required : true
+    },
+    accountId:{
+        type: Number,
+        required : true
+    },
+    tags: [String],
+    likes: [Number],
+    Location: String,
+    Photos: String,
+    memoryId: String,
+    Visibility: String
 
-    @Prop()
-    likes;
-    
-    @Prop()
-    Location;
+});
 
-    @Prop()
-    Photos;
+const MemorySchema = mongoose.model('memories', Memory, 'memories');
+module.exports = MemorySchema;
 
-    @Prop()
-    memoryId;
 
-    @Prop()
-    Visibility;    
-}

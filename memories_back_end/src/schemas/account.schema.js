@@ -1,28 +1,25 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import * as mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
-@Schema()
-export class Account {
-    @Prop()
-    email;
+const Account = new mongoose.Schema({
+    email: {
+        type: String,
+        unique : true,
+        required : true
+        },
+    verification : Boolean,
+    accountId : {
+        type: Number,
+        unique: true,
+        required: true
+        },
 
-    @Prop()
-    verification;
+    username : String,
+    bio : String,
+    password : String,
+    profilepic : String,
+    label : String
+});
 
-    @Prop()
-    accountId;
+const AccountSchema = mongoose.model('accounts', Account, 'accounts');
 
-    @Prop()
-    username;
-
-    @Prop()
-    password;
-
-    @Prop()
-    profilepic;
-
-    @Prop()
-    label;
-}
-
-export const AccountSchema = SchemaFactory.createForClass(Account);
+module.exports = AccountSchema;
