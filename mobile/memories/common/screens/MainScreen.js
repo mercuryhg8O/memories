@@ -34,10 +34,10 @@ function MainScreen({ navigation }) {
             {/* Buttons for interim demo only */}
             <View style={{backgroundColor: 'black', width: '100%', flexDirection: 'row'}}>
                 {/* need to hardcode real user ids from the database once we have those */}
-                <TestingProfileButton navigation={navigation} userId={4321}/>
                 <TestingProfileButton navigation={navigation} userId={1234}/>
-                <TestingProfileButton navigation={navigation} userId={1234}/>
-                <TestingProfileButton navigation={navigation} userId={1234}/>
+                <TestingProfileButton navigation={navigation} userId={2341}/>
+                <TestingProfileButton navigation={navigation} userId={3412}/>
+                <TestingProfileButton navigation={navigation} userId={4123}/>
                 <Text style={{color: 'white', top: 10, left: 10}}>For demo only</Text>
             </View>
             <Map memory_locations={memory_locations} />

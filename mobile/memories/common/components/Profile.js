@@ -6,8 +6,8 @@ import axios from 'axios';
 const Profile = () => {
 
     {/* Once the  */}
-    const [userName, SetUserName] = useState('');
-    const [userBio, SetuserBio] = useState('');
+    const [userName, setUserName] = useState('');
+    const [userBio, setUserBio] = useState('');
     const { displayUser, targetUserUID, endpointURL } = useContext(CurrentUserContext);
     useEffect(()=>{}, [userName]);
 
@@ -23,8 +23,8 @@ const Profile = () => {
 
         const userName = response.data.username;
         const userBio = response.data.bio;
-        SetUserName(userName);
-        SetuserBio(userBio);
+        setUserName(userName);
+        setUserBio(userBio);
     }
 
 

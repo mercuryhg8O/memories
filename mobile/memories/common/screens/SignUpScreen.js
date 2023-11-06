@@ -58,18 +58,6 @@ const SignUpScreen = ({ navigation }) => {
 
     const [userIcon, setUserIcon] = useState('https://cdn-icons-png.flaticon.com/512/3177/3177440.png');
     
-    // const ImagePicker = async () => {
-    //     let options = {
-    //         storageOptions: {
-    //             path: "image"
-    //         }
-    //     }
-
-    //     launchImageLibrary(options, (response)=>{
-    //         setUserIcon(response.assets[0].uri);
-    //     }).then(console.log('it was a dark and stormy night')).catch(alert('u suck'));
-    // }
-
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
@@ -112,7 +100,7 @@ const SignUpScreen = ({ navigation }) => {
                     />
                 <CustomInput
                     placeholder={'[optional]Bio  '}
-                    setValue={SetPassword}
+                    setValue={setBio}
                     isMuliLine={true}
                     />
                 <CustomButton
