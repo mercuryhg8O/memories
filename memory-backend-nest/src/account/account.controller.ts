@@ -31,6 +31,12 @@ import {
       return user;
     }
 
+    @Get(':id')
+    async findOneById(id) {
+      const user = await this._accountService.findOneById(id);
+      return user;
+    }
+
     @Get()
     async createAccount(username, password, email, bio){
       const creation = await this._accountService.createAccount(username,password,email,bio);
