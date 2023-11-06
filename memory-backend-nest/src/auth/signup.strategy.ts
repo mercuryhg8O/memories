@@ -18,12 +18,12 @@ export class SignupStrategy extends PassportStrategy(Strategy, 'signup') {
     });
   }
 
-  async validate(req, _username, _password, _email, _bio) {
+  async validate(req, username, password, email, bio) {
     const signupDto = new SignupDto();
-    signupDto.username = req.body.username;
-    signupDto.email = req.body.email;
-    signupDto.password = req.body.password;
-    signupDto.bio = req.body.bio;
+    signupDto.username = req.params[username];
+    signupDto.email = req.params[email];
+    signupDto.password = req.params[password];
+    signupDto.bio = req.params[bio]
     const errors = await validate(signupDto);
     if (errors.length > 0) {
       throw new BadRequestException();

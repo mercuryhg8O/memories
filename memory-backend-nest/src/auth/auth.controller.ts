@@ -8,6 +8,7 @@ import {
     Delete,
     UseGuards,
     Request,
+    Query,
     Res,
   } from '@nestjs/common';
   import { AuthService } from './auth.service';
@@ -26,9 +27,8 @@ import {
     }
   
     //@UseGuards(SignupAuthGuard)
-    @Get('signup')
-    async signup(req) {
-      return req;
+    @Get('createaccount')
+    async signup(@Query() query) {
+      return query;
     }
   }
-  
