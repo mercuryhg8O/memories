@@ -22,11 +22,11 @@ The Memories application relies on the following:
 
 1. Navigate to backend directory
    ```sh
-    cd memories_back_end
+    cd memory-backend-nest
     ```
 2. To start the node server
     ```sh
-    node app.js
+    nest start
     ```
 3. Navigate to http://localhost:3000/URI for testing
 
