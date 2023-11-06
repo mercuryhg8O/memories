@@ -17,6 +17,13 @@ The Memories application relies on the following:
 |                               | CSS                               |
 |                               | HTML5                             |
 
+### Prerequisites
+
+To avoid issues with cloning and testing the repository, ensure the following technologies are up to date:
+1. npm
+    ```sh
+    npm install npm@latest -g
+    ```
 
 ### Get Started (Back-End)
 
@@ -44,14 +51,6 @@ The Memories application relies on the following:
 3. Scan QR Code on phone
 
 
-### Prerequisites
-
-To avoid issues with cloning and testing the repository, ensure the following technologies are up to date:
-1. npm
-    ```sh
-    npm install npm@latest -g
-    ```
-
 ### Installation
 
 _The following steps allow a new developer to install the main repository and begin testing locally._
@@ -64,7 +63,23 @@ _The following steps allow a new developer to install the main repository and be
    ```sh
    npm install
    ```
-   
+3. Install yarn package manager
+    ```
+    npm install -g yarn
+    ```
+4. Install react native maps package:
+   ```
+    npx expo install react-native-maps
+    ```
+5. Install navigator package(s):
+    ```
+    yarn add @react-navigation/native
+    yarn add @react-navigation/native-stack
+    yarn add axios
+    npx expo install react-native-screens react-native-safe-area-context
+    ```
+
+### Note: alternatively can use yarn instead of npx
 
 
 <h2> Project Description </h2> <br>
