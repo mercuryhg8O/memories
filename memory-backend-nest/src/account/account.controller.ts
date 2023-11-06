@@ -43,5 +43,4 @@ import {
       const user = await this._accountService.findOneById(split[split.length() - 1]);
       return user;
     }
-
   }
