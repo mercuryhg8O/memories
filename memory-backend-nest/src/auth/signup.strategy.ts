@@ -36,8 +36,8 @@ export class SignupStrategy extends PassportStrategy(Strategy, 'signup') {
       signupDto.label
     );
     if (!user) {
-      throw new UnauthorizedException();
+      return false;
     }
-    return user;
+    return true;
   }
 }

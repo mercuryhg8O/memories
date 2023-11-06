@@ -14,6 +14,7 @@ export class MeService {
     return {
       username: me.username,
       accountId: me.accountId,
+      bio: me.bio
     };
   }
 }

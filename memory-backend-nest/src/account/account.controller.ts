@@ -31,6 +31,12 @@ import {
       return user;
     }
 
+    @Get()
+    async createAccount(username, password, email, bio){
+      const creation = await this._accountService.createAccount(username,password,email,bio);
+      return creation;
+    }
+
     @Get('user')
     async findOneById(ID){
       const split = ID.split('=')
@@ -39,4 +45,3 @@ import {
     }
 
   }
-  
