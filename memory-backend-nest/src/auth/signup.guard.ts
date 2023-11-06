@@ -7,6 +7,6 @@ export class SignupAuthGuard extends AuthGuard('signup') {
     const result = (await super.canActivate(context));
     const request = context.switchToHttp().getRequest();
     await super.logIn(request);
-    return result;
+    return result as boolean;
   }
 }
