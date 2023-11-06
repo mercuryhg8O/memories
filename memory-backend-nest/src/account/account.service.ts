@@ -24,7 +24,7 @@ export class AccountService {
     return user;
   }
 
-  async createAccount(username, password, email, label) {
+  async createAccount(username, password, email, bio) {
     const user = await this.findOneByUsername(username);
     if (user) {
       throw new BadRequestException();
@@ -33,7 +33,7 @@ export class AccountService {
       username: username,
       password: password,
       email: email,
-      label: label
+      bio: bio
     });
     await createdUser.save();
     return createdUser;

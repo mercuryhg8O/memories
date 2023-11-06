@@ -11,11 +11,12 @@ const Account = new mongoose.Schema({
         },
     verification : Boolean,
     accountId : {
-        type:Number,
+        type: Number,
         unique: true
         },
 
     username : String,
+    bio : String,
     password : String,
     profilepic : String,
     label : String
