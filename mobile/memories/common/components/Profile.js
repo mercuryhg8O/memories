@@ -32,11 +32,11 @@ const Profile = () => {
     //  T -> show user modal
     //  F -> return empty view
     return (displayUser ?
-        <SafeAreaView style={styles.modal}>
+        <SafeAreaView style={styles.modal} accessibilityLabel='User profile' accessible={true}>
             <View style={styles.content}>
                 <View style={styles.iconnname}>
                     <Image style={styles.icon} />
-                    <Text style={styles.name}>{targetUserUID + userName}</Text>
+                    <Text style={styles.name}>{userName + "#" + targetUserUID}</Text>
                 </View>
                 <SafeAreaView style={styles.bioview}>
                     <Text>{userBio}</Text>

@@ -1,28 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { AccountService } from '../account/account.service';
-import * as bcrypt from 'bcrypt';
+//import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
   constructor(private accountService: AccountService) {}
 
-  async validateUser(username, password) {
-    const user = await this.accountService.findOneByUsername(username);
+  async validateUser(email, password) {
+    const user = await this.accountService.findOneByEmail(email);
     if (user) {
-      const result = await bcrypt.compare(password, user.password);
-      if (result) {
-        return user;
+      console.log('User Exists');
+      if (password == user.password) {
+        return true;
       }
     }
-    return null;
+    return false;
   }
 
-  async createUser(username, email, password, label) {
+  async createUser(username, email, password, bio) {
     const user = await this.accountService.createAccount(
       username,
       email,
       password,
-      label
+      bio
     );
     return user;
   }

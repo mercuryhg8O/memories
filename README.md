@@ -24,7 +24,52 @@ To avoid issues with cloning and testing the repository, ensure the following te
     ```sh
     npm install npm@latest -g
     ```
+### Installation 
+_The following steps allow a new developer to install the main repository and begin testing locally._
+1. Clone the repo
+   ```sh
+   git clone https://github.com/mercuryhg31/memories.git
+   ```
+### Front-End
 
+2. Navigate to backend directory
+   ```sh
+    cd mobile/memories
+    ```
+3. Install NPM packages in the memories folder
+   ```sh
+   npm install
+   ```
+4. Install yarn package manager
+    ```
+    npm install -g yarn
+    ```
+5. Install react native maps package:
+   ```
+    npx expo install react-native-maps
+    ```
+6. Install navigator package(s):
+    ```
+    yarn add @react-navigation/native
+    yarn add @react-navigation/native-stack
+    yarn add axios
+    npx expo install react-native-screens react-native-safe-area-context
+    ```
+
+### Back-End
+2. Install NestJS
+   ```sh
+   npm install -g @nestjs/cli
+   ```
+3. Navigate to backend directory
+   ```sh
+    cd memory-backend-nest
+    ```
+4. Install NPM packages
+    ```sh
+   npm install
+   ```
+    
 ### Get Started (Back-End)
 
 1. Navigate to backend directory
@@ -51,33 +96,6 @@ To avoid issues with cloning and testing the repository, ensure the following te
 3. Scan QR Code on phone
 
 
-### Installation
-
-_The following steps allow a new developer to install the main repository and begin testing locally._
-
-1. Clone the repo
-   ```sh
-   git clone https://github.com/mercuryhg31/memories.git
-   ```
-2. Install NPM packages in the memories folder(Has to be done for both front-end and back-end separately)
-   ```sh
-   npm install
-   ```
-3. Install yarn package manager
-    ```
-    npm install -g yarn
-    ```
-4. Install react native maps package:
-   ```
-    npx expo install react-native-maps
-    ```
-5. Install navigator package(s):
-    ```
-    yarn add @react-navigation/native
-    yarn add @react-navigation/native-stack
-    yarn add axios
-    npx expo install react-native-screens react-native-safe-area-context
-    ```
 
 ### Note: alternatively can use yarn instead of npx
 

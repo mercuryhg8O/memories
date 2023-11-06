@@ -9,9 +9,7 @@ import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [UsersModule,
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '...\mobile\memories', 'client'),
-    }),
+    
     AuthModule
   ],
   controllers: [AppController],

@@ -65,15 +65,14 @@ const SignInScreen = ({ navigation }) => {
                         Memories
                     </Text>
                 </View>
-
             </View>
 
             <View /* Registration container */ style={styles.inputContainer}>
-                <CustomInput placeholder={'email'} setValue={setemail} />
-                <CustomInput placeholder={'password'} setValue={SetPassword} />
-                <CustomButton placeholder={'Forgot Password'}  onPress={() => AlertHelper('forgot password, not implemented yet')} text_type={{ color: '#858585' }} />
-                <CustomButton placeholder={'Login'} onPress={() => attemptLogin()} button_type={styles.loginBtn} />
-                <CustomButton placeholder={'Sign Up'} onPress={() => navigation.navigate('SignUp')} button_type={styles.signUpBtn} />
+                <CustomInput placeholder={'email'} setValue={setemail} label={'Email input field'} />
+                <CustomInput placeholder={'password'} setValue={SetPassword} label={'Password input field'} />
+                <CustomButton placeholder={'Forgot Password'}  onPress={() => AlertHelper('forgot password, not implemented yet')} text_type={{ color: '#858585' }} label={'Forgot password button'} />
+                <CustomButton placeholder={'Login'} onPress={() => attemptLogin()} button_type={styles.loginBtn} label={'Login button'} />
+                <CustomButton placeholder={'Sign Up'} onPress={() => navigation.navigate('SignUp')} button_type={styles.signUpBtn} label={'Sign up button'} />
             </View>
         </SafeAreaView>
         </ScrollView>

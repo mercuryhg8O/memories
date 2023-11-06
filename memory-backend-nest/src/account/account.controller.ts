@@ -8,10 +8,12 @@ import {
     Delete,
     UseGuards,
     Request,
+    Query,
   } from '@nestjs/common';
   import { AccountService } from './account.service';
   import { MeService } from './me.service'
-  
+
+
   @Controller('account')
   export class AccountController {
     constructor(private _accountService: AccountService, private meService: MeService ) {
@@ -24,17 +26,12 @@ import {
       return data;
     }
   
- //   @UseGuards(AuthenticatedGuard)
+    //@UseGuards(AuthenticatedGuard)
     @Get(':username')
     async findOneByUsername(username) {
       const user = await this._accountService.findOneByUsername(username);
       return user;
     }
 
-    @Get()
-    async createAccount(username, password, email, label){
-      const creation = await this._accountService.createAccount(username,password,email,label);
-      return creation;
-    }
+
   }
-  
