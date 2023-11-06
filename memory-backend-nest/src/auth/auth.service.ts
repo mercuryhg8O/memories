@@ -17,12 +17,12 @@ export class AuthService {
     return false;
   }
 
-  async createUser(username, email, password, label) {
+  async createUser(username, email, password, bio) {
     const user = await this.accountService.createAccount(
       username,
       email,
       password,
-      label
+      bio
     );
     return user;
   }

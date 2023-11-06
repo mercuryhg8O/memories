@@ -15,20 +15,20 @@ import {
   import { SignupAuthGuard } from './signup.guard';
   import { AuthenticatedGuard } from './authenticated.guard';
   
-  @Controller('auth')
+  @Controller()
   export class AuthController {
     constructor(private authService: AuthService) {}
   
-    @UseGuards(LoginAuthGuard)
-    @Post('login')
+    //@UseGuards(LoginAuthGuard)
+    @Get('login')
     async login(req) {
-      return req.user;
+      return req;
     }
   
-    @UseGuards(SignupAuthGuard)
-    @Post('signup')
+    //@UseGuards(SignupAuthGuard)
+    @Get('signup')
     async signup(req) {
-      return req.user;
+      return req;
     }
   }
   
