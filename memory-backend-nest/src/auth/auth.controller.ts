@@ -19,7 +19,7 @@ import {
   import { LoginStrategy } from './login.strategy';
   @Controller()
   export class AuthController {
-    constructor(private authService: AuthService) {}
+    constructor(private authService: AuthService, private accountService: AccountService) {}
   
     //@UseGuards(LoginAuthGuard)
     @Get('login')
@@ -35,5 +35,11 @@ import {
       const accountService = new AccountService();
       accountService.createAccount( query.username, query.password, query.email, query.bio);
       return query;
+    }
+
+    @Get('user')
+    async findOneById(@Query() query){
+      const user = await this.accountService.findOneByAccountID(query.userid as number);
+      return user;
     }
   }

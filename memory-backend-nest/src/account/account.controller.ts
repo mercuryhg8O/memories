@@ -14,7 +14,7 @@ import {
   import { MeService } from './me.service'
 
 
-  @Controller()
+  @Controller('account')
   export class AccountController {
     constructor(private _accountService: AccountService, private meService: MeService ) {
     }
@@ -33,15 +33,5 @@ import {
       return user;
     }
 
-    @Get()
-    async createAccount(username, password, email, bio){
-      const creation = await this._accountService.createAccount(username,password,email,bio);
-      return creation;
-    }
 
-    @Get('user')
-    async findOneById(@Query() query){
-      const user = await this._accountService.findOneByAccountID(query.userid as number);
-      return user;
-    }
   }
