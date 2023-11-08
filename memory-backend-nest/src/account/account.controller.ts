@@ -13,7 +13,6 @@ import {
   import { AccountService } from './account.service';
   import { MeService } from './me.service'
 
-
   @Controller('account')
   export class AccountController {
     constructor(private _accountService: AccountService, private meService: MeService ) {
@@ -32,6 +31,4 @@ import {
       const user = await this._accountService.findOneByUsername(username);
       return user;
     }
-
-
   }

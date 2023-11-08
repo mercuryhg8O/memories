@@ -1,29 +1,47 @@
-import mongoose from 'mongoose';
-const { Schema } = mongoose;
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
 
-@Schema()
-export class Memory {
-    @Prop()
-    bodyText;
+const memorySchema = new Schema({
+    bodyText: {
+        type: String,
+        minLength: 3,
+        maxLength: 1000,
+        required: true,
+    },
 
-    @Prop()
-    account;
-
-    @Prop()
-    tags;
-
-    @Prop()
-    likes;
+    account: {
+        type: mongoose.Schema.Types.ObjectId
+    },
     
-    @Prop()
-    Location;
+    tags: {
+        type: [String],
+    },
 
-    @Prop()
-    Photos;
+    likes: {
+        type: Number,
+        default: 0,
+    }, 
 
-    @Prop()
-    memoryId;
+    location: {
+        latitude: Number,
+        longitude: Number,
+        required: true,
+    },
 
-    @Prop()
-    Visibility;    
-}
+    photo: {
+
+    }, 
+
+    visibility: {
+        type: String,
+        enum: {
+            values: ['Private', 'Public', 'Mutuals'],
+            message: '{Value} not supported'
+        },
+        required: true,
+    }
+})
+
+const MemorySchema = SchemaFactory.createForClass(Memory);
+
+export { MemorySchema };
