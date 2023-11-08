@@ -19,8 +19,18 @@ router.post('/', (req, res, next) => {
     .then(result => {
         console.log(result);
         res.status(201).json({
-            message: 'Handling POST requests to /account',
-            createdAccount: result
+            message: 'Created account successfully',
+            createdAccount: {
+                _id: result._id,
+                email: result.email,
+                username: result.username,
+                label: result.label,
+                bio: result.bio,
+                request: {
+                    type: 'GET',
+                    url: 'http://localhost:3000/account/' + result._id
+                }
+            }
         })
     })
     .catch(err => {
@@ -34,13 +44,25 @@ router.post('/', (req, res, next) => {
 
 router.get('/', (req, res, next) => {
     Account.find()
-        .select('')
+        .select('_id email username label bio')
         .exec()
         .then(docs => {
             const response = {
                 count: docs.length,
-                accounts: 
-            }
+                accounts: docs.map(doc => {
+                    return {
+                        _id: doc._id,
+                        email: doc.email,
+                        username: doc.username,
+                        label: doc.label,
+                        bio: doc.bio,
+                        request: {
+                            type: 'GET',
+                            url: 'http://localhost:3000/account' + doc._id
+                        }
+                    }
+                })
+            };
             if (docs.length >= 0) {
                 res.status(200).json(docs);
             } else {
@@ -84,7 +106,6 @@ router.get('/:username', (req, res, next) => {
         ccount.findById(id)
         .exec()
         .then(doc => {
-            console.log("From database", doc);
             res.status(200).json({ doc });
         })
         .catch(err => {
@@ -103,7 +124,14 @@ router.patch('/:accountID', (req, res, next) => {
         .exec()
         .then(result => {
             console.log(result);
-            res.status(200).json(result);
+            res.status(200).json({
+                message: 'Account Updated',
+                request: {
+                    type: 'GET',
+                    url: 'http://localhost:3000/account/' + result._id
+                } 
+
+            });
         })
         .catch(err => {
             console.log(err);
@@ -118,7 +146,9 @@ router.delete('/:accountID', (req, res, next) => {
     Account.deleteOne({ _id: id })
         .exec()
         .then(result => {
-            res.status(200).json(result);
+            res.status(200).json({
+                message: 'Account Deleted',
+            });
         })
         .catch(err => {
             console.log(err);

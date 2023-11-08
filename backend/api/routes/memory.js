@@ -1,19 +1,29 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 
+const Memory = require('../models/memory')
 router.post('/', (req, res, next) => {
-    const memory = {
+    const memory = new Memory({
+        _id: new mongoose.Schema.ObjectId,
+        account: req.account,
         bodyText: req.body.bodyText,
         tags: req.body.tags,
         visibility: req.body.visibility,
         likes: 0,
         // location:,
-        // account:,
-    }
-    res.status(201).json({
-        message: 'Handling POST requests to /memory',
-        createdMemory: memory
     })
+    memory.save().exec().then(result => {
+        console.log(result);
+        res.status(201).json(result);
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    })
+    
 });
 router.get('/', (req, res, next) => {
     res.status(201).json({

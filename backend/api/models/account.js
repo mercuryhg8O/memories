@@ -7,22 +7,31 @@ const label = Object.freeze({
 });
 
 const accountSchema = mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
-    email: {String, required: true},
-    username: {String, required: true},
-    password: {String, required: true},
-    label: {
-      type: String,
-      enum: Object.values(label),
-      required: true
-    },
-    bio: String,
-    profilePic: String,
-    verified: Boolean,
+  _id: mongoose.Schema.Types.ObjectId,
+  email: {
+    type: String,
+    required: true
+  },
+  username: {
+    type: String,
+    required: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  label: {
+    type: String,
+    enum: Object.values(label),
+    required: true
+  },
+  bio: String,
+  profilePic: String,
+  verified: Boolean,
 });
 
 Object.assign(accountSchema.statics, {
   label,
 });
 
-module.exports = mongoose.model('Account', accountSchema);
+module.exports = mongoose.model('account', accountSchema);
