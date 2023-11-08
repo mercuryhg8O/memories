@@ -2,41 +2,46 @@ import React, { Component, useState, useEffect, useContext } from 'react';
 import { Text, View, StyleSheet, Image, SafeAreaView, Dimensions } from 'react-native';
 import { CurrentUserContext } from '../context/contexts';
 import axios from 'axios';
+import {getUserData} from '../helpers/requestHelpers';
 
 const Profile = () => {
 
     {/* Once the  */}
     const [userName, setUserName] = useState('');
     const [userBio, setUserBio] = useState('');
-    const { displayUser, targetUserUID, endpointURL } = useContext(CurrentUserContext);
-    useEffect(()=>{}, [userName]);
+    const { displayUser, targetUserUID } = useContext(CurrentUserContext);
 
-    // once a new userUID is selected, then a request should be made to gather data about the user
-    useEffect(()=>{}, [targetUserUID]);
-    const requestUserData = async () => {
-        // creates a request for the user data once 
-        const query_string = `userdetails/?username=${targetUserUID}`
-        const response = await axios.get(endpointURL + query_string).catch((err) => {
-            console.log('error during retrieval of when getting response: ', err);
-            return true;
-        });
+    // Once the targetUserUID gets updated, a request to get the profile of the targetUserUID is created
+    // and the username and bio information gets updated.
+    useEffect(()=>{
+        const getUserProfileData = async () => {
+            const {userid, username, bio} = await getUserData(targetUserUID);
 
-        const userName = response.data.username;
-        const userBio = response.data.bio;
-        setUserName(userName);
-        setUserBio(userBio);
-    }
+            if(!userid){
+                console.log('error parsing response from request for profile with uid: ' + targetUserUID);
+            }else{
+                // response was valid, so parse and save the output
+                console.log(userid);
+                console.log(username);
+                console.log(bio);
+                setUserName(username);
+                setUserBio(bio);
+            }
+        }
+        getUserProfileData();
+    }, [targetUserUID]);
+
 
 
     // ternary expression:
-    //  T -> show user modal
+    //  T -> show profile modal
     //  F -> return empty view
     return (displayUser ?
-        <SafeAreaView style={styles.modal}>
+        <SafeAreaView style={styles.modal} accessibilityLabel='User profile' accessible={true}>
             <View style={styles.content}>
                 <View style={styles.iconnname}>
                     <Image style={styles.icon} />
-                    <Text style={styles.name}>{targetUserUID + userName}</Text>
+                    <Text style={styles.name}>{userName + '#' + targetUserUID}</Text>
                 </View>
                 <SafeAreaView style={styles.bioview}>
                     <Text>{userBio}</Text>
