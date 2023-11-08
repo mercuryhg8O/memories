@@ -103,7 +103,7 @@ router.get('/:accountID', (req, res, next) => {
 router.get('/:username', (req, res, next) => {
     const username = req.params.username;
     Account.findByUsername(username)
-        ccount.findById(id)
+        count.findById(id)
         .exec()
         .then(doc => {
             res.status(200).json({ doc });
