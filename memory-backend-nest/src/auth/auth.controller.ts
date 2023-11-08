@@ -39,7 +39,7 @@ import {
 
     @Get('user')
     async findOneById(@Query() query){
-      const user = await this.accountService.findOneByAccountID(query.userid as number);
+      const user = await this.accountService.findOneByAccountID(query.accountId as number);
       return user;
     }
   }
