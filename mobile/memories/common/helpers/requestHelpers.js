@@ -22,13 +22,23 @@ const isValidUser = async (email, password) => {
 }
 
 const createUserSuccessful = async (username, email, password, bio) => {
-  const query_string = `/api/createaccount?email=${email}&password=${password}&username=${username}&bio=${bio}`
+  const query_string = '/api/createaccount'
+  const query_string1 = `/api/createaccount?email=${email}&password=${password}&username=${username}&bio=${bio}`
   const request_address = endpointURL + query_string
   console.log('request made to: ' + request_address)
   
-  const response = await axios.get(request_address).catch((err) => {
-    // console.log('error during retrieval of when getting response: ', err);
-    return false;
+  // const response = await axios.get(request_address).catch((err) => {
+  //   // console.log('error during retrieval of when getting response: ', err);
+  //   return false;
+  // });
+
+  const response = await axios.post(request_address,{
+    username: username,
+    email: email,
+    password: password,
+    bio: bio,
+  }).catch((err) => {
+    console.log('error during retrieval of when getting response: ', err);
   });
 
   if(response && response.data.isvaliduser === 'true'){
@@ -38,6 +48,29 @@ const createUserSuccessful = async (username, email, password, bio) => {
   return true;
 }
 
-export {isValidUser, createUserSuccessful};
+
+
+const getUserData = async (userid) => {
+  const query_string = `/api/userid?userid=${userid}`
+  const request_address = endpointURL + query_string
+  console.log('request made to: ' + request_address)
+
+  const response = await axios.get(request_address).catch((err) => {
+    console.log('error during retrieval response: ', err);
+    return false;
+  });
+
+  let username = 'a';
+  let bio = 'a';
+
+  if(response){
+    username = response.data.username;
+    bio = response.data.bio;
+  }
+  
+  return { userid, username, bio };
+}
+
+export {isValidUser, createUserSuccessful, getUserData};
 
 export default isValidUser;
