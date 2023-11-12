@@ -1,5 +1,5 @@
-//import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-//import { HydratedDocument } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
 import * as mongoose from 'mongoose';
 
 //export type AccountDocument = HydratedDocument<Account>;
@@ -11,17 +11,18 @@ const Account = new mongoose.Schema({
         },
     verification : Boolean,
     accountId : {
-        type:Number,
+        type: Number,
         unique: true
         },
 
     username : String,
+    bio : String,
     password : String,
     profilepic : String,
     label : String
 })
 
-export const AccountModel = mongoose.model('accounts', Account);
+export const AccountModel = mongoose.model('accounts', Account, 'accounts');
 
 
 
@@ -44,6 +45,9 @@ export class Account {
 
     @Prop()
     profilepic : string;
+
+    @Prop()
+    bio: string;
 
     @Prop()
     label : string;

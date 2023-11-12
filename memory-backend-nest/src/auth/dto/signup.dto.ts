@@ -11,6 +11,6 @@ export class SignupDto {
   password;
 
   @Length(3, 20)
-  label;
+  bio;
 }
 

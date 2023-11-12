@@ -1,11 +1,12 @@
 import React from 'react';
 import {View, Text, TextInput, StyleSheet, KeyboardAvoidingView} from 'react-native';
 
-const CustomInput = ({value, setValue, placeholder, isMuliLine}) => {
+const CustomInput = ({value, setValue, placeholder, isMuliLine, label}) => {
     return (
         <KeyboardAvoidingView 
             style={isMuliLine ? styles.multiline_container: styles.singleline_container}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            accessibilityLabel={label}
             >
             <TextInput 
                 value={value}
