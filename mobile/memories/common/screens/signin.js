@@ -5,13 +5,18 @@ import { StyleSheet, View, Text, Button, Pressable } from 'react-native';
 export default function Signin() {
     return (
         <View style = {styles.container}>
-            <Text>Welcome to</Text>
-            <Text > Mini Memory logo</Text>
-            <Text> Welcome to the Memories App! 
+          <View style = {styles.logotitle}>
+            <Text> Mini Memory logo</Text>
+          </View>
+          <View style = {styles.titleText}>
+            <Text style = {{fontWeight: 'bold',  fontSize: 25,}}> Welcome to the Memories App! 
                 Check your email for a verification. Once you've verified
                 your email you will have access to your account.
             </Text>
-            <Button title = "Continue"></Button>
+          </View>
+          <View style = {{paddingTop: 30}}>
+            <Button title = "Continue" color = "#9577CA"></Button>
+          </View>
         </View>
     )
 }
@@ -19,15 +24,15 @@ export default function Signin() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#DEDEC5',
+    backgroundColor: '#c5effc',
     alignItems: 'center',
     justifyContent: 'center',
-    textAlign: 'center',
-    height: '100%'
+    textAlign: 'center'
   },
   titleText: {
-    height: '15%',
-    fontSize: 20,
-    fontWeight: 'bold'
-  }
+    height: 270,
+    width: 260,
+  },
+  logotitle: {
+  },
 }); 

@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import SignInScreen from '../screens/SignInScreen'; // may need to capitalize the import file here
+import SignInScreen from '../screens/signInScreen'; // may need to capitalize the import file here
 import SignUpScreen from '../screens/SignUpScreen';
 import MainScreen from '../screens/MainScreen';
 
