@@ -10,6 +10,7 @@ const memoryRoutes = require('./api/routes/memory');
 mongoose.connect('mongodb+srv://memory-db:' + process.env.MONGO_ATLAS_PW + '@memories.ykoxmda.mongodb.net/?retryWrites=true&w=majority');
 
 app.use(morgan('dev'));
+app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 

@@ -10,7 +10,9 @@ const accountSchema = mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
   email: {
     type: String,
-    required: true
+    required: true,
+    unique: true,
+    match: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
   },
   username: {
     type: String,
@@ -27,7 +29,10 @@ const accountSchema = mongoose.Schema({
   },
   bio: String,
   profilePic: String,
-  verified: Boolean,
+  verified: {
+    type: Boolean,
+    default: false
+  },
 });
 
 Object.assign(accountSchema.statics, {

@@ -9,7 +9,7 @@ const visibility = Object.freeze({
 
 const memorySchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    account: { type: mongoose.Schema.Types.ObjectId, ref: 'account' },
+    accountID: { type: mongoose.Schema.Types.ObjectId, ref: 'account' },
     bodyText: {
         type: String,
         minLength: 3,
@@ -17,23 +17,16 @@ const memorySchema = mongoose.Schema({
         required: true,
     },
     tags: [String],
-    likes: {
-        type: Number,
-        default: 0
-    },
+    likes: Number,
     location: {
         // required: true,
     },
-    images: {
-
-    },
+    // images: ,
     visibility: {
-        label: {
-            type: String,
-            enum: Object.values(visibility),
-            required: true
-        },
-    }
+        type: String,
+        enum: Object.values(visibility),
+        required: true
+    },
 })
 
 module.exports = mongoose.model('memory', memorySchema);
