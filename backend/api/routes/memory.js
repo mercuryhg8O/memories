@@ -178,6 +178,69 @@ router.patch('/:memoryID/unlike', checkAuth, (res, req, next) => {
         })
 })
 
+// FINDING MEMORIES THAT ARE PUBLIC
+router.get('/public', (res, req, next) => {
+    Memory.find()
+    .select('_id')
+    .where('visibility.type').equals('Public')
+    .exec()
+    .then(docs => {
+        res.status(200).json({
+            count: docs.length,
+            memory: docs.map(doc => {
+                return {
+                    id: doc._id,
+                }
+            }),
+            request: {
+                type: "GET",
+                url: 'http://localhost:3000/memory/' + doc._id
+            }
+        });
+    })
+    .catch(err => {
+        res.status(500).json({
+            error: err
+        });
+    });;
+})
+
+// FINDING MEMORIES FOR A SPECIFIC USER
+// based on the specific user requesting, finding the posts for that user.
+// if the two users are mutuals, they can view all memories besides private. if not, they can just view public memories
+router.get('/:accountID', (res, req, next) => {
+    const id = req.params.accountID;
+    Memory.find()
+        .select('_id')
+        .where('accountID').equals(id)
+        .exec()
+        .then(docs => {
+            res.status(200).json({
+                count: docs.length,
+                memory: docs.map(doc => {
+                    return {
+                        id: doc._id,
+                        account: doc.accountID,
+                        tags: doc.tags,
+                        images: doc.images,
+                        likes: doc.likes,
+                        visibility: doc.visibility
+                    }
+                }),
+                request: {
+                    type: "GET",
+                    url: 'http://localhost:3000/memory/' + doc._id
+                }
+            });
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err
+            });
+        });
+})
+
+
 router.delete('/:memoryID', checkAuth, (res, req, next) => {
     const id = req.params.memoryID;
     Memory.deleteOne({ _id: id })
