@@ -42,7 +42,6 @@ const getUserData = async (userid) => {
   return { userid, username, bio };
 }
 
-export {isValidUser, createUserSuccessful, getUserData};
 
 const createUserSuccessful = async (username, email, password, bio) => {
   const query_string = `/api/createaccount?email=${email}&password=${password}&username=${username}&bio=${bio}`
@@ -61,6 +60,4 @@ const createUserSuccessful = async (username, email, password, bio) => {
   return true;
 }
 
-export {isValidUser, createUserSuccessful};
-
-export default isValidUser;
+export {isValidUser, createUserSuccessful, getUserData};

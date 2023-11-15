@@ -5,9 +5,7 @@ import { StyleSheet, View, Text, Button, TouchableOpacity } from 'react-native';
 import { ParseMemoriesDetails } from '../helpers/helpers';
 import { StatusBar } from 'expo-status-bar';
 import SearchButton from '../components/SearchButton.js';
-import TestingProfileButton from '../components/TestingProfileButton.js';
 import Map from '../components/Map';
-import Search from '../components/Search';
 import Profile from '../components/Profile';
 import { CurrentUserContext } from '../context/contexts';
 
@@ -16,6 +14,10 @@ import { CurrentUserContext } from '../context/contexts';
 function MainScreen({ navigation }) {
 
     const { displayUser, setDisplayUser } = useContext(CurrentUserContext);
+
+    // const map = React.createRef();
+
+    // map.current.goTo(12, 41);
 
     useEffect(() => {
         const { memories, error } = ParseMemoriesDetails();
@@ -32,15 +34,17 @@ function MainScreen({ navigation }) {
         <View style={styles.container}>
             <StatusBar style="auto" />
             {/* Buttons for interim demo only */}
-            <View style={{backgroundColor: 'black', width: '100%', flexDirection: 'row'}}>
-                {/* need to hardcode real user ids from the database once we have those */}
+            {/* <View style={{backgroundColor: 'black', width: '100%', flexDirection: 'row'}}>
+                need to hardcode real user ids from the database once we have those
                 <TestingProfileButton navigation={navigation} userId={1234}/>
                 <TestingProfileButton navigation={navigation} userId={2341}/>
                 <TestingProfileButton navigation={navigation} userId={3412}/>
                 <TestingProfileButton navigation={navigation} userId={4123}/>
                 <Text style={{color: 'white', top: 10, left: 10}}>For demo only</Text>
-            </View>
-            <Map memory_locations={memory_locations} />
+             </View> */}
+            <Map 
+                // ref={map}
+                memory_locations={memory_locations} />
             <Profile/>
         </View>
     );
