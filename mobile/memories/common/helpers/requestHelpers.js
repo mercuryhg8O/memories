@@ -21,28 +21,6 @@ const isValidUser = async (email, password) => {
     return true;
 }
 
-const createUserSuccessful = async (username, email, password, bio) => {
-  const query_string = '/api/createaccount'
-  const query_string1 = `/api/createaccount?email=${email}&password=${password}&username=${username}&bio=${bio}`
-  const request_address = endpointURL + query_string
-  console.log('request made to: ' + request_address)
-  
-  const response = await axios.post(request_address,{
-    username: username,
-    email: email,
-    password: password,
-    bio: bio,
-  }).catch((err) => {
-    console.log('error during retrieval of when getting response: ', err);
-  });
-
-  if(response && response.data.isvaliduser === 'true'){
-      return true;
-  }
-  
-  return true;
-}
-
 
 
 const getUserData = async (userid) => {

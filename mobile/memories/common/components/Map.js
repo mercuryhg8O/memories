@@ -8,28 +8,58 @@ const Map = ({ memory_locations }) => {
     const mapView = React.createRef();
 
     // TODO get user's current location as initial region
-    const [location, setLocation] = useState(false);
+    const [location, setLocation] = useState(null);
+    const [region , setRegion] = useState({
+        latitude: 11,
+        longitude: 11,
+        latitudeDelta: 0.015,
+        longitudeDelta: 0.0121
+    });
 
-    useEffect(() => {
-        (async () => {
+    
+    // for matt:
+    // how do we get coordinate info from location object in location
+
+    (() => {
+        async () => {
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== 'granted') {
-                setErrorMsg('Permission to access location was denied');
+                // setErrorMsg('Permission to access location was denied');
+                console.warn("Permission not granted :middle-finger:");
                 return;
             }
-            let location = await Location.getCurrentPositionAsync({});
+            location = await Location.getCurrentPositionAsync({});
             setLocation(location);
-        })();
+        }
     }, []);
 
-    const initialRegion = () => {
-        const lat = location.coords.latitude;
-        return {
-            latitude: {},
-            longitude: -73.681227,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
+    useEffect(() => {
+        async () => {
+            setRegion({
+                latitude: location
+            })
         }
+    }, [location]);
+
+    // const initialRegion = () => {
+    //     if (location != false) {
+    //         const lat = location.coords.latitude;
+    //         const long = location.coords.longitude;
+    //         return {
+    //             latitude: lat,
+    //             longitude: long,
+    //             latitudeDelta: 0.0922,
+    //             longitudeDelta: 0.0421,
+    //         }
+    //     }
+    //     return null;
+    // }
+
+    const initialRegion = {
+        latitude: 11,
+        longitude: 11,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
     }
 
     /* don't worry about this if you see this no you don't
@@ -52,6 +82,9 @@ const Map = ({ memory_locations }) => {
         }
     }
     */
+
+
+
 
     const goTo = (lat, long, latDelta = 0, longDelta = 0) => {
         const region =  {

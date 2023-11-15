@@ -140,7 +140,7 @@ function SearchScreen({ route /* elephant */, navigation }) {
     return (
         // <SafeAreaView>
         //     <View style={{ height: '8%', width:'100%' }}>
-        //         <TextInput 
+        //         <TextInput
         //             // style={styles.input}
         //             placeholder="search person, place, or tag"
         //             onChangeText={newText => SetBuildingText(newText)}/>
