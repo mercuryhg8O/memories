@@ -87,9 +87,9 @@ router.get('/', (req, res, next) => {
                 }),
                 request: {
                     type: "GET",
-                    url: 'http://localhost:3000/memory/' + doc._id
+                    url: 'http://localhost/3000/memory/' + docs._id
                 }
-            });
+            })
         })
         .catch(err => {
             res.status(500).json({
@@ -98,29 +98,29 @@ router.get('/', (req, res, next) => {
         });
 });
 
-router.get('/:memoryID', (req, res, next) => {
-    const id = req.params.memoryID
-    Memory.findById(id)
-        .exec()
-        .then(memory => {
-            res.status(200).json({
-                memory: memory,
-                request: {
-                    type: 'GET',
-                    url: 'http://localhost:3000/memory'
-                }
-            })
-        })
-        .catch(err => {
-            res.status(500).json({
-                error: err
-            })
-        });
-    res.status(201).json({
-        message: 'Retrieved ID',
-        _id: id
-    });
-});
+// router.get('/:memoryID', (req, res, next) => {
+//     const id = req.params.memoryID
+//     Memory.findById(id)
+//         .exec()
+//         .then(memory => {
+//             res.status(200).json({
+//                 memory: memory,
+//                 request: {
+//                     type: 'GET',
+//                     url: 'http://localhost:3000/memory'
+//                 }
+//             })
+//         })
+//         .catch(err => {
+//             res.status(500).json({
+//                 error: err
+//             })
+//         });
+//     res.status(201).json({
+//         message: 'Retrieved ID',
+//         _id: id
+//     });
+// });
 
 router.patch('/:memoryID/like', checkAuth, (req, res, next) => {
     const id = req.params.memoryID;
@@ -178,41 +178,13 @@ router.patch('/:memoryID/unlike', checkAuth, (res, req, next) => {
         })
 })
 
-// FINDING MEMORIES THAT ARE PUBLIC
-router.get('/public', (res, req, next) => {
-    Memory.find()
-    .select('_id')
-    .where('visibility.type').equals('Public')
-    .exec()
-    .then(docs => {
-        res.status(200).json({
-            count: docs.length,
-            memory: docs.map(doc => {
-                return {
-                    id: doc._id,
-                }
-            }),
-            request: {
-                type: "GET",
-                url: 'http://localhost:3000/memory/' + doc._id
-            }
-        });
-    })
-    .catch(err => {
-        res.status(500).json({
-            error: err
-        });
-    });;
-})
 
-// FINDING MEMORIES FOR A SPECIFIC USER
-// based on the specific user requesting, finding the posts for that user.
-// if the two users are mutuals, they can view all memories besides private. if not, they can just view public memories
-router.get('/:accountID', (res, req, next) => {
-    const id = req.params.accountID;
+// FINDING MEMORIES THAT ARE PUBLIC
+router.get('/public', (req, res, next) => {
+    //console.log(visibility)
     Memory.find()
-        .select('_id')
-        .where('accountID').equals(id)
+        .where('visibility').equals("Public")
+        .select('_id accountID bodyText tags images likes visibility')
         .exec()
         .then(docs => {
             res.status(200).json({
@@ -229,9 +201,44 @@ router.get('/:accountID', (res, req, next) => {
                 }),
                 request: {
                     type: "GET",
-                    url: 'http://localhost:3000/memory/' + doc._id
+                    url: 'http://localhost/3000/memory/' + docs._id
                 }
+            })
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err
             });
+        });
+})
+
+// FINDING MEMORIES FOR A SPECIFIC USER
+// based on the specific user requesting, finding the posts for that user.
+// if the two users are mutuals, they can view all memories besides private. if not, they can just view public memories
+router.get('/:accountID', (res, req, next) => {
+    const id = req.params.accountID;
+    Memory.find()
+        .where('accountID').equals(id)
+        .select('_id accountID bodyText tags images likes visibility')
+        .exec()
+        .then(docs => {
+            res.status(200).json({
+                count: docs.length,
+                memory: docs.map(doc => {
+                    return {
+                        id: doc._id,
+                        account: doc.accountID,
+                        tags: doc.tags,
+                        images: doc.images,
+                        likes: doc.likes,
+                        visibility: doc.visibility
+                    }
+                }),
+                request: {
+                    type: "GET",
+                    url: 'http://localhost/3000/memory/' + docs._id
+                }
+            })
         })
         .catch(err => {
             res.status(500).json({
