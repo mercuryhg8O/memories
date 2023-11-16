@@ -22,8 +22,10 @@ router.post('/signup', (req, res, next) => {
                             error: err
                         });
                     } else {
+                        const id = newId();
                         const account = new Account({
                             _id: new mongoose.Types.ObjectId(),
+                            userid: id,
                             email: req.body.email,
                             password: hash,
                             username: req.body.username,
@@ -146,7 +148,7 @@ router.get('/', (req, res, next) => {
 
 router.get('/:accountID', (req, res, next) => {
     const id = req.params.accountID;
-    Account.findById(id)
+    Account.findOne({userid : id})
         .exec()
         .then(doc => {
             if (doc) {
@@ -171,7 +173,7 @@ router.patch('/:accountID', checkAuth, (req, res, next) => {
     for (const ops of req.body) {
         updateOps[ops.propName] = ops.value;
     }
-    Account.updateOne({ _id: id }, { $set: updateOps })
+    Account.updateOne({ userid : id }, { $set: updateOps })
         .exec()
         .then(result => {
             console.log(result);
@@ -179,7 +181,7 @@ router.patch('/:accountID', checkAuth, (req, res, next) => {
                 message: 'Account Updated',
                 request: {
                     type: 'GET',
-                    url: 'http://localhost:3000/account/' + result._id
+                    url: 'http://localhost:3000/account/' + result.userid
                 } 
             });
         })
@@ -193,7 +195,7 @@ router.patch('/:accountID', checkAuth, (req, res, next) => {
 
 router.delete('/:accountID', checkAuth, (req, res, next) => {
     const id = req.params.accountID;
-    Account.deleteOne({ _id: id })
+    Account.deleteOne({ userid: id })
         .exec()
         .then(result => {
             res.status(200).json({
@@ -207,5 +209,18 @@ router.delete('/:accountID', checkAuth, (req, res, next) => {
             });
         });
 })
+
+//Generate new 4-digit ID for user
+const newId = () => {
+    var id = 1;
+    while(Account.findOne({userid : id})){
+        id = id + 1;
+    }
+    id = '' + id;
+    while(id.length < 4){
+        id = '0' + id;
+    }
+    return id;  
+    }
 
 module.exports = router;

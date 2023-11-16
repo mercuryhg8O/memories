@@ -8,6 +8,11 @@ const label = Object.freeze({
 
 const accountSchema = mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
+  userid : {
+    type: String,
+    required : true,
+    unique : true
+  },
   email: {
     type: String,
     required: true,

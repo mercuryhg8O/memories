@@ -30,15 +30,27 @@ const upload = multer({
 const Memory = require('../models/memory');
 const Account = require('../models/account');
 const checkAuth = require('../auth/check-auth');
+const Tags = require('../models/tags');
 
 router.post('/', checkAuth, upload.single('images'), (req, res, next) => {
     console.log(req.file);
+    const tags = req.body.tags.split(',');
+    for(i=0; i<tags.length; i++){
+        Tags.findOne({tag : tags[i]}, (err, result) => {
+            if(err){
+             return;   
+            }
+            if(!result){
+                Tags.save({tag: tags[i]});
+            }
+        })
+    }
     const memory = new Memory({
         _id: new mongoose.Types.ObjectId(),
         accountID: req.body.accountID,
         bodyText: req.body.bodyText,
         visibility: req.body.visibility,
-        tags: req.body.tags,
+        tags: tags,
         likes: 0,
         // images: req.file.path
     });
@@ -194,5 +206,7 @@ router.delete('/:memoryID', checkAuth, (res, req, next) => {
         });
     });
 })
+
+
 
 module.exports = router;
