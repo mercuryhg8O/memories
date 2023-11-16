@@ -6,9 +6,10 @@ const router = express.Router();
 
 const Account = require('../models/account');
 const checkAuth = require('../auth/check-auth');
+const useridCount = require('../models/userid');
     
 router.post('/signup', (req, res, next) => {
-    Account.find({ email: req.body.email })
+    Account.find({ email: req.query.email })
         .exec()
         .then(account => {
             if (account.length >= 1) {
@@ -16,22 +17,21 @@ router.post('/signup', (req, res, next) => {
                     message: 'An account with this email already exist'
                 });
             } else {
-                bcrpyt.hash(req.body.password, 10, (err, hash) => {
+                bcrpyt.hash(req.query.password, 10, (err, hash) => {
                     if (err) {
                         return res.status(500).json({
                             error: err
                         });
                     } else {
-                        const id = newId();
                         const account = new Account({
                             _id: new mongoose.Types.ObjectId(),
-                            userid: id,
-                            email: req.body.email,
+                            userid: newid(),
+                            email: req.query.email,
                             password: hash,
-                            username: req.body.username,
-                            label: req.body.label,
-                            bio: req.body.bio,
-                            profilePic: req.body.profilePic,
+                            username: req.query.username,
+                            label: req.query.label,
+                            bio: req.query.bio,
+                            profilePic: req.query.profilePic,
                             verified: false
                         })
                         account.save()
@@ -71,7 +71,7 @@ router.post('/signup', (req, res, next) => {
 });
 
 router.post('/login', (req, res, next) => {
-    Account.find({ email: req.body.email })
+    Account.find({ email: req.query.email })
     .exec()
     .then(account => {
         if (account.length < 1) {
@@ -79,7 +79,7 @@ router.post('/login', (req, res, next) => {
                 message: "Email not found, user does not exist"
             });
         }
-        bcrpyt.compare(req.body.password, account[0].password, (err, result) => {
+        bcrpyt.compare(req.query.password, account[0].password, (err, result) => {
             if (err) {
                 return res.status(401).json({
                     message: "Auth failed"
@@ -210,17 +210,14 @@ router.delete('/:accountID', checkAuth, (req, res, next) => {
         });
 })
 
-//Generate new 4-digit ID for user
-const newId = () => {
-    var id = 1;
-    while(Account.findOne({userid : id})){
-        id = id + 1;
-    }
-    id = '' + id;
-    while(id.length < 4){
-        id = '0' + id;
-    }
-    return id;  
-    }
+//Generate new ID for user
+const newid = () =>{
+    const data = useridCount.findOne({name : 'Counter'});
+    const datavalue = data.current;
+    console.log(datavalue);
+    useridCount.updateOne({current: datavalue}, {$set : datavalue+1});
+    return datavalue;
+}
+
 
 module.exports = router;

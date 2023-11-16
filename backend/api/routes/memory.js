@@ -34,7 +34,7 @@ const Tags = require('../models/tags');
 
 router.post('/', checkAuth, upload.single('images'), (req, res, next) => {
     console.log(req.file);
-    const tags = req.body.tags.split(',');
+    const tags = req.query.tags.split(',');
     for(i=0; i<tags.length; i++){
         Tags.findOne({tag : tags[i]}, (err, result) => {
             if(err){
@@ -47,9 +47,9 @@ router.post('/', checkAuth, upload.single('images'), (req, res, next) => {
     }
     const memory = new Memory({
         _id: new mongoose.Types.ObjectId(),
-        accountID: req.body.accountID,
-        bodyText: req.body.bodyText,
-        visibility: req.body.visibility,
+        accountID: req.query.accountID,
+        bodyText: req.query.bodyText,
+        visibility: req.query.visibility,
         tags: tags,
         likes: 0,
         // images: req.file.path

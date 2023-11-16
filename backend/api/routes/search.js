@@ -7,17 +7,21 @@ const Account = require('../models/account');
 const Tags = require('../models/tags');
 
 router.get('/', (req,res,next) => {
-
+    const search = req.query.search;
+    searchUser(search);
+    searchPlace(search);
+    searchPlace(search);
 })
 
-const searchUser = () => {
-    
+const searchUser = (req) => {
+    return null;
 }
 
-const searchPlace = () => {
+const searchPlace = (req) => {
     //Needs some garbage data for location
+    return null;
 }
-const searchTags = () => {
-
+const searchTags = (req) => {
+    return null;
 }
 module.exports = router;
