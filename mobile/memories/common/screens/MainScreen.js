@@ -7,6 +7,7 @@ import { StatusBar } from 'expo-status-bar';
 import SearchButton from '../components/SearchButton.js';
 import Map from '../components/Map';
 import Profile from '../components/Profile';
+import MemoryModal from '../components/MemoryModal.js'
 import { CurrentUserContext } from '../context/contexts';
 import NavigationButton from '../components/NavigationButton.js'
 
@@ -52,6 +53,7 @@ function MainScreen({ navigation }) {
                 navigation={navigation}
                 memory_locations={memory_locations} />
             <Profile/>
+            <MemoryModal/>
         </View>
     );
 }

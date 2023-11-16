@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as Location from 'expo-location';
+import {getMemoryDetails} from './requestHelpers';
 
 
 const MockResponse = {
@@ -31,7 +32,7 @@ const ParseMemoriesDetails = () => {
 
   // Make Back-end call here to get Json, and parse similarly to the mock response.
   {/*Parse memory */ }
-  memories = MockResponse.memories.map((memory) => ({ latitude: memory.latitude, longitude: memory.longitude, title: memory.title }))
+  memories = MockResponse.memories.map((memory) => ({ latitude: memory.latitude, longitude: memory.longitude, title: memory.title, id: memory.id }))
   error = false;
 
   return { memories, error }
@@ -110,7 +111,27 @@ const setCurrentLocation = async (mapView) => {
 };
 
 
+const selectMemory = async (mapView, memoryId, setCurrentMemoryDetails, setDisplayMemoryDetails, lat=0, long=0)  => {
+  /* selectMemory does the following:
+  - move the mapview to the location of the memory
+  - set the current memory details (makes a call to request helper function to get data from backend)
+  */
 
-export { ParseMemoriesDetails, fetchData, goTo, setCurrentLocation };
+  // update the map to move to the memory location (optional)
+  goTo(mapView, lat, long, .01, .01);
+
+
+  // send request to backend (await on)
+  const created_memory = await getMemoryDetails(memoryId);
+
+  // update the memory currentMemoryDetails (used by the memory modal)
+  setCurrentMemoryDetails(created_memory);
+
+  // set displayMemoryDetails if able to retrieve all details
+  setDisplayMemoryDetails(true);
+}
+
+
+export { ParseMemoriesDetails, fetchData, goTo, setCurrentLocation, selectMemory };
 
 export default ParseMemoriesDetails;

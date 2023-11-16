@@ -3,6 +3,7 @@ import MapView, { Marker } from 'react-native-maps';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import * as Location from 'expo-location';
 import { CurrentUserContext } from '../context/contexts';
+import {selectMemory} from '../helpers/helpers';
 
 const Map = ({ memory_locations, navigation }) => {
 
@@ -19,7 +20,7 @@ const Map = ({ memory_locations, navigation }) => {
         longitudeDelta: 1.0421,
     }
     const [defaultRegion, setDefaultRegion] = useState(initialRegion);
-    const { mapView } = useContext(CurrentUserContext);
+    const { mapView, setCurrentMemoryDetails, setDisplayMemoryDetails } = useContext(CurrentUserContext);
 
     // if location services are enabled, set the default region to the current device's location.
 
@@ -41,6 +42,13 @@ const Map = ({ memory_locations, navigation }) => {
                     key={index}
                     coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
                     title={marker.title}
+                    onPress={()=> {
+                        selectMemory(mapView, 
+                            marker.id, 
+                            setCurrentMemoryDetails, 
+                            setDisplayMemoryDetails, 
+                            marker.latitude, 
+                            marker.longitude)}}
                 />))
             }
         </MapView>        
