@@ -3,7 +3,9 @@ import { View, Text, StyleSheet, Modal, TouchableOpacity, ScrollView, Image, Saf
 import { CurrentUserContext } from '../context/contexts';
 import { useContext } from 'react';
 import SearchButton from '../components/SearchButton';
-import { goTo } from '../helpers/helpers'
+import { goTo } from '../helpers/helpers';
+import {Picker} from '@react-native-picker/picker';
+import Dropdown from '../components/Dropdown';
 
 const userMockData = {
     users: [
@@ -63,16 +65,19 @@ const tagMockData = {
     ]
 }
 
-
+export const SearchCriteria = {
+    name: 'people by name',
+    id: 'people by id',
+    place: 'places',
+    tag: 'tags'
+}
 
 const SearchScreen = ({ navigation }) => {
 
     // CONTEXTS:
     const { mapView, setDisplayUser, setTargetUserUID } = useContext(CurrentUserContext);
 
-    // USE STATES
-    // searchCriteria should be username, userid, place, or tag (should set to universal ENUM)
-    const [searchCriteria, setSearchCriteria] = useState('username');
+    const [searchCriteria, setSearchCriteria] = useState(SearchCriteria.name);
     const [searchText, setSearchText] = useState('');
 
     // USE EFFECTS    
@@ -201,13 +206,13 @@ const SearchScreen = ({ navigation }) => {
     const DisplayBasedOnCriteria = () => {
 
         switch (searchCriteria) {
-            case 'userid':
+            case SearchCriteria.name:
                 return (<SearchUsersView/>);
-            case 'username':
+            case SearchCriteria.id:
                 return (<SearchUsersView/>);
-            case 'place':
+            case SearchCriteria.place:
                 return (<SearchPlacesView/>);
-            case 'tag':
+            case SearchCriteria.tag:
                 return (<SearchTagsView/>);
             default:
                 return (<SearchUsersView/>);
@@ -225,26 +230,29 @@ const SearchScreen = ({ navigation }) => {
                     placeholder='What are you looking for?'
                     onChangeText={newText => setSearchText(newText)}
                     onSubmitEditing={() => {
-                        // elephant
-                        // send request to search for stuff
+                        // TODO send request to search for stuff
                         console.log('HI!');
                     }} />
             </View>
-
-            {/* view to select what should be searched (e.g. user, place, tag*/}
-            <View style={{ height: '7%', width: '100%' }}>
-                    <Text>Search By: {searchCriteria}</Text>
-                    <ScrollView horizontal={true} >
-                        {/* Set all the following to change the search criteria 
-                        (use an on effect to create a request for back-end contents)
-                        Must be a valid criteria */}
-                        <SelectFocusButton criteriaName={'username'}/>
-                        <SelectFocusButton criteriaName={'userid'}/>
-                        <SelectFocusButton criteriaName={'place'}/>
-                        <SelectFocusButton criteriaName={'tag'}/>
-                    </ScrollView>
+            <View style={styles.criteria}>
+                <Text>Searching for </Text>
+                <Picker
+                    selectedValue={searchCriteria}
+                    onValueChange={(itemValue, itemIndex) => {
+                        setSearchCriteria(itemValue);
+                    }}
+                    style={styles.picker}
+                    itemStyle={styles.pickeritem}
+                >
+                    <Picker.Item label={SearchCriteria.name} value={SearchCriteria.name}/>
+                    <Picker.Item label={SearchCriteria.id} value={SearchCriteria.id}/>
+                    <Picker.Item label={SearchCriteria.place} value={SearchCriteria.place}/>
+                    <Picker.Item label={SearchCriteria.tag} value={SearchCriteria.tag}/>
+                </Picker>
             </View>
 
+            {/* elephant */}
+            {/* <Dropdown label="Select Item" data={data} onSelect={setSelected} /> */}
 
             <View style={styles.content}>
                 {/* set view to be conditional set by searchCriteria*/}
@@ -326,8 +334,15 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
-    criteria_view: {
-        height: '83%',
+    criteria: {
+        flexDirection: 'row'
+    },
+    picker: {
+        width: '70%',
+        
+    },
+    pickeritem: {
+        
     }
 
 });
