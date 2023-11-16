@@ -53,7 +53,15 @@ const MemoryModal = () => {
                 <SafeAreaView style={styles.bioview}>
                     <Text>{memoryDescription}</Text>
                 </SafeAreaView>
+                <SafeAreaView style={styles.bioview}>
+                    <Text>Likes: {numberOfLikes}</Text>
+                </SafeAreaView>
+                <SafeAreaView style={styles.bioview}>
+                    <Text>Tags: {memoryTags}</Text>
+                </SafeAreaView>
+                
             </View>
+            
         </SafeAreaView> : <View></View>
     );
 };

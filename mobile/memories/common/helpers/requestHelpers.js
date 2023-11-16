@@ -8,7 +8,7 @@ const endpointURL = ''
 const mockMemoryResponse = {
   username: 'user1234',
   memoryDescription: 'memoryDescription example',
-  numOfLikes: 'numOfLikes example',
+  numOfLikes: 0,
   tags: 'tags example'
 }
 
@@ -91,7 +91,7 @@ const getMemoryDetails = async (memoryId) => {
   let created_memory = {
     username: 'error user example',
     memoryDescription: 'error example',
-    numOfLikes: 'error example',
+    numOfLikes: 0,
     tags: 'error example'
   }
 
