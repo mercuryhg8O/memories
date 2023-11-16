@@ -63,16 +63,19 @@ const tagMockData = {
     ]
 }
 
-
+export const SearchCriteria = {
+    name: 'people by name',
+    id: 'people by id',
+    place: 'places',
+    tag: 'tags'
+}
 
 const SearchScreen = ({ navigation }) => {
 
     // CONTEXTS:
     const { mapView, setDisplayUser, setTargetUserUID } = useContext(CurrentUserContext);
 
-    // USE STATES
-    // searchCriteria should be username, userid, place, or tag (should set to universal ENUM)
-    const [searchCriteria, setSearchCriteria] = useState('username');
+    const [searchCriteria, setSearchCriteria] = useState(SearchCriteria.name);
     const [searchText, setSearchText] = useState('');
 
     // USE EFFECTS    
@@ -201,13 +204,13 @@ const SearchScreen = ({ navigation }) => {
     const DisplayBasedOnCriteria = () => {
 
         switch (searchCriteria) {
-            case 'userid':
+            case SearchCriteria.name:
                 return (<SearchUsersView/>);
-            case 'username':
+            case SearchCriteria.id:
                 return (<SearchUsersView/>);
-            case 'place':
+            case SearchCriteria.place:
                 return (<SearchPlacesView/>);
-            case 'tag':
+            case SearchCriteria.tag:
                 return (<SearchTagsView/>);
             default:
                 return (<SearchUsersView/>);
@@ -238,10 +241,10 @@ const SearchScreen = ({ navigation }) => {
                         {/* Set all the following to change the search criteria 
                         (use an on effect to create a request for back-end contents)
                         Must be a valid criteria */}
-                        <SelectFocusButton criteriaName={'username'}/>
-                        <SelectFocusButton criteriaName={'userid'}/>
-                        <SelectFocusButton criteriaName={'place'}/>
-                        <SelectFocusButton criteriaName={'tag'}/>
+                        <SelectFocusButton criteriaName={SearchCriteria.name}/>
+                        <SelectFocusButton criteriaName={SearchCriteria.id}/>
+                        <SelectFocusButton criteriaName={SearchCriteria.place}/>
+                        <SelectFocusButton criteriaName={SearchCriteria.tag}/>
                     </ScrollView>
             </View>
 
