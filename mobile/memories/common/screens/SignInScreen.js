@@ -14,7 +14,7 @@ const SignInScreen = ({ navigation }) => {
     [password, SetPassword] = useState('');
     [loginInValid, setLoginValid] = useState(false);
 
-    // attemp to log in function that creates back-end request
+    // attempt to log in function that creates back-end request
     const attemptLogin = () => {
         if(email === ''){
             Alert.alert('Enter email', 'login requires email', [

@@ -8,16 +8,13 @@ import SearchButton from '../components/SearchButton.js';
 import Map from '../components/Map';
 import Profile from '../components/Profile';
 import { CurrentUserContext } from '../context/contexts';
+import NavigationButton from '../components/NavigationButton.js'
 
 
 // Main page
 function MainScreen({ navigation }) {
 
     const { displayUser, setDisplayUser } = useContext(CurrentUserContext);
-
-    // const map = React.createRef();
-
-    // map.current.goTo(12, 41);
 
     useEffect(() => {
         const { memories, error } = ParseMemoriesDetails();
@@ -42,8 +39,17 @@ function MainScreen({ navigation }) {
                 <TestingProfileButton navigation={navigation} userId={4123}/>
                 <Text style={{color: 'white', top: 10, left: 10}}>For demo only</Text>
              </View> */}
-            <Map 
-                // ref={map}
+
+            <View /* Buttons for navigation*/ style={styles.navbar}>
+                {/* Temporary: the navigateTo is set to the screen name as defined in nav */}
+                <NavigationButton navigation={navigation} navigateTo={'Search'}/>
+                <NavigationButton navigation={navigation} navigateTo={'UserScreen'}/>
+                <TouchableOpacity><Text> navigate to current location</Text></TouchableOpacity>
+            </View>
+
+
+            <Map
+                navigation={navigation}
                 memory_locations={memory_locations} />
             <Profile/>
         </View>
@@ -53,6 +59,15 @@ function MainScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+
+    navbar: {
+        // position: 'absolute',
+        // top: 50, bottom: 20,
+        width: '100%',
+        height: '5%',
+        alignContent: 'center',
+        flexDirection: 'row'
     }
 });
 

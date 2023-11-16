@@ -1,4 +1,5 @@
 import axios from 'axios';
+import * as Location from 'expo-location';
 
 
 const MockResponse = {
@@ -20,6 +21,11 @@ const MockResponse = {
   ]
 }
 
+const defaultLatLong = {
+  latitude: 42,
+  longitude: 42,
+}
+
 
 const ParseMemoriesDetails = () => {
 
@@ -32,34 +38,79 @@ const ParseMemoriesDetails = () => {
 }
 
 
-const baseUrl = 'https://reqres.in'; // unify this endpoint with other hardcoded baseUrl in codebase.
-axios({
-  method: 'get',
-  url: `${baseUrl}/api/users/1`,
-}).then((response) => {
-  console.log(response.data);
-});
-
 const fetchData = (URI) => {
-// Invoking the get method to perform a GET request
-axios.get(`${baseUrl}` + URI).then((response) => {
-  console.log(response.data);
-  if(response.status == 200){
-    return response.data
-  }else{
-    console.warn('An error occurred in the fetchData function with the URI: ' + URI);
-    return null;
-  }
-});
-
-
-
-
+  // Invoking the get method to perform a GET request
+  axios.get(`${baseUrl}` + URI).then((response) => {
+    console.log(response.data);
+    if (response.status == 200) {
+      return response.data
+    } else {
+      console.warn('An error occurred in the fetchData function with the URI: ' + URI);
+      return null;
+    }
+  });
 }
 
 
+const goTo = (mapView, lat, long, latDelta = .5, longDelta = .5) => {
+  const region = {
+    latitude: lat,
+    longitude: long,
+    latitudeDelta: latDelta,
+    longitudeDelta: longDelta,
+  }
+  mapView.current.animateToRegion(region, 1000); // args: (region, duration)
+}
 
 
-export { ParseMemoriesDetails, fetchData };
+const getCurrentLatLong = async () => {
+
+  // set default lat and long
+  let latitude = defaultLatLong.latitude;
+  let longitude = defaultLatLong.longitude;
+
+
+  const { status } = await Location.requestForegroundPermissionsAsync();
+  if (status !== 'granted') {
+
+    Alert.alert('location permissions not available', 'navigate to setting and allow app location permissions', [
+      { text: 'OK' }, { text: 'No thank you' }
+    ]);
+
+    // give default location as current location
+    return { latitude, longitude };
+  }
+
+  // get current location
+  const location = await Location.getCurrentPositionAsync({});
+  if (location?.coords?.latitude !== undefined && location?.coords?.longitude !== undefined) {
+    // latitude and longitude are valid so return lat and long
+    latitude = location.coords.latitude;
+    longitude = location.coords.longitude;
+    return { latitude, longitude };
+  }
+
+  // could not access current location
+  Alert.alert('Could not access current location', 'navigate to setting and allow app location permissions', [
+    { text: 'OK' }
+  ]);
+  return { latitude, longitude };
+
+};
+
+
+const setCurrentLocation = async (mapView) => {
+  // sets mapView to current location if possible, or a default location (if location settings are not enabled).
+
+  const { latitude, longitude } = await getCurrentLatLong();
+
+  console.log('get current lat and long returned: ' + latitude + 'and' + longitude)
+
+  await goTo(mapView, latitude, longitude);
+};
+
+
+
+export { ParseMemoriesDetails, fetchData, goTo, setCurrentLocation };
 
 export default ParseMemoriesDetails;

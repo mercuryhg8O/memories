@@ -1,105 +1,36 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import MapView, { Marker } from 'react-native-maps';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import * as Location from 'expo-location';
+import { CurrentUserContext } from '../context/contexts';
 
-const Map = ({ memory_locations }) => {
+const Map = ({ memory_locations, navigation }) => {
 
-    const mapView = React.createRef();
+    // check that memory_locations is not empty. If it is then display  
+    // as message that there was no (item of interest as defined in the context)
 
-    // TODO get user's current location as initial region
-    const [location, setLocation] = useState(null);
-    const [region , setRegion] = useState({
-        latitude: 11,
-        longitude: 11,
-        latitudeDelta: 0.015,
-        longitudeDelta: 0.0121
-    });
+    // goal: start at current location as default. (move get current location to a helper function)
 
-    
-    // for matt:
-    // how do we get coordinate info from location object in location
-
-    (() => {
-        async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-                // setErrorMsg('Permission to access location was denied');
-                console.warn("Permission not granted :middle-finger:");
-                return;
-            }
-            location = await Location.getCurrentPositionAsync({});
-            setLocation(location);
-        }
-    }, []);
-
-    useEffect(() => {
-        async () => {
-            setRegion({
-                latitude: location
-            })
-        }
-    }, [location]);
-
-    // const initialRegion = () => {
-    //     if (location != false) {
-    //         const lat = location.coords.latitude;
-    //         const long = location.coords.longitude;
-    //         return {
-    //             latitude: lat,
-    //             longitude: long,
-    //             latitudeDelta: 0.0922,
-    //             longitudeDelta: 0.0421,
-    //         }
-    //     }
-    //     return null;
-    // }
-
+    // set initial default region
     const initialRegion = {
-        latitude: 11,
-        longitude: 11,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+        latitude: 42,
+        longitude: 42,
+        latitudeDelta: 1.00,
+        longitudeDelta: 1.0421,
     }
+    const [defaultRegion, setDefaultRegion] = useState(initialRegion);
+    const { mapView } = useContext(CurrentUserContext);
 
-    /* don't worry about this if you see this no you don't
-    regionFrom(lat, lon, distance) {
-        distance = distance/2
-        const circumference = 40075
-        const oneDegreeOfLatitudeInMeters = 111.32 * 1000
-        const angularDistance = distance/circumference
-
-        const latitudeDelta = distance / oneDegreeOfLatitudeInMeters
-        const longitudeDelta = Math.abs(Math.atan2(
-                Math.sin(angularDistance)*Math.cos(lat),
-                Math.cos(angularDistance) - Math.sin(lat) * Math.sin(lat)))
-
-        return result = {
-            latitude: lat,
-            longitude: lon,
-            latitudeDelta,
-            longitudeDelta,
-        }
-    }
-    */
+    // if location services are enabled, set the default region to the current device's location.
 
 
 
 
-    const goTo = (lat, long, latDelta = 0, longDelta = 0) => {
-        const region =  {
-            latitude: lat,
-            longitude: long,
-            latitudeDelta: latDelta,
-            longitudeDelta: longDelta,
-        }
-        mapView.current.animateToRegion(region, 1000); // args: (region, duration)
-    }
 
     return <View style={styles.container}>
         <MapView
             ref={mapView}
-            initialRegion={initialRegion}
+            initialRegion={defaultRegion}
             style={styles.map}
             accessibilityLabel='Main map'
             >
@@ -112,7 +43,8 @@ const Map = ({ memory_locations }) => {
                     title={marker.title}
                 />))
             }
-        </MapView>
+        </MapView>        
+    
     </View>
 };
 

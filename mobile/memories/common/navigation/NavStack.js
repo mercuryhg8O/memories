@@ -3,6 +3,7 @@ import SignInScreen from '../screens/SignInScreen.js'; // may need to capitalize
 import SignUpScreen from '../screens/SignUpScreen.js';
 import MainScreen from '../screens/MainScreen.js';
 import SearchScreen from '../screens/SearchScreen.js';
+import UserScreen from '../screens/UserScreen.js'
 
 const Stack = createNativeStackNavigator();
 const NavStack = () => {
@@ -12,6 +13,7 @@ const NavStack = () => {
         <Stack.Screen name="SignIn" component={SignInScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="Search" component={SearchScreen} />
+        <Stack.Screen name="UserScreen" component={UserScreen} />
     </Stack.Navigator>)
 };
 
