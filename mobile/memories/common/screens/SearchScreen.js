@@ -1,19 +1,23 @@
 import { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Modal, TouchableOpacity, ScrollView, Image, SafeAreaView, FlatList, TextInput } from "react-native";
+import { View, Text, StyleSheet, Modal, TouchableOpacity, ScrollView, Image, SafeAreaView, FlatList, TextInput, Dimensions } from "react-native";
 import { CurrentUserContext } from '../context/contexts';
 import { useContext } from 'react';
 import SearchButton from '../components/SearchButton';
+import { goTo } from '../helpers/helpers'
 
 const userMockData = {
     users: [
         {
-            name: 'Cheeta'
+            username: 'Cheeta',
+            userid: '1234'
         },
         {
-            name: 'Cheata'
+            username: 'Dratini',
+            userid: '3542'
         },
         {
-            name: 'Chetata'
+            username: 'ShawnMendez',
+            userid: '9999'
         },
     ]
 }
@@ -21,13 +25,25 @@ const userMockData = {
 const placeMockData = {
     places: [
         {
-            title: 'Troy'
+            title: 'Troy',
+            latitude: 42.0,
+            longitude: 42.0,
+            latitudeDelta: 1.00,
+            longitudeDelta: 1.0421,
         },
         {
-            title: 'Cali'
+            title: 'Cali',
+            latitude: 100.0,
+            longitude: 10.2,
+            latitudeDelta: 1.00,
+            longitudeDelta: 1.0421,
         },
         {
-            title: 'France'
+            title: 'France',
+            latitude: 10.2,
+            longitude: 42.2,
+            latitudeDelta: 1.00,
+            longitudeDelta: 1.0421,
         },
     ]
 }
@@ -49,34 +65,36 @@ const tagMockData = {
 
 
 
-function SearchScreen({ route /* elephant */, navigation }) {
+const SearchScreen = ({ navigation }) => {
 
+    // CONTEXTS:
+    const { mapView, setDisplayUser, setTargetUserUID } = useContext(CurrentUserContext);
+
+    // USE STATES
+    // searchCriteria should be username, userid, place, or tag (should set to universal ENUM)
+    const [searchCriteria, setSearchCriteria] = useState('username');
     const [searchText, setSearchText] = useState('');
 
-    useEffect(() => { console.log('update query: ' + searchText)
+    // USE EFFECTS    
+    useEffect(() => {
+        console.log('update query: ' + searchText)
     }, [searchText]);
 
-    // const renderUserDetails = (username) => {
-    //     console.log(username)
-    //     if (username === '' || username.toLowerCase().includes(searchText.toLowerCase())) {
-    //         return (
-    //         <View >
-    //             <TouchableOpacity
-    //                 onPress={() => {  navigation.navigate('MainScreen')}}
-    //                 delayPressIn={100}
-    //                 // style={styles.itemContainer}
-    //                 >
-    //                 <Text>
-    //                     {username}
-    //                 </Text>
-    //             </TouchableOpacity>
-    //         </View>)
-    //     }
-    // }
 
-    const { setDisplayUser, setTargetUserUID } = useContext(CurrentUserContext);
+    // COMPONENTS
 
-    const createPerson = (userId) => { // TODO request info based on id
+    // A button for selecting a search criteria
+    const SelectFocusButton = ({criteriaName}) => {
+        return (
+            <TouchableOpacity style={styles.btnContainer}
+            onPress={() => {setSearchCriteria(criteriaName)}}>
+                <Text>{criteriaName}</Text>
+            </TouchableOpacity>
+        )
+    }
+
+    // returns an instance of a user to be displayed as a search option
+    const userDetails = (username, userId) => { // TODO request info based on id
         return (
             <TouchableOpacity
                 style={styles.item}
@@ -85,106 +103,161 @@ function SearchScreen({ route /* elephant */, navigation }) {
                     setDisplayUser(true);
                     navigation.navigate('MainScreen');
                 }}
-                >
-                <Image style={styles.icon}/>
+            >
+                <Image style={styles.icon} />
                 <Text
                     style={styles.itemtext}
-                    >
-                    Cheetah
+                >
+                    {username}#{userId}
                 </Text>
             </TouchableOpacity>
         );
     }
 
-    const createPlace = (lat, long, latDelta = 0, longDelta = 0) => {
+    // returns a list of user instances to select to be displayed
+    const SearchUsersView = () => {
+        return (
+            <View style={styles.criteria_view}>
+                <FlatList
+                    data={userMockData.users}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={({ item, index }) => (
+                        userDetails(item.username, item.userid)
+                    )}>
+                </FlatList>
+    
+            </View>);
+    };
+
+    // returns an instance of a place to be displayed as a search option
+    const placeDetails = (lat, long, latDelta = 0, longDelta = 0) => { // TODO request info based on id
         return (
             <TouchableOpacity
                 style={styles.item}
                 onPress={() => {
-                    // elephant
                     setDisplayUser(false);
+                    console.log(lat, long)
+                    goTo(mapView, lat, long);
+                    // setCurrentLocation()
                     navigation.navigate('MainScreen');
-                }}
-                >
-                <Image style={styles.icon}/>
-                {/* this needs to be a lil pin svg or something that we create/source from elsewhere */}
-                <Text
-                    style={styles.itemtext}
-                    >
-                    RPI Union
+                }}>
+                <Image style={styles.icon} />
+                <Text style={styles.itemtext}>
+                    Place 
                 </Text>
             </TouchableOpacity>
         );
     }
 
-    const createTag = (string) => {
+    // returns a list of places instances to select to be displayed
+    const SearchPlacesView = () => {
+        return (
+            <View style={styles.criteria_view}>
+                <FlatList
+                    data={placeMockData.places}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={({ item, index }) => (
+                        placeDetails(item.latitude, item.longitude)
+                    )}>
+                </FlatList>
+    
+            </View>);
+    };
+
+    // returns an instance of a user to be displayed as a search option
+    const tagDetails = (tagTitle) => { // TODO request info based on id
         return (
             <TouchableOpacity
                 style={styles.item}
                 onPress={() => {
-                    // elephant
                     setDisplayUser(false);
                     navigation.navigate('MainScreen');
-                }}
-                >
-                <Text style={styles.tag}>#</Text>
+                }}>
+                <Image style={styles.icon} />
                 <Text
                     style={styles.itemtext}
-                    >
-                    all nighterrr
+                >
+                    {tagTitle}
                 </Text>
             </TouchableOpacity>
         );
     }
+
+    // returns a list of user instances to select to be displayed
+    const SearchTagsView = () => {
+        return (
+            <View style={styles.criteria_view}>
+                <FlatList
+                    data={tagMockData.tags}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={({ item, index }) => (
+                        tagDetails(item.title)
+                    )}>
+                </FlatList>
+    
+            </View>);
+    };
+
+    const DisplayBasedOnCriteria = () => {
+
+        switch (searchCriteria) {
+            case 'userid':
+                return (<SearchUsersView/>);
+            case 'username':
+                return (<SearchUsersView/>);
+            case 'place':
+                return (<SearchPlacesView/>);
+            case 'tag':
+                return (<SearchTagsView/>);
+            default:
+                return (<SearchUsersView/>);
+        }
+    };
+
 
     return (
-        // <SafeAreaView>
-        //     <View style={{ height: '8%', width:'100%' }}>
-        //         <TextInput
-        //             // style={styles.input}
-        //             placeholder="search person, place, or tag"
-        //             onChangeText={newText => SetBuildingText(newText)}/>
-        //     </View>
-        //     <View style={{ height: '92%', width:'100%' }}>
-        //         {/* Person */}
-        //         <Text>Person</Text>
-        //         <FlatList
-        //             data={userMockData}
-        //             showsVerticalScrollIndicator={false}
-        //             renderItem={({ item, index }) => (
-        //                 renderUserDetails(item.name)
-        //             )}>
-        //         </FlatList>
-        //     </View>
-        // </SafeAreaView>
 
         <SafeAreaView style={styles.modal}>
-                {/* <SearchButton navigation={navigation}/> */}
-                {/* button to navigate back to main screen */}
-                <View style={styles.searchingLine}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder='What are you looking for?'
-                        onChangeText={(text) => {setSearchText(text)}}
-                        onSubmitEditing={() => {
-                            // elephant
-                            // send request to search for stuff
-                            console.log('HI!');
-                        }}
-                    />
-                    <TouchableOpacity style={styles.btn}>
-                        <Text>Back</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.content}>
-                    {createPerson(1234)}
-                    {createPlace()}
-                    {createTag()}
-                </View>
+            {/* Search View*/}
+            <View style={{ height: '10%', width: '100%' }}>
+                <TextInput
+                    style={styles.input_alt}
+                    placeholder='What are you looking for?'
+                    onChangeText={newText => setSearchText(newText)}
+                    onSubmitEditing={() => {
+                        // elephant
+                        // send request to search for stuff
+                        console.log('HI!');
+                    }} />
+            </View>
+
+            {/* view to select what should be searched (e.g. user, place, tag*/}
+            <View style={{ height: '7%', width: '100%' }}>
+                    <Text>Search By: {searchCriteria}</Text>
+                    <ScrollView horizontal={true} >
+                        {/* Set all the following to change the search criteria 
+                        (use an on effect to create a request for back-end contents)
+                        Must be a valid criteria */}
+                        <SelectFocusButton criteriaName={'username'}/>
+                        <SelectFocusButton criteriaName={'userid'}/>
+                        <SelectFocusButton criteriaName={'place'}/>
+                        <SelectFocusButton criteriaName={'tag'}/>
+                    </ScrollView>
+            </View>
+
+
+            <View style={styles.content}>
+                {/* set view to be conditional set by searchCriteria*/}
+                {/* <SearchPlacesView/> */}
+                <DisplayBasedOnCriteria/>
+            </View>
+
         </SafeAreaView>
     );
 }
 
+
+const vw = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
     searchingLine: {
@@ -208,17 +281,20 @@ const styles = StyleSheet.create({
     modal: {
         height: '100%',
         width: '100%',
-        backgroundColor:'white'
+        backgroundColor: 'white'
     },
     content: {
-        top: 100,
+        top: 10,
         left: '10%',
         width: '80%',
         display: 'flex',
-        flexDirection: 'column'
     },
-    item:{
+    item: {
         flexDirection: 'row',
+        margin: 8,
+        borderRadius: 12 / 1.25,
+        backgroundColor: '#ededed'
+        
     },
     itemtext: {
         fontSize: 15,
@@ -230,7 +306,30 @@ const styles = StyleSheet.create({
     },
     tag: {
         fontSize: 50
+    },
+    input_alt: {
+        flex: 1,
+        margin: 12,
+        borderWidth: 1,
+        borderRadius: 12 / 1.25,
+        padding: 10,
+    },
+    select_area_view: {
+        flex: 1,
+        flexDirection: 'row',
+    },
+    btnContainer: {
+        flex:1,
+        width: vw / 4,
+        backgroundColor: "#dba7c3",
+        borderRadius: 60,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    criteria_view: {
+        height: '83%',
     }
+
 });
 
 export default SearchScreen;

@@ -5,10 +5,6 @@ import Map from '../components/Map.js';
 import { CurrentUserContext } from '../context/contexts';
 import {goTo, setCurrentLocation} from '../helpers/helpers.js'
 
-
-
-
-
 function UserScreen({ navigation }) {
 
     const { mapView } = useContext(CurrentUserContext);
