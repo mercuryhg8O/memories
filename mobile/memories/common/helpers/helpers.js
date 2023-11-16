@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Alert } from 'react-native';
 import * as Location from 'expo-location';
 import {getMemoryDetails} from './requestHelpers';
 

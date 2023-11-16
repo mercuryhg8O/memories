@@ -1,4 +1,5 @@
 import { useState, useEffect, createContext, useContext, } from 'react';
+import { Alert } from 'react-native';
 import axios from 'axios';
 import { CurrentUserContext } from '../context/contexts';
 
@@ -53,10 +54,50 @@ const getUserData = async (userid) => {
 }
 
 
+const followUser = async (current_user, user_to_follow) => {
+
+  // create back-end request to ask to follow the user
+  const query_string =  `/api/followuser?requesting_user=${current_user}&usertofollow=${user_to_follow}`;
+  const request_address = endpointURL + query_string;
+
+  // error handling and return value handling:
+  let error_during_request = false;
+  let follow_request_sent = false;
+
+  // send request to back-end
+  console.log('sending request to:' + request_address);
+  const response = await axios.get(request_address).catch((err) => {
+    console.log('error during axios request: ', err);
+    error_during_request = true;
+  });
+
+  // parse response to see if follow request was sent & process successfully
+  if(response !== undefined){
+    follow_request_sent = response?.follow_request_sent;
+    if(follow_request_sent === undefined){
+      follow_request_sent = false;
+    }
+  }
+
+
+  // create alert if request was sent
+  if(!error_during_request && follow_request_sent === true){
+    Alert.alert('Send follow request', 'You sent a follow request to' + user_to_follow, [
+      { text: 'Awesome' }
+    ]);
+  }
+  
+  if(!follow_request_sent){
+    console.log('follow request was not sent');
+  }
+  
+}
+
+
 const createUserSuccessful = async (username, email, password, bio) => {
   const query_string = `/api/createaccount?email=${email}&password=${password}&username=${username}&bio=${bio}`
-  const request_address = endpointURL + query_string
-  console.log('request made to: ' + request_address)
+  const request_address = endpointURL + query_string;
+  console.log('request made to: ' + request_address);
 
   const response = await axios.get(request_address).catch((err) => {
     // console.log('error during retrieval of when getting response: ', err);
@@ -82,7 +123,7 @@ const getMemoryDetails = async (memoryId) => {
 
 
   // create request to backend to get details about a memory and package it in a memory object
-  const query_string = `/api/getmemorydetails?memoryid={memoryId}`
+  const query_string = `/api/getmemorydetails?memoryid=${memoryId}`
   const request_address = endpointURL + query_string
   console.log('request should be made to: ' + request_address);
 
@@ -135,4 +176,4 @@ const getMemoryDetails = async (memoryId) => {
   return created_memory;
 }
 
-export { isValidUser, createUserSuccessful, getUserData, getMemoryDetails };
+export { isValidUser, createUserSuccessful, getUserData, getMemoryDetails, followUser };

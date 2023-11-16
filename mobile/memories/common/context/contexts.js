@@ -4,8 +4,11 @@ import React, {useState, createContext, useEffect} from 'react';
 const CurrentUserContext = createContext();
 function CurrentUserContextProvider({ children }) {
 
-  // used for getting required information about a user for displaying in the main view modal
+  // current user information
   const [currentUserID, setCurrentUser] = useState('');
+
+  // used for getting required information about a user for displaying in the main view modal
+  const [targetUserUID, setTargetUserUID] = useState('');
   const [displayUser, setDisplayUser] = useState(false);
   
   // used for populating memory modal that displays information about the memory that is currently selected
@@ -20,7 +23,7 @@ function CurrentUserContextProvider({ children }) {
   - tags: <tags associated with the post as a single string where all the tags are concatenated>
   */
 
-  const [targetUserUID, setTargetUserUID] = useState('');
+  
   const endpointURL = 'https://reqres.in';
 
   const mapView = React.createRef();

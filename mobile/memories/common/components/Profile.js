@@ -1,15 +1,15 @@
 import React, { Component, useState, useEffect, useContext } from 'react';
-import { Text, View, StyleSheet, Image, SafeAreaView, Dimensions } from 'react-native';
+import { Text, View, StyleSheet, Image, SafeAreaView, Dimensions, TouchableOpacity } from 'react-native';
 import { CurrentUserContext } from '../context/contexts';
 import axios from 'axios';
-import {getUserData} from '../helpers/requestHelpers';
+import {getUserData, followUser } from '../helpers/requestHelpers';
 
 const Profile = () => {
 
     {/* Once the  */}
     const [userName, setUserName] = useState('');
     const [userBio, setUserBio] = useState('');
-    const { displayUser, targetUserUID } = useContext(CurrentUserContext);
+    const { displayUser, targetUserUID, currentUserID } = useContext(CurrentUserContext);
 
     // Once the targetUserUID gets updated, a request to get the profile of the targetUserUID is created
     // and the username and bio information gets updated.
@@ -45,6 +45,13 @@ const Profile = () => {
                 </View>
                 <SafeAreaView style={styles.bioview}>
                     <Text>{userBio}</Text>
+                </SafeAreaView>
+
+                <SafeAreaView style={styles.bioview}>
+                    <TouchableOpacity onPress={()=> {followUser(currentUserID, targetUserUID)}}>
+                        <Text>follow user</Text>
+                    </TouchableOpacity>
+                    
                 </SafeAreaView>
             </View>
         </SafeAreaView> : <View></View>
