@@ -2,6 +2,7 @@ import { useState, useEffect, createContext, useContext, } from 'react';
 import { Alert } from 'react-native';
 import axios from 'axios';
 import { CurrentUserContext } from '../context/contexts';
+import {getCurrentLatLong} from './helpers'
 
 const endpointURL = ''
 
@@ -176,4 +177,51 @@ const getMemoryDetails = async (memoryId) => {
   return created_memory;
 }
 
-export { isValidUser, createUserSuccessful, getUserData, getMemoryDetails, followUser };
+
+const createMemorySuccessful = async ( memoryDescription, memoryVisibility, memoryImage, memoryTags) => {
+
+
+  // get the current location:
+  const { latitude, longitude } = await getCurrentLatLong();
+
+
+  const query_string = `/api/creatememory`
+  const request_address = endpointURL + query_string;
+  console.log('request made to: ' + request_address);
+  console.log('the contents of the request body are as follow:', memoryDescription, memoryVisibility, memoryTags);
+  console.log('at this location', latitude, longitude);
+  
+  // error handling and return value handling:
+  let error_during_request = false;
+  let created_memory = false;
+  // in the future add error checking for user-side data validation
+
+  // send a post request to the server to create a memory
+  const response = await axios.post(request_address, {
+    memory_description: memoryDescription,
+    memory_visibility: memoryVisibility,
+    memory_tags: memoryTags
+  }).catch((err) => {
+    console.log('an error happened when trying to create a memory during the requesting phase' + err);
+    error_during_request = true;
+  });
+
+  // parse response to see if memory was created
+  if(!error_during_request && response?.data?.created_memory !== undefined){
+    console.log('the memory?.data?.valid_info: ' + response?.data?.created_memory);
+    created_memory = true;
+  }
+
+  if(!error_during_request && created_memory){
+    console.log('created a memory');
+    return true;
+  }else{
+    console.log('something went wrong while creating a memory');
+  }
+
+
+  return false;
+}
+
+
+export { isValidUser, createUserSuccessful, getUserData, getMemoryDetails, followUser, createMemorySuccessful };

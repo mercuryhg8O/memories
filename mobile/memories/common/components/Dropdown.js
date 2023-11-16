@@ -1,4 +1,5 @@
-// https://blog.logrocket.com/creating-custom-react-native-dropdown/
+
+// Sourced and modified from https://blog.logrocket.com/creating-custom-react-native-dropdown/
 
 import React, { FC, ReactElement, useRef, useState } from 'react';
 import {
@@ -19,7 +20,7 @@ import {
 //   onSelect: (item) => void
 // }
 
-const Dropdown = ({ label, data, onSelect }) => {
+const Dropdown = ({ preLabel, label, data, onSelect }) => {
   const DropdownButton = useRef();
   const [visible, setVisible] = useState(false);
   const [selected, setSelected] = useState(undefined);
@@ -38,7 +39,7 @@ const Dropdown = ({ label, data, onSelect }) => {
 
   const onItemPress = (item) => {
     setSelected(item);
-    onSelect(item);
+    onSelect(item.value);
     setVisible(false);
   };
 
@@ -75,20 +76,23 @@ const Dropdown = ({ label, data, onSelect }) => {
     >
       {renderDropdown()}
       <Text style={styles.buttonText}>
-        {(!!selected && selected.label) || label}
+        {preLabel} {(!!selected && selected.label) || label}
       </Text>
       {/* <Icon style={styles.icon} type="font-awesome" name="chevron-down" /> */}
     </TouchableOpacity>
   );
 };
 
+const width = '50%';
+
 const styles = StyleSheet.create({
   button: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#efefef',
-    height: 50,
-    zIndex: 1,
+    height: 'auto',
+    // zIndex: 1,
+    width: width
   },
   buttonText: {
     flex: 1,
@@ -100,7 +104,7 @@ const styles = StyleSheet.create({
   dropdown: {
     position: 'absolute',
     backgroundColor: '#fff',
-    width: '100%',
+    width: width,
     shadowColor: '#000000',
     shadowRadius: 4,
     shadowOffset: { height: 4, width: 0 },

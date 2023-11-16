@@ -45,6 +45,7 @@ function MainScreen({ navigation }) {
                 {/* Temporary: the navigateTo is set to the screen name as defined in nav */}
                 <NavigationButton navigation={navigation} navigateTo={'Search'}/>
                 <NavigationButton navigation={navigation} navigateTo={'UserScreen'}/>
+                <NavigationButton navigation={navigation} navigateTo={'CreateMemory'}/>
                 <TouchableOpacity><Text> navigate to current location</Text></TouchableOpacity>
             </View>
 

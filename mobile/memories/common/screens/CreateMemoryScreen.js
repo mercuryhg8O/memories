@@ -2,61 +2,55 @@ import { useState, useEffect, createContext, useContext, } from 'react';
 import { StyleSheet, View, Text, SafeAreaView, Alert, Image, TouchableOpacity, Dimensions } from 'react-native';
 import CustomInput from '../components/customInput.component';
 import CustomButton from '../components/customButton.component';
+import Dropdown from '../components/Dropdown';
 import { CurrentUserContext } from '../context/contexts';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import { createUserSuccessful } from '../helpers/requestHelpers';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { createMemorySuccessful } from '../helpers/requestHelpers';
+import {setCurrentLocation} from '../helpers/helpers';
 
 import * as ImagePicker from 'expo-image-picker';
 
+const Visibility = {
+    PRIVATE: 'Private',
+    MUTUALS: 'Mutuals',
+    PUBLIC: 'Public'
+}
+
 const CreateMemoryScreen = ({ navigation }) => {
-    const { setCurrentUser } = useContext(CurrentUserContext);
+    const { currentUserID, mapView } = useContext(CurrentUserContext);
 
-    // handle log in functionality and only pass up the user name
-    [userName, setUserName] = useState('');
-    [password, SetPassword] = useState('');
-    [email, SetEmail] = useState('');
-    [bio, setBio] = useState('');
+    // the information required for creating a post
+    const [memoryDescription, setMemoryDescription] = useState('');
+    const [memoryVisibility, setMemoryVisibility] = useState(Visibility.PUBLIC);
+    const [memoryImage, setMemoryImage] = useState('https://cdn-icons-png.flaticon.com/512/3177/3177440.png');
+    const [memoryTags, setMemoryTags] = useState('');
+    
 
-    const attemptSignUp = () => {
+    const attemptMemoryCreation = async () => {
+        console.log('attempting to create a memory')
 
-        if(userName === ''){
-            Alert.alert('Enter userName', 'login requires userName', [
-                {text: 'OK'},
-              ]);
-        } else if(email === ''){
-            Alert.alert('Enter email', 'login requires email', [
-                {text: 'OK'},
-              ]);
-        } else if(password === ''){
-            Alert.alert('Enter password', 'login requires password', [
-                {text: 'OK'},
-              ]);
-        } else{
+        if (memoryDescription === '') {
+            // memory did not include a description - let the user know that it's required.
+            Alert.alert('Enter memory description', 'creating a memory requires memory description', [
+                { text: 'OK' },
+            ]);
+        } else {
 
-            // create and login user if possible
-            createUserSuccessful(userName, email, password, bio).then((userLoginStatus) => {
-                if(userLoginStatus){ // valid login
-
-                    // should parse request for userid to make future requests
-                    setCurrentUser(email); // save email for future requests (temporary solution)
-                    navigation.navigate('MainScreen'); // navigate to map
-                }else{
-                    console.warn('no account exists with that email & password.');
-                }
-            }).catch(
-                (err) => {console.log(err)});
-
-            if (true){ // valid login (replace with request)
-                navigation.navigate('MainScreen'); // navigate to map
-                setCurrentUser(userName); // save username for future requests
-            } else{
-                console.warn('cannot create an account with that information.')
-                // TODO: parse to provide informative error of why account creation didn't succeed
+            // create request to back end to create a memory
+            const created_memory = await createMemorySuccessful();
+            if(created_memory){
+                // created a memory, should move the mapview to the 
+                // users current location (aka where the memory was made)
+                await setCurrentLocation(mapView);
+                console.log('created a memory');
+                
+            }else{
+                console.log('could not create a memory - please check the logs.');
             }
         }
     }
 
-    const [userIcon, setUserIcon] = useState('https://cdn-icons-png.flaticon.com/512/3177/3177440.png');
+    
 
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -65,52 +59,55 @@ const CreateMemoryScreen = ({ navigation }) => {
         });
 
         if (!result.canceled) {
-            setUserIcon(result.assets[0].uri);
+            setMemoryImage(result.assets[0].uri);
         } else {
             alert("pick an image dude");
         }
     };
 
+    const data = [
+        {label: Visibility.PRIVATE, value: Visibility.PRIVATE},
+        {label: Visibility.MUTUALS, value: Visibility.MUTUALS},
+        {label: Visibility.PUBLIC, value: Visibility.PUBLIC},
+    ];
+
     return <View style={styles.container}>
 
         <SafeAreaView >
-
-            
-        <View /* memory description container */ style={styles.inputContainer}>
+            <View /* memory description container */ style={styles.inputContainer}>
                 <CustomInput
                     placeholder={'memory description goes here'}
-                    setValue={setUserName}
+                    setValue={setMemoryDescription}
                     isMuliLine={true}
-                    label={'memory description input field'}
-                    />
+                    label={'memory description input field'}/>
             </View>
 
-            <View /* Logo container */ style={styles.logo_container}>
+
+            <View /* image selector container */ style={styles.logo_container}>
                 <TouchableOpacity onPress={pickImageAsync}>
                     <Image
                         style={styles.logo}
                         source={{
-                            uri: userIcon,
-                        }}
-                    />
+                            uri: memoryImage,
+                        }}/>
                 </TouchableOpacity>
             </View>
 
 
-
-
-            <View /* Tag & create memory container */ style={styles.inputContainer}>
+            <View /* visibility, tag & create memory button container */ style={styles.inputContainer}>
+                {/* TODO: replace with drop down */}
+                <Dropdown label="Select visibility" data={data} onSelect={setMemoryVisibility}/>
                 <CustomInput
                     placeholder={'tags'}
-                    setValue={setUserName}
+                    setValue={setMemoryTags}
                     label={'tags input field'}
-                    />
+                />
                 <CustomButton
                     placeholder={'Create Memory'}
-                    onPress={() => {console.log('should create a memory')}}
+                    onPress={() => { attemptMemoryCreation() }}
                     button_type={styles.createAccountBtn}
                     label={'Create Memory button'}
-                    />
+                />
             </View>
 
         </SafeAreaView>
@@ -130,16 +127,16 @@ const styles = StyleSheet.create({
     },
     logo_container: {
         alignItems: "center",
-        paddingTop: .05*vh,
+        paddingTop: .05 * vh,
     },
     logo: {
-        width: .25*vh, height: .25*vh,
-        borderRadius: 100
+        width: .25 * vh, height: .25 * vh,
+        borderRadius: 35
     },
     inputContainer: {
-        paddingTop: .05*vh,
+        paddingTop: .05 * vh,
         alignItems: "center",
-        gap: 0.025*vh,
+        gap: 0.025 * vh,
     },
 
     createAccountBtn: {

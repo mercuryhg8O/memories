@@ -54,7 +54,7 @@ const MemoryModal = () => {
                     <Text>{memoryDescription}</Text>
                 </SafeAreaView>
                 <SafeAreaView style={styles.bioview}>
-                    <Text>Likes: {numberOfLikes}</Text>
+                    <Text>Likes: {numberOfLikes}</Text> {/* TODO: need the ability to dislike by clicking on it*/}
                 </SafeAreaView>
                 <SafeAreaView style={styles.bioview}>
                     <Text>Tags: {memoryTags}</Text>

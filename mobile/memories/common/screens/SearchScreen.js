@@ -65,17 +65,22 @@ const tagMockData = {
     ]
 }
 
-
+export const SearchCriteria = {
+    NAME: 'people by name',
+    ID: 'people by ID',
+    PLACE: 'places',
+    TAG: 'tags'
+}
 
 const SearchScreen = ({ navigation }) => {
 
     // CONTEXTS:
     const { mapView, setDisplayUser, setTargetUserUID } = useContext(CurrentUserContext);
 
-    const [searchCriteria, setSearchCriteria] = useState(SearchCriteria.name);
+    const [searchCriteria, setSearchCriteria] = useState(SearchCriteria.NAME);
     const [searchText, setSearchText] = useState('');
 
-    // USE EFFECTS    
+    // USE EFFECTS
     useEffect(() => {
         console.log('update query: ' + searchText)
     }, [searchText]);
@@ -125,12 +130,12 @@ const SearchScreen = ({ navigation }) => {
                         userDetails(item.username, item.userid)
                     )}>
                 </FlatList>
-    
+
             </View>);
     };
 
     // returns an instance of a place to be displayed as a search option
-    const placeDetails = (lat, long, latDelta = 0, longDelta = 0) => { // TODO request info based on id
+    const placeDetails = (localizedName, lat, long, latDelta = 0, longDelta = 0) => { // TODO request info based on id
         return (
             <TouchableOpacity
                 style={styles.item}
@@ -143,7 +148,7 @@ const SearchScreen = ({ navigation }) => {
                 }}>
                 <Image style={styles.icon} />
                 <Text style={styles.itemtext}>
-                    Place 
+                    {localizedName}
                 </Text>
             </TouchableOpacity>
         );
@@ -160,7 +165,6 @@ const SearchScreen = ({ navigation }) => {
                         placeDetails(item.latitude, item.longitude)
                     )}>
                 </FlatList>
-    
             </View>);
     };
 
@@ -194,32 +198,37 @@ const SearchScreen = ({ navigation }) => {
                         tagDetails(item.title)
                     )}>
                 </FlatList>
-    
+
             </View>);
     };
 
     const DisplayBasedOnCriteria = () => {
 
         switch (searchCriteria) {
-            case SearchCriteria.name:
+            case SearchCriteria.NAME:
                 return (<SearchUsersView/>);
-            case SearchCriteria.id:
+            case SearchCriteria.ID:
                 return (<SearchUsersView/>);
-            case SearchCriteria.place:
+            case SearchCriteria.PLACE:
                 return (<SearchPlacesView/>);
-            case SearchCriteria.tag:
+            case SearchCriteria.TAG:
                 return (<SearchTagsView/>);
             default:
                 return (<SearchUsersView/>);
         }
     };
 
+    const data = [
+        {label: SearchCriteria.NAME, value: SearchCriteria.NAME},
+        {label: SearchCriteria.ID, value: SearchCriteria.ID},
+        {label: SearchCriteria.PLACE, value: SearchCriteria.PLACE},
+        {label: SearchCriteria.TAG, value: SearchCriteria.TAG},
+    ];
+
 
     return (
-
         <SafeAreaView style={styles.modal}>
-            {/* Search View*/}
-            <View style={{ height: '10%', width: '100%' }}>
+            <View style={styles.topRow}>
                 <TextInput
                     style={styles.input_alt}
                     placeholder='What are you looking for?'
@@ -228,27 +237,8 @@ const SearchScreen = ({ navigation }) => {
                         // TODO send request to search for stuff
                         console.log('HI!');
                     }} />
+                <Dropdown preLabel="Searching for" label="..." data={data} onSelect={setSearchCriteria}/>
             </View>
-{/*  */}
-            <View style={styles.criteria}>
-                <Text>Searching for </Text>
-                <Picker
-                    selectedValue={searchCriteria}
-                    onValueChange={(itemValue, itemIndex) => {
-                        setSearchCriteria(itemValue);
-                    }}
-                    style={styles.picker}
-                    itemStyle={styles.pickeritem}
-                >
-                    <Picker.Item label={SearchCriteria.name} value={SearchCriteria.name}/>
-                    <Picker.Item label={SearchCriteria.id} value={SearchCriteria.id}/>
-                    <Picker.Item label={SearchCriteria.place} value={SearchCriteria.place}/>
-                    <Picker.Item label={SearchCriteria.tag} value={SearchCriteria.tag}/>
-                </Picker>
-            </View>
-
-            {/* elephant */}
-            {/* <Dropdown label="Select Item" data={data} onSelect={setSelected} /> */}
 
             <View style={styles.content}>
                 {/* set view to be conditional set by searchCriteria*/}
@@ -298,7 +288,7 @@ const styles = StyleSheet.create({
         margin: 8,
         borderRadius: 12 / 1.25,
         backgroundColor: '#ededed'
-        
+
     },
     itemtext: {
         fontSize: 15,
@@ -314,9 +304,10 @@ const styles = StyleSheet.create({
     input_alt: {
         flex: 1,
         margin: 12,
-        borderWidth: 1,
+        borderBottomWidth: 1,
         borderRadius: 12 / 1.25,
         padding: 10,
+        width: '70%'
     },
     select_area_view: {
         flex: 1,
@@ -333,12 +324,10 @@ const styles = StyleSheet.create({
     criteria: {
         flexDirection: 'row'
     },
-    picker: {
-        width: '70%',
-        
-    },
-    pickeritem: {
-        
+    topRow: {
+        height: 50,
+        width: '100%',
+        flexDirection: 'row'
     }
 
 });
