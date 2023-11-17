@@ -23,41 +23,43 @@ router.post('/signup', (req, res, next) => {
                             error: err
                         });
                     } else {
-                        const account = new Account({
-                            _id: new mongoose.Types.ObjectId(),
-                            userid: newid(),
-                            email: req.query.email,
-                            password: hash,
-                            username: req.query.username,
-                            label: req.query.label,
-                            bio: req.query.bio,
-                            profilePic: req.query.profilePic,
-                            verified: false
-                        })
-                        account.save()
-                            .then(result => {
-                                console.log(result);
-                                res.status(201).json({
-                                    message: 'Created account successfully',
-                                    createdAccount: {
-                                        _id: result._id,
-                                        email: result.email,
-                                        username: result.username,
-                                        label: result.label,
-                                        bio: result.bio,
-                                        request: {
-                                            type: 'GET',
-                                            url: 'http://localhost:3000/account/' + result._id
-                                        }
-                                    }
-                                })
+                        newid().then(id => {
+                            const account = new Account({
+                                _id: new mongoose.Types.ObjectId(),
+                                userid: id,
+                                email: req.query.email,
+                                password: hash,
+                                username: req.query.username,
+                                label: req.query.label,
+                                bio: req.query.bio,
+                                profilePic: req.query.profilePic,
+                                verified: false
                             })
-                            .catch(err => {
-                                console.log(err);
-                                res.status(500).json({
-                                    error: err
+                            account.save()
+                                .then(result => {
+                                    console.log(result);
+                                    res.status(201).json({
+                                        message: 'Created account successfully',
+                                        createdAccount: {
+                                            _id: result._id,
+                                            email: result.email,
+                                            username: result.username,
+                                            label: result.label,
+                                            bio: result.bio,
+                                            request: {
+                                                type: 'GET',
+                                                url: 'http://localhost:3000/account/' + result._id
+                                            }
+                                        }
+                                    })
                                 })
-                            });
+                                .catch(err => {
+                                    console.log(err);
+                                    res.status(500).json({
+                                        error: err
+                                    })
+                                });
+                        });
                     }
                 });
             }
@@ -211,12 +213,17 @@ router.delete('/:accountID', checkAuth, (req, res, next) => {
 })
 
 //Generate new ID for user
-const newid = () =>{
-    const data = useridCount.findOne({name : 'Counter'});
-    const datavalue = data.current;
-    console.log(datavalue);
-    useridCount.updateOne({current: datavalue}, {$set : datavalue+1});
-    return datavalue;
+const newid = async () =>{
+    const currentVal = await useridCount.getCurrent();
+    const newID = currentVal+1;
+    useridCount.updateOne({name : "Counter"}, {current : newID})
+    .exec()
+    .then(err => {
+        if (err) {
+            console.error(err);
+          } 
+    });
+    return newID;
 }
 
 
