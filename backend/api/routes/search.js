@@ -1,18 +1,27 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
-const searchController = require('../controllers/search');
+
 const Memory = require('../models/memory');
 const Account = require('../models/account');
 const Tags = require('../models/tags');
 
-//The default Search bar that shows all 3 types
-router.get('/', searchController.searchAll);
+router.get('/', (req,res,next) => {
+    const search = req.query.search;
+    searchUser(search);
+    searchPlace(search);
+    searchPlace(search);
+})
 
-router.get('/user', searchController.searchUser);
+const searchUser = (req) => {
+    return null;
+}
 
-router.get('/place', searchController.searchPlace);
-
-router.get('/tags', searchController.searchTags);
-
+const searchPlace = (req) => {
+    //Needs some garbage data for location
+    return null;
+}
+const searchTags = (req) => {
+    return null;
+}
 module.exports = router;
