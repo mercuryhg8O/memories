@@ -17,12 +17,15 @@ const memorySchema = mongoose.Schema({
         required: true,
     },
     tags: [String],
-    likes: Number,
+    // likes: Number,
     likedBy: {
         type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'account' }]
     },
     location: {
-        // required: true,
+        //longitude comes first
+        type : Point,
+        "coordinates": [Number],
+        required: true,
     },
     // images: ,
     visibility: {

@@ -1,9 +1,37 @@
-const mongoose = require('mongoose');
 const Account = require('../models/account');
-const bcrpyt = require('bcrypt');
+const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
+const bcrpyt = require('bcrypt');
 
-exports.signup = (req, res, next) => {
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './profilePics');
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname);
+    }
+});
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image.png') {
+        cb(null, false);
+    } else {
+        cb(null, true);
+        res.status(404).json({
+            message: "Only jpeg or png"
+        })
+    }
+};
+
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 1024 * 1024 *5
+    },
+    fileFilter: fileFilter
+});
+
+exports.signup = (upload.single('profilePic'), (req, res, next) => {
     Account.find({ email: req.body.email })
         .exec()
         .then(account => {
@@ -26,7 +54,8 @@ exports.signup = (req, res, next) => {
                             label: req.body.label,
                             bio: req.body.bio,
                             profilePic: req.body.profilePic,
-                            verified: false
+                            verified: false,
+                            followers: []
                         })
                         account.save()
                         .then(result => {
@@ -62,7 +91,7 @@ exports.signup = (req, res, next) => {
                 error: err
             });
         })
-}
+})
 
 exports.login = (req, res, next) => {
     Account.find({ email: req.body.email })
@@ -140,7 +169,7 @@ exports.getAllAccounts = (req, res, next) => {
 }
 
 exports.getById = (req, res, next) => {
-    const id = req.params.accountID;
+    const id = req.userData.id;
     Account.findById(id)
     .exec()
     .then(doc => {
@@ -161,7 +190,7 @@ exports.getById = (req, res, next) => {
 }
 
 exports.edit = (req, res, next) => {
-    const id = req.params.accountID;
+    const id = req.userData.id;
     const updateOps = {};
     for (const ops of req.body) {
         updateOps[ops.propName] = ops.value;
@@ -187,57 +216,129 @@ exports.edit = (req, res, next) => {
 }
 
 exports.follow = (req, res, next) => {
-    const id = req.params.accountID;
-    const account = Account.findById(id);
-    account.followers.push(req.user._id)
-    .exec()
-    .then(doc => {
-        if (doc) {
-            console.log(account.followers);
-            res.status(200).json({ doc });
-        } else {
-            res.status(404).json({
-                message: "No found entry found for provided ID"
-            });
-        }
-    })
-    .catch(err => {
-        res.status(500).json({
-            error: err
-        });
-    });
+    // const memoryID = req.body.memoryID;
+    const accountID = req.params.accountID;
+    console.log(req);
+    const userID = req.userData.id;
+    const account = Account.findById(accountID)
+        .exec()
+        .then(account => {
+            if (!account) {
+                return res.status(404).json({
+                    message: "User Not Found",
+                });
+            }
+            const index = account.followers.indexOf(userID);
+            console.log(index);
+            if (index == -1) {
+                account.followers.push(req.userData.id);
+                account.save();
+                // memory.likes++;
+                res.status(200).json({
+                    account: account,
+                    message: 'User Followed',
+                    request: {
+                        type: 'GET',
+                        url: 'http://localhost:3000/memory/' + account._id
+                    } 
+                });
+            } else {
+                res.status(404).json({
+                    message: "You're Already Following this User"
+                })
+            }   
+        })
+    // const id = req.params.accountID;
+    // const account = Account.findById(id)
+    //     .exec()
+    //     .then(account => {
+    //         if (!account) {
+    //             return res.status(404).json({
+    //                 message: "Account Not Found",
+    //             });
+    //         }
+    //         console.log('227')
+    //         const index = account.followers.indexOf(req.userData.id);
+    //         console.log(index);
+    //         if (index == -1) {
+    //             account.followers.push(req.userData.id);
+    //             account.save();
+    //             // memory.likes++;
+    //             res.status(200).json({
+    //                 memory: memory,
+    //                 message: 'Memory Liked',
+    //                 request: {
+    //                     type: 'GET',
+    //                     url: 'http://localhost:3000/memory/' + memory._id
+    //                 }
+    //             });
+    //         } else {
+    //             res.status(404).json({
+    //                 message: "Already Following User Liked Memory"
+    //             })
+    //         }
+    //     })
+    
+    // account.followers.push(req.user._id)
+    // .exec()
+    // .then(doc => {
+    //     if (doc) {
+    //         console.log(account.followers);
+    //         res.status(200).json({ doc });
+    //     } else {
+    //         res.status(404).json({
+    //             message: "No found entry found for provided ID"
+    //         });
+    //     }
+    // })
+    // .catch(err => {
+    //     res.status(500).json({
+    //         error: err
+    //     });
+    // });
 }
 
 exports.unfollow = (req, res, next) => {
-    const id = req.params.accountID;
-    const account = Account.findById(id);
-    let index = group.followers.indexOf(account);
-    if (index === -1) {
-        res.status(404).json({
-            message: 'User is not a follower'
-        });
-    }
-    group.followers.splice(index, 1)
+    const userID = req.userData.id;
+    const accountID = req.param.accountID;
+    const account = Account.findById(accountID)
     .exec()
-    .then(doc => {
-        if (doc) {
-            console.log(account.followers);
-            res.status(200).json({ doc });
-        } else {
-            res.status(404).json({
-                message: "No found entry found for provided ID"
+    .then(account => {
+        if (!account) {
+            return res.status(404).json({
+                message: "User Not Found",
             });
+        } else {
+            const index = account.followers.indexOf(userID);
+            if (index == -1) {
+                res.status(404).json({
+                    message: "You aren't Following this User"
+                })
+            } else {
+                memory.likedBy.splice(index, 1);
+                memory.save();
+                res.status(200).json({
+                    account: account,
+                    message: 'User Followed',
+                    request: {
+                        type: 'GET',
+                        url: 'http://localhost:3000/memory/' + memory._id
+                    } 
+                })
+                // memory.likes--;
+            }
         }
-    })
+    })   
     .catch(err => {
+        console.log(err);
         res.status(500).json({
             error: err
         });
-    });
+    })
 }
 
 exports.delete = (req, res, next) => {
-    const id = req.params.accountID;
+    const id = req.userData.id;
     Account.deleteOne({ _id: id })
     .exec()
     .then(result => {
