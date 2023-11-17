@@ -3,6 +3,9 @@ const Account = require('../models/account');
 const UserID = require('../models/userid');
 
 exports.searchUser = (req, res, next) => {
+    if(req.query.constructor === Object && Object.keys(req.query).length === 0) {
+        res.status(404).json({"Error": "Got Nothing"});    
+      }
     const term = req.query.search;
     //Check if the search term is a UserID
     if(!isNaN(term) && term.length == 4){ 
@@ -14,7 +17,7 @@ exports.searchUser = (req, res, next) => {
     }
     else{
         //Temporarily no other function
-        res.status(500);
+        res.status(500).json({"Error": "Currently Not Supported"});
     }
 }
 
