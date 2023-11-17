@@ -19,7 +19,10 @@ exports.searchUser = (req, res, next) => {
             res.status(500).json({err}));
     }
         else{
-            Account.find({userid : term})
+            Account.find()
+            .or([{userid : term},
+            {email: {$regex: '.*' + term + '.*', $options: 'i'}},
+            {username: {$regex: '.*' + term + '.*', $options: 'i'}}])
             .exec()
             .then(user =>
                 res.status(200).json({user}))
