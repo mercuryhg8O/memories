@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 
 const accountRoutes = require('./api/routes/account');
 const memoryRoutes = require('./api/routes/memory');
+const searchRoutes = require('./api/routes/search')
 
 mongoose.connect('mongodb+srv://memory-db:' + process.env.MONGO_ATLAS_PW + '@memories.ykoxmda.mongodb.net/?retryWrites=true&w=majority');
 
@@ -29,6 +30,7 @@ app.use((req, res, next) => {
 //ROUTES THAT HANDLE REQUEST
 app.use('/account', accountRoutes);
 app.use('/memory', memoryRoutes);
+app.use('/search', searchRoutes);
 app.use((req, res, nest) => {
     const error = new Error('Not Found');
     error.status(404);
