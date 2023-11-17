@@ -30,42 +30,11 @@ const upload = multer({
 const Memory = require('../models/memory');
 const Account = require('../models/account');
 const checkAuth = require('../auth/check-auth');
+const memoryController = require('../controllers/memory')
 
-router.post('/', checkAuth, upload.single('images'), (req, res, next) => {
+router.post('/', checkAuth, upload.single('images'), memoryController.createMemory, (req, res, next) => {
     console.log(req.file);
-    const memory = new Memory({
-        _id: new mongoose.Types.ObjectId(),
-        accountID: req.body.accountID,
-        bodyText: req.body.bodyText,
-        visibility: req.body.visibility,
-        tags: req.body.tags,
-        likes: 0,
-        // images: req.file.path
-    });
-    memory.save()
-    .then(result => {
-        console.log(result);
-        res.status(201).json({
-            message: 'Created memory successfully',
-            createdMemory: {
-                _id: result._id,
-                bodyText: result.bodyText,
-                accountID: result.accountID,
-                visibility: result.visibility,
-                likes: result.likes,
-                request: {
-                    type: 'GET',
-                    url: 'http://localhost:3000/memory/' + result._id
-                }
-            }
-        })
-    })
-    .catch(err => {
-        console.log(err);
-        res.status(500).json({
-            error: err
-        })
-    });
+    
 });
 
 router.get('/', (req, res, next) => {
@@ -122,17 +91,24 @@ router.get('/', (req, res, next) => {
 //     });
 // });
 
-router.patch('/:memoryID/like', checkAuth, (req, res, next) => {
-    const id = req.params.memoryID;
-    const memory = Memory.findById(id);
+router.patch('/like', checkAuth, (req, res, next) => {
+    const memoryID = req.body.memoryID;
+    const accountID = req.body.accountID;
+    const memory = Memory.findById(memoryID);
     if (!memory) {
         return res.status(404).json({
             message: "Memory Not Found",
         })
     }
-    memory.updateOne({ _id: id },{ likes: (memory.likes + 1) })
-        .exec()
-        .then(result => {
+    const account = Account.findById(accountID);
+    if (!account) {
+        return res.status(404).json({
+            message: "User Not Found",
+        })
+    } 
+    const index = memory.likedBy.indexOf(account);
+    if (index == -1) {
+        memory.likedBy.push(accountID).then(result => {
             console.log(result);
             res.status(200).json({
                 message: 'Memory Liked',
@@ -148,27 +124,33 @@ router.patch('/:memoryID/like', checkAuth, (req, res, next) => {
                 error: err
             });
         })
+        memory.likes++;
+    } else {
+        res.status(404).json({
+            message: "User Already Liked Memory"
+        })
+    }   
 })
 
-router.patch('/:memoryID/unlike', checkAuth, (res, req, next) => {
-    const id = req.params.memoryID;
-    const memory = memory.findById(id);
+router.patch('/:memoryID/:accountID/unlike', checkAuth, (res, req, next) => {
+    const memoryID = req.params.memoryID;
+    const accountID = req.params.accountID;
+    const memory = Memory.findById(memoryID);
     if (!memory) {
         return res.status(404).json({
             message: "Memory Not Found",
         })
     }
-    memory.updateOne({ _id: id }, { likes: (memory.likes - 1) })
-        .exec()
-        .then(result => {
-            console.log(result);
-            res.status(200).json({
-                message: 'Memory Unliked',
-                request: {
-                    type: 'GET',
-                    url: 'http://localhost:3000/memory/' + result._id
-                } 
-            });
+    const account = Account.findById(accountID);
+    if (!account) {
+        return res.status(404).json({
+            message: "User Not Found",
+        })
+    } 
+    const index = memory.likedBy.indexOf(accountID);
+    if (index == -1) {
+        res.status(404).json({
+            message: "User Never Liked Memory"
         })
         .catch(err => {
             console.log(err);
@@ -176,6 +158,19 @@ router.patch('/:memoryID/unlike', checkAuth, (res, req, next) => {
                 error: err
             });
         })
+    } else {
+        memory.likedBy.push(account).then(result => {
+            console.log(result);
+            res.status(200).json({
+                message: 'Memory Liked',
+                request: {
+                    type: 'GET',
+                    url: 'http://localhost:3000/memory/' + result._id
+                } 
+            });
+        })
+        memory.likes++;
+    } 
 })
 
 
