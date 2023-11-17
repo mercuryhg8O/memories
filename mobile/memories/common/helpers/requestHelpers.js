@@ -209,12 +209,9 @@ const getMemoryDetails = async (memoryId) => {
 }
 
 
-const createMemorySuccessful = async ( memoryDescription, memoryVisibility, memoryTags, latitude, longitude) => {
-
-  // temporary short circuit for testing
-  return true;
-
-  const query_string = `/api/creatememory`
+const createMemorySuccessful = async ( accountID, memoryDescription, memoryVisibility, memoryTags, latitude, longitude) => {
+  // NOTE: requires a minium of 5 characters for memoryDescription
+  const query_string = `/memory`
   const request_address = endpointURL + query_string;
   console.log('request made to: ' + request_address);
   console.log('the contents of the request body are as follow:', memoryDescription, memoryVisibility, memoryTags);
@@ -227,17 +224,20 @@ const createMemorySuccessful = async ( memoryDescription, memoryVisibility, memo
 
   // send a post request to the server to create a memory
   const response = await axios.post(request_address, {
-    memory_description: memoryDescription,
-    memory_visibility: memoryVisibility,
-    memory_tags: memoryTags
+    bodyText: memoryDescription,
+    visibility: memoryVisibility,
+    accountID: accountID,
+    tags: memoryTags,
+    latitude: latitude,
+    longitude: longitude
   }).catch((err) => {
     console.log('an error happened when trying to create a memory during the requesting phase' + err);
     error_during_request = true;
   });
 
   // parse response to see if memory was created
-  if(!error_during_request && response?.data?.created_memory !== undefined){
-    console.log('the memory?.data?.valid_info: ' + response?.data?.created_memory);
+  if(!error_during_request && response?.data?.message === "Created memory successfully"){
+    console.log('the memory?.data?.valid_info: ' + response?.data?.createdMemory._id);
     created_memory = true;
   }
 
@@ -248,14 +248,16 @@ const createMemorySuccessful = async ( memoryDescription, memoryVisibility, memo
     console.log('something went wrong while creating a memory');
   }
 
-
+  // could not create memory
   return false;
 }
 
 
-const getMemoriesFromUser = () => {
+const getMemoriesFromUser = (currentuserid, memories_of_this_user) => {
 
   // get a list of id's, lats, and longs of each memory from this user
+
+
 
   
 
