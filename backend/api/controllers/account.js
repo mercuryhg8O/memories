@@ -6,7 +6,7 @@ const UserID = require('../models/userid');
 
 
 exports.signup = (req, res, next) => {
-    Account.find({ email: req.query.email })
+    Account.find({ email: req.body.email })
         .exec()
         .then(account => {
             if (account.length >= 1) {
@@ -14,7 +14,7 @@ exports.signup = (req, res, next) => {
                     message: 'An account with this email already exist'
                 });
             } else {
-                bcrpyt.hash(req.query.password, 10, (err, hash) => {
+                bcrpyt.hash(req.body.password, 10, (err, hash) => {
                     if (err) {
                         return res.status(500).json({
                             error: err
@@ -24,12 +24,12 @@ exports.signup = (req, res, next) => {
                         const account = new Account({
                             _id: new mongoose.Types.ObjectId(),
                             userid : id,
-                            email: req.query.email,
+                            email: req.body.email,
                             password: hash,
-                            username: req.query.username,
-                            label: req.query.label,
-                            bio: req.query.bio,
-                            profilePic: req.query.profilePic,
+                            username: req.body.username,
+                            label: req.body.label,
+                            bio: req.body.bio,
+                            profilePic: req.body.profilePic,
                             verified: false
                         })
                         account.save()
@@ -70,7 +70,7 @@ exports.signup = (req, res, next) => {
 }
 
 exports.login = (req, res, next) => {
-    Account.find({ email: req.query.email })
+    Account.find({ email: req.body.email })
     .exec()
     .then(account => {
         if (account.length < 1) {
@@ -78,7 +78,7 @@ exports.login = (req, res, next) => {
                 message: "Email not found, user does not exist"
             });
         }
-        bcrpyt.compare(req.query.password, account[0].password, (err, result) => {
+        bcrpyt.compare(req.body.password, account[0].password, (err, result) => {
             if (err) {
                 return res.status(401).json({
                     message: "Auth failed"
@@ -259,7 +259,7 @@ exports.delete = (req, res, next) => {
 }
 
 //Generate new ID for user
-const newid = async () =>{
+const newid = async () => {
     const currentVal = await UserID.getCurrent();
     const newID = currentVal+1;
     UserID.updateOne({name : "Counter"}, {current : newID})
@@ -268,7 +268,7 @@ const newid = async () =>{
         if (err) {
             console.error(err);
           } 
-    });
+        });
     return newID;
 }
 
