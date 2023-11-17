@@ -2,7 +2,6 @@ import { useState, useEffect, createContext, useContext, } from 'react';
 import { Alert } from 'react-native';
 import axios from 'axios';
 import { CurrentUserContext } from '../context/contexts';
-import {getCurrentLatLong} from './helpers'
 
 const endpointURL = ''
 
@@ -178,12 +177,10 @@ const getMemoryDetails = async (memoryId) => {
 }
 
 
-const createMemorySuccessful = async ( memoryDescription, memoryVisibility, memoryImage, memoryTags) => {
+const createMemorySuccessful = async ( memoryDescription, memoryVisibility, memoryTags, latitude, longitude) => {
 
-
-  // get the current location:
-  const { latitude, longitude } = await getCurrentLatLong();
-
+  // temporary short circuit for testing
+  return true;
 
   const query_string = `/api/creatememory`
   const request_address = endpointURL + query_string;

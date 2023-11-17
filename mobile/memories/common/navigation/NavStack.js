@@ -9,7 +9,7 @@ import CreateMemoryScreen from '../screens/CreateMemoryScreen.js';
 const Stack = createNativeStackNavigator();
 const NavStack = () => {
     return(
-    <Stack.Navigator initialRouteName="MainScreen">
+    <Stack.Navigator initialRouteName="SignIn">
         <Stack.Screen name="MainScreen" component={MainScreen} />
         <Stack.Screen name="SignIn" component={SignInScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />

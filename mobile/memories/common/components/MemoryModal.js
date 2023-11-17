@@ -46,17 +46,17 @@ const MemoryModal = () => {
     return (displayMemoryDetails ?
         <SafeAreaView style={styles.modal} accessibilityLabel='memory modal' accessible={true}>
             <View style={styles.content}>
-                <View style={styles.iconnname}>
+                <View style={styles.iconName}>
                     <Image style={styles.icon} />
-                    <Text style={styles.name}>{userName}</Text>
+                    <Text style={styles.name}> {userName} </Text>
                 </View>
-                <SafeAreaView style={styles.bioview}>
+                <SafeAreaView style={styles.bioView}>
                     <Text>{memoryDescription}</Text>
                 </SafeAreaView>
-                <SafeAreaView style={styles.bioview}>
-                    <Text>Likes: {numberOfLikes}</Text> {/* TODO: need the ability to dislike by clicking on it*/}
+                <SafeAreaView style={styles.bioView}>
+                    <Text>Likes: {numberOfLikes}</Text> 
                 </SafeAreaView>
-                <SafeAreaView style={styles.bioview}>
+                <SafeAreaView style={styles.bioView}>
                     <Text>Tags: {memoryTags}</Text>
                 </SafeAreaView>
                 
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column'
     },
-    iconnname: {
+    iconName: {
         left: .08 * vw,
         top: .05 * vw,
         flexDirection: 'row'
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
         top: 40,
         left: 10
     },
-    bioview: {
+    bioView: {
         left: .28 * vw + 10,
         top: 30,
         width: .70 * vw - 30,

@@ -6,7 +6,7 @@ import Dropdown from '../components/Dropdown';
 import { CurrentUserContext } from '../context/contexts';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { createMemorySuccessful } from '../helpers/requestHelpers';
-import {setCurrentLocation} from '../helpers/helpers';
+import { setCurrentLocation, getCurrentLatLong, goTo } from '../helpers/helpers';
 
 import * as ImagePicker from 'expo-image-picker';
 
@@ -22,7 +22,7 @@ const CreateMemoryScreen = ({ navigation }) => {
     // the information required for creating a post
     const [memoryDescription, setMemoryDescription] = useState('');
     const [memoryVisibility, setMemoryVisibility] = useState(Visibility.PUBLIC);
-    const [memoryImage, setMemoryImage] = useState('https://cdn-icons-png.flaticon.com/512/3177/3177440.png');
+    const [memoryImage, setMemoryImage] = useState('https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F000%2F349%2F672%2Foriginal%2Fcamera-vector-icon.jpg&f=1&nofb=1&ipt=6e208aea39071b070fe8a7d5258de9fe3a859b0fba678b495ec39b29e67b791d&ipo=images');
     const [memoryTags, setMemoryTags] = useState('');
     
 
@@ -36,21 +36,26 @@ const CreateMemoryScreen = ({ navigation }) => {
             ]);
         } else {
 
+
+            const { latitude, longitude } = await getCurrentLatLong();
             // create request to back end to create a memory
-            const created_memory = await createMemorySuccessful();
+            const created_memory = await createMemorySuccessful(memoryDescription, memoryVisibility, memoryTags, latitude, longitude);
             if(created_memory){
                 // created a memory, should move the mapview to the 
-                // users current location (aka where the memory was made)
+                // users current location (aka where the memory was made) and display map view
                 await setCurrentLocation(mapView);
-                console.log('created a memory');
-                
+                console.log('created a memory and navigating to current location on the map');
+                navigation.navigate('MainScreen');
             }else{
                 console.log('could not create a memory - please check the logs.');
             }
         }
     }
 
-    
+    const parseTags = (text) => {
+        const tags = text.split(',');
+        setMemoryTags(tags);
+    }
 
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -78,10 +83,9 @@ const CreateMemoryScreen = ({ navigation }) => {
                 <CustomInput
                     placeholder={'memory description goes here'}
                     setValue={setMemoryDescription}
-                    isMuliLine={true}
+                    isMultiLine={true}
                     label={'memory description input field'}/>
             </View>
-
 
             <View /* image selector container */ style={styles.logo_container}>
                 <TouchableOpacity onPress={pickImageAsync}>
@@ -96,10 +100,13 @@ const CreateMemoryScreen = ({ navigation }) => {
 
             <View /* visibility, tag & create memory button container */ style={styles.inputContainer}>
                 {/* TODO: replace with drop down */}
-                <Dropdown label="Select visibility" data={data} onSelect={setMemoryVisibility}/>
+                <View style={{flexDirection: 'row'}}>
+                    <Text style={{padding: 10}}>Visibility:</Text>
+                    <Dropdown label="Viewable to..." data={data} onSelect={setMemoryVisibility}/>
+                </View>
                 <CustomInput
-                    placeholder={'tags'}
-                    setValue={setMemoryTags}
+                    placeholder={'tags (delineated by ,)'}
+                    setValue={parseTags}
                     label={'tags input field'}
                 />
                 <CustomButton

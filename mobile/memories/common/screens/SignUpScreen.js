@@ -104,7 +104,7 @@ const SignUpScreen = ({ navigation }) => {
                 <CustomInput
                     placeholder={'[optional]Bio  '}
                     setValue={setBio}
-                    isMuliLine={true}
+                    isMultiLine={true}
                     label={'Bio input field'}
                     />
                 <CustomButton
