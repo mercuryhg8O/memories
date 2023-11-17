@@ -16,12 +16,12 @@ router.get('/', accountController.getAllAccounts);
 
 router.get('/:accountID', accountController.getById);
 
-router.patch('/:accountID', checkAuth, accountController.edit);
+router.patch('/edit', accountController.edit);
 
-router.patch('/:accountID/follow', checkAuth, accountController.follow);
+router.post('/:accountID/:self/follow', accountController.follow);
 
-router.patch('/:accountID/unfollow', checkAuth, accountController.unfollow);
+router.post('/:accountID/:self/unfollow', accountController.unfollow);
 
-router.delete('/:accountID', checkAuth, accountController.delete);
+router.delete('/:accountID/delete', accountController.delete);
 
 module.exports = router;
