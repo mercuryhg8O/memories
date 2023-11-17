@@ -63,7 +63,7 @@ exports.signup = (upload.single('profilePic'), (req, res, next) => {
                                 bio: req.body.bio,
                                 profilePic: req.body.profilePic,
                                 verified: false,
-                            followers: []
+                                followers: []
                             })
                             account.save()
                             .then(result => {

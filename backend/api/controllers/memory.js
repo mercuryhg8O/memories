@@ -110,25 +110,15 @@ exports.getAllMemories = (req, res, next) => {
 
 //GET A MEMORY BY ID
 exports.getById = (req, res, next) => {
-    const id = req.params.memoryID
+    const id = req.params.memoryID;
     const memory = Memory.findById(id)
     .exec()
-    .then(docs => {
+    .then(memory => {
         res.status(200).json({
-            count: docs.length,
-            memory: docs.map(doc => {
-                return {
-                    id: doc._id,
-                    account: doc.accountID,
-                    tags: doc.tags,
-                    images: doc.images,
-                    likes: doc.likes,
-                    visibility: doc.visibility
-                }
-            }),
+            memory: memory,
             request: {
                 type: "GET",
-                url: 'http://localhost/3000/memory/' + docs._id
+                url: 'http://localhost/3000/memory'
             }
         })
     })
@@ -260,7 +250,7 @@ exports.getUserMemories = (req, res, next) => {
     .exec()
     .then(account1 => {
         index1 = account1.followers.indexOf(id);
-        account2 = Account.findById(req.params.self)
+        const account2 = Account.findById(req.params.self)
         .exec()
         .then(account2 => {
             index2 = account2.followers.indexOf(req.params.self);
@@ -311,12 +301,14 @@ exports.getUserMemories = (req, res, next) => {
                                 tags: doc.tags,
                                 images: doc.images,
                                 likes: doc.likes,
-                                visibility: doc.visibility
+                                visibility: doc.visibility,
+                                latitude: doc.latitude,
+                                longitude: doc.longitude
                             }
                         }),
                         request: {
                             type: "GET",
-                            url: 'http://localhost/3000/memory/' + docs._id
+                            url: 'http://localhost/3000/memory/' + doc._id
                         }
                     })
                 })

@@ -19,7 +19,7 @@ router.post('/unlike', memoryController.unlike);
 router.get('/', memoryController.getAllMemories);
 
 //GET A MEMORY BY ITS ID
-router.get('/:memoryID', memoryController.getById); 
+// router.get('/:memoryID', memoryController.getById); 
 
 // FINDING MEMORIES THAT ARE PUBLIC
 router.get('/public', memoryController.getPublicMemories);
