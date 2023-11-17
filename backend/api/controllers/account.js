@@ -18,40 +18,42 @@ exports.signup = (req, res, next) => {
                             error: err
                         });
                     } else {
-                        const account = new Account({
-                            _id: new mongoose.Types.ObjectId(),
-                            userid : id,
-                            email: req.body.email,
-                            password: hash,
-                            username: req.body.username,
-                            label: req.body.label,
-                            bio: req.body.bio,
-                            profilePic: req.body.profilePic,
-                            verified: false
-                        })
-                        account.save()
-                        .then(result => {
-                            console.log(result);
-                            res.status(201).json({
-                                message: 'Created account successfully',
-                                createdAccount: {
-                                    _id: result._id,
-                                    email: result.email,
-                                    username: result.username,
-                                    label: result.label,
-                                    bio: result.bio,
-                                    request: {
-                                        type: 'GET',
-                                        url: 'http://localhost:3000/account/' + result._id
+                        newid().then(id => {
+                            const account = new Account({
+                                _id: new mongoose.Types.ObjectId(),
+                                userid : id,
+                                email: req.body.email,
+                                password: hash,
+                                username: req.body.username,
+                                label: req.body.label,
+                                bio: req.body.bio,
+                                profilePic: req.body.profilePic,
+                                verified: false
+                            })
+                            account.save()
+                            .then(result => {
+                                console.log(result);
+                                res.status(201).json({
+                                    message: 'Created account successfully',
+                                    createdAccount: {
+                                        _id: result._id,
+                                        email: result.email,
+                                        username: result.username,
+                                        label: result.label,
+                                        bio: result.bio,
+                                        request: {
+                                            type: 'GET',
+                                            url: 'http://localhost:3000/account/' + result._id
+                                        }
                                     }
-                                }
+                                })
                             })
-                        })
-                        .catch(err => {
-                            console.log(err);
-                            res.status(500).json({
-                                error: err
-                            })
+                            .catch(err => {
+                                console.log(err);
+                                res.status(500).json({
+                                    error: err
+                                })
+                            });
                         });
                     }
                 });
