@@ -253,16 +253,54 @@ const createMemorySuccessful = async ( accountID, memoryDescription, memoryVisib
 }
 
 
-const getMemoriesFromUser = (currentuserid, memories_of_this_user) => {
+const getMemoriesFromUser = async (currentuserid, memories_of_this_user) => {
 
   // get a list of id's, lats, and longs of each memory from this user
+  const query_string = `/memory/${currentuserid}/${memories_of_this_user}`
+  const request_address = endpointURL + query_string
+  console.log('request made to: ' + request_address)
+  let search_worked = false;
+  let users_list = []
 
 
+  const response = await axios.get(request_address).catch((err) => {
+    console.log('error during retrieval of when getting response: ', err);
+  });
 
-  
+  console.log(response);
+
+  if (response && response.data.message === 'successful') {
+    users_list = response.data.userslist;
+    search_worked = true;
+  }
+
+  return {search_worked, users_list};
 
 
 };
 
+const getUsersFromSearch = async (searchString) => {
 
-export { isValidUser, createUserSuccessful, getUserData, getMemoryDetails, followUser, createMemorySuccessful };
+  const query_string = `/searchbyuser?searchstring=${searchString}`
+  const request_address = endpointURL + query_string
+  console.log('request made to: ' + request_address)
+  let search_worked = false;
+  let users_list = []
+
+
+  const response = await axios.get(request_address).catch((err) => {
+    console.log('error during retrieval of when getting response: ', err);
+  });
+
+  console.log(response);
+
+  if (response && response.data.message === 'successful') {
+    users_list = response.data.userslist;
+    search_worked = true;
+  }
+
+  return {search_worked, users_list};
+};
+
+
+export { isValidUser, createUserSuccessful, getUserData, getMemoryDetails, followUser, createMemorySuccessful, getUsersFromSearch };

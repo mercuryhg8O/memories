@@ -6,6 +6,7 @@ import SearchButton from '../components/SearchButton';
 import { goTo } from '../helpers/helpers';
 import {Picker} from '@react-native-picker/picker';
 import Dropdown from '../components/Dropdown';
+import { getUsersFromSearch } from '../helpers/requestHelpers';
 
 const userMockData = {
     users: [
@@ -79,11 +80,31 @@ const SearchScreen = ({ navigation }) => {
 
     const [searchCriteria, setSearchCriteria] = useState(SearchCriteria.NAME);
     const [searchText, setSearchText] = useState('');
+    const [usersList, setUsersList] = useState([]);
+    const [searchButtonPressed, setSearchButtonPressed] = useState(false);
 
     // USE EFFECTS
     useEffect(() => {
         console.log('update query: ' + searchText)
     }, [searchText]);
+    
+    const fetchUsers = (searchString) => {
+
+        // get the latest users by username, then render
+        getUsersFromSearch(searchString).then((response) => {
+
+            if(response.search_worked){
+
+                    setUsersList(response.users_list);
+            }else{
+                console.log('there was an error with the search')
+            }
+
+
+        }).catch((err) => {console.log('there was an error', err)})
+
+
+    }
 
 
     // COMPONENTS
@@ -237,6 +258,8 @@ const SearchScreen = ({ navigation }) => {
                     onChangeText={newText => setSearchText(newText)}
                     onSubmitEditing={() => {
                         // TODO send request to search for stuff
+                        setSearchButtonPressed(false);// to have on effect run 
+                        setSearchButtonPressed(true);
                         console.log('HI!');
                     }} />
                 <Dropdown preLabel="Searching for" label="..." data={data} onSelect={setSearchCriteria}/>

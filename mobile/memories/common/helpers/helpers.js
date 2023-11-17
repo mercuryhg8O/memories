@@ -29,9 +29,12 @@ const defaultLatLong = {
 }
 
 
-const ParseMemoriesDetails = () => {
+const ParseMemoriesDetails = async () => {
 
   // Make Back-end call here to get Json, and parse similarly to the mock response.
+  
+
+
   {/*Parse memory */ }
   memories = MockResponse.memories.map((memory) => ({ latitude: memory.latitude, longitude: memory.longitude, title: memory.title, id: memory.id }))
   error = false;
