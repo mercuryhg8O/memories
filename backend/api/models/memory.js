@@ -32,7 +32,7 @@ const memorySchema = mongoose.Schema({
         type: Number,
         required: true
     },
-    // images: {},
+    // images: {type: String},
     visibility: {
         type: String,
         enum: Object.values(visibility),
