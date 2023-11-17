@@ -220,10 +220,9 @@ exports.edit = (req, res, next) => {
 }
 
 exports.follow = (req, res, next) => {
-    // const memoryID = req.body.memoryID;
     const accountID = req.params.accountID;
     console.log(req);
-    const userID = req.userData.id;
+    const userID = req.params.selfID;
     const account = Account.findById(accountID)
         .exec()
         .then(account => {
@@ -235,9 +234,8 @@ exports.follow = (req, res, next) => {
             const index = account.followers.indexOf(userID);
             console.log(index);
             if (index == -1) {
-                account.followers.push(req.userData.id);
+                account.followers.push(req.params.selfID);
                 account.save();
-                // memory.likes++;
                 res.status(200).json({
                     account: account,
                     message: 'User Followed',
