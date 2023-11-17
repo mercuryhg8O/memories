@@ -259,7 +259,7 @@ exports.delete = (req, res, next) => {
 }
 
 //Generate new ID for user
-const newid = async () =>{
+const newid = async () => {
     const currentVal = await UserID.getCurrent();
     const newID = currentVal+1;
     UserID.updateOne({name : "Counter"}, {current : newID})
@@ -268,7 +268,7 @@ const newid = async () =>{
         if (err) {
             console.error(err);
           } 
-    });
+        });
     return newID;
 }
 
