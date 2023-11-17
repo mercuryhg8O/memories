@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const multer = require('multer');
+const geolocation = require('geolocation')
 const router = express.Router();
 const Memory = require('../models/memory');
 const Account = require('../models/account');
@@ -41,16 +42,17 @@ const error = ((req, res, next) => {
 })
 
 exports.createMemory = (upload.array('images', 2), (req, res, next) => {
-    console.log(req);
+    console.log(req.file);
     const memory = new Memory({
         _id: new mongoose.Types.ObjectId(),
-        accountID: req.userData.id,
+        accountID: req.params.accountID,
         bodyText: req.body.bodyText,
         visibility: req.body.visibility,
         tags: req.body.tags,
         likes: 0,
         likedBy: [],
-        location: navigator.geolocation.getCurrentPosition(success, error),
+        latitude: req.params.latitude,
+        longitude: req.params.longitude,
         images: req.file.path
     });
     memory.save()
