@@ -34,7 +34,7 @@ const success = (position) => {
     coord = position.coords;
 }
 
-const error = (err, (req, res, next) => {
+const error = ((req, res, next) => {
     res.status(404).json({
         message: "Could not retrieve location"    
     })

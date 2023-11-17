@@ -153,75 +153,80 @@ router.get('/public', (req, res, next) => {
 // FINDING MEMORIES FOR A SPECIFIC USER
 // based on the specific user requesting, finding the posts for that user.
 // if the two users are mutuals, they can view all memories besides private. if not, they can just view public memories
-router.get('/:accountID', (res, req, next) => {
+router.get('/:accountID/:self', (req, res, next) => {
     const id = req.params.accountID;
-    const mutuals = true;
-    const account1 = Account.findById(id);
-    const index1 = account1.followers.indexOf(id);
-    const account2 = Account.findById(req.userData.id);
-    const index2 = account2.followers.indeexOf(req.userData.id)
-    if (index1 != -1 && index2 != -1) {
-        Memory.find()
-        .where('accountID').equals(id)
-        .where('visibility').equals("Public")
-        .where('visibility').equals("Mutuals")
-        .select('_id accountID bodyText tags images likes visibility')
+    const account1 = Account.findById(id)
+    .exec()
+    .then(account1 => {
+        index1 = account1.followers.indexOf(id);
+        account2 = Account.findById(req.params.self)
         .exec()
-        .then(docs => {
-            res.status(200).json({
-                count: docs.length,
-                memory: docs.map(doc => {
-                    return {
-                        id: doc._id,
-                        account: doc.accountID,
-                        tags: doc.tags,
-                        images: doc.images,
-                        likes: doc.likes,
-                        visibility: doc.visibility
-                    }
-                }),
-                request: {
-                    type: "GET",
-                    url: 'http://localhost/3000/memory/' + docs._id
-                }
-            })
+        .then(account2 => {
+            index2 = account2.followers.indexOf(req.params.self);
+            if (index1 != -1 && index2 != -1) {
+                Memory.find()
+                .where('accountID').equals(id)
+                .where('visibility').equals("Public")
+                .where('visibility').equals("Mutuals")
+                .select('_id accountID bodyText tags images likes visibility')
+                .exec()
+                .then(docs => {
+                    res.status(200).json({
+                        count: docs.length,
+                        memory: docs.map(doc => {
+                            return {
+                                id: doc._id,
+                                account: doc.accountID,
+                                tags: doc.tags,
+                                images: doc.images,
+                                likes: doc.likes,
+                                visibility: doc.visibility
+                            }
+                        }),
+                        request: {
+                            type: "GET",
+                            url: 'http://localhost/3000/memory/' + docs._id
+                        }
+                    })
+                })
+                .catch(err => {
+                    res.status(500).json({
+                        error: err
+                    });
+                });
+            } else {
+                Memory.find()
+                .where('accountID').equals(id)
+                .where('visibility').equals("Public")
+                .select('_id accountID bodyText tags images likes visibility')
+                .exec()
+                .then(docs => {
+                    res.status(200).json({
+                        count: docs.length,
+                        memory: docs.map(doc => {
+                            return {
+                                id: doc._id,
+                                account: doc.accountID,
+                                tags: doc.tags,
+                                images: doc.images,
+                                likes: doc.likes,
+                                visibility: doc.visibility
+                            }
+                        }),
+                        request: {
+                            type: "GET",
+                            url: 'http://localhost/3000/memory/' + docs._id
+                        }
+                    })
+                })
+                .catch(err => {
+                    res.status(500).json({
+                        error: err
+                    });
+                });
+            }
         })
-        .catch(err => {
-            res.status(500).json({
-                error: err
-            });
-        });
-    } else {
-        Memory.find()
-        .where('accountID').equals(id)
-        .where('visibility').equals("Public")
-        .select('_id accountID bodyText tags images likes visibility')
-        .exec()
-        .then(docs => {
-            res.status(200).json({
-                count: docs.length,
-                memory: docs.map(doc => {
-                    return {
-                        id: doc._id,
-                        account: doc.accountID,
-                        tags: doc.tags,
-                        images: doc.images,
-                        likes: doc.likes,
-                        visibility: doc.visibility
-                    }
-                }),
-                request: {
-                    type: "GET",
-                    url: 'http://localhost/3000/memory/' + docs._id
-                }
-            })
-        })
-        .catch(err => {
-            res.status(500).json({
-                error: err
-            });
-        });
-    }
+    })
 })
 
 router.delete('/:memoryID', (res, req, next) => {
