@@ -24,4 +24,19 @@ router.patch('/:accountID/unfollow', checkAuth, accountController.unfollow);
 
 router.delete('/:accountID', checkAuth, accountController.delete);
 
+//Generate new ID for user
+const newid = async () =>{
+    const currentVal = await useridCount.getCurrent();
+    const newID = currentVal+1;
+    useridCount.updateOne({name : "Counter"}, {current : newID})
+    .exec()
+    .then(err => {
+        if (err) {
+            console.error(err);
+          } 
+    });
+    return newID;
+}
+
+
 module.exports = router;
