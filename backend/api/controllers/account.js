@@ -173,7 +173,7 @@ exports.getAllAccounts = (req, res, next) => {
 }
 
 exports.getById = (req, res, next) => {
-    const id = req.userData.id;
+    const id = req.params.accountID;
     Account.findById(id)
     .exec()
     .then(doc => {
@@ -194,7 +194,7 @@ exports.getById = (req, res, next) => {
 }
 
 exports.edit = (req, res, next) => {
-    const id = req.userData.id;
+    const id = req.params.accountId;
     const updateOps = {};
     for (const ops of req.body) {
         updateOps[ops.propName] = ops.value;
@@ -262,9 +262,9 @@ exports.follow = (req, res, next) => {
 }
 
 exports.unfollow = (req, res, next) => {
-    const userID = req.userData.id;
-    const accountID = req.param.accountID;
-    const account = Account.findById(accountID)
+    const userID = req.params.self;
+    const accountID = req.params.accountID;
+    Account.findById(accountID)
     .exec()
     .then(account => {
         if (!account) {
@@ -278,14 +278,14 @@ exports.unfollow = (req, res, next) => {
                     message: "You aren't Following this User"
                 })
             } else {
-                memory.likedBy.splice(index, 1);
-                memory.save();
+                account.followers.splice(index, 1);
+                account.save();
                 res.status(200).json({
                     account: account,
-                    message: 'User Followed',
+                    message: 'User Unfollowed',
                     request: {
                         type: 'GET',
-                        url: 'http://localhost:3000/memory/' + memory._id
+                        url: 'http://localhost:3000/memory/' + account._id
                     } 
                 })
             }
@@ -319,7 +319,7 @@ exports.getMutuals = (req, res, next) => {
 }
 
 exports.delete = (req, res, next) => {
-    const id = req.userData.id;
+    const id = req.params.accountID;
     Account.deleteOne({ _id: id })
     .exec()
     .then(result => {
