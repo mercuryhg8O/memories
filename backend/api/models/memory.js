@@ -21,12 +21,7 @@ const memorySchema = mongoose.Schema({
     likedBy: {
         type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'account' }]
     },
-    location: {
-        //longitude comes first
-        type : Point,
-        "coordinates": [Number],
-        required: true,
-    },
+    location : { type: [Number] },
     // images: ,
     visibility: {
         type: String,
