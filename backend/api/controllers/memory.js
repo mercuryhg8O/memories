@@ -5,16 +5,53 @@ const router = express.Router();
 const Memory = require('../models/memory');
 const Account = require('../models/account');
 
-exports.createMemory = (req, res, next) => {
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads');
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname);
+    }
+});
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image.png') {
+        cb(null, false);
+    } else {
+        cb(null, true);
+    }
+};
+
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 1024 * 1024 *5
+    },
+    fileFilter: fileFilter
+});
+
+const success = (position) => {
+    coord = position.coords;
+}
+
+const error = (err, (req, res, next) => {
+    res.status(404).json({
+        message: "Could not retrieve location"    
+    })
+})
+
+exports.createMemory = (upload.array('images', 2), (req, res, next) => {
+    console.log(req);
     const memory = new Memory({
         _id: new mongoose.Types.ObjectId(),
-        accountID: req.body.accountID,
+        accountID: req.userData.id,
         bodyText: req.body.bodyText,
         visibility: req.body.visibility,
         tags: req.body.tags,
         likes: 0,
-        likedBy: mongoose.Types.ObjectId['account']
-        // images: req.file.path
+        likedBy: [],
+        location: navigator.geolocation.getCurrentPosition(success, error),
+        images: req.file.path
     });
     memory.save()
     .then(result => {
@@ -41,7 +78,7 @@ exports.createMemory = (req, res, next) => {
             error: err
         })
     });
-}
+})
 
 exports.getAllMemories = (req, res, next) => {
     Memory.find()
