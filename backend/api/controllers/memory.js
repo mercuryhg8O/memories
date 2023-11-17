@@ -1,7 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const multer = require('multer');
-const geolocation = require('geolocation')
 const router = express.Router();
 const Memory = require('../models/memory');
 const Account = require('../models/account');
