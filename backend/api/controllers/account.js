@@ -2,8 +2,6 @@ const mongoose = require('mongoose');
 const Account = require('../models/account');
 const bcrpyt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const UserID = require('../models/userid');
-
 
 exports.signup = (req, res, next) => {
     Account.find({ email: req.body.email })
@@ -20,7 +18,6 @@ exports.signup = (req, res, next) => {
                             error: err
                         });
                     } else {
-                        newid().then(id => {
                         const account = new Account({
                             _id: new mongoose.Types.ObjectId(),
                             userid : id,
@@ -56,7 +53,6 @@ exports.signup = (req, res, next) => {
                                 error: err
                             })
                         });
-                    });
                     }
                 });
             }

@@ -8,11 +8,6 @@ const label = Object.freeze({
 
 const accountSchema = mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
-  userid : {
-    type: Number,
-    required : true,
-    unique : true
-  },
   email: {
     type: String,
     required: true,
@@ -52,4 +47,4 @@ Object.assign(accountSchema.statics, {
   label,
 });
 
-module.exports = mongoose.model('accounts', accountSchema);
+module.exports = mongoose.model('account', accountSchema);
