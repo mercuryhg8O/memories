@@ -9,27 +9,31 @@ const Profile = () => {
     {/* Once the  */}
     const [userName, setUserName] = useState('');
     const [userBio, setUserBio] = useState('');
-    const { displayUser, targetUserUID, currentUserID } = useContext(CurrentUserContext);
+    const { displayUser, setDisplayMemoryDetails, targetUserUID, currentUserID } = useContext(CurrentUserContext);
 
     // Once the targetUserUID gets updated, a request to get the profile of the targetUserUID is created
     // and the username and bio information gets updated.
     useEffect(()=>{
         const getUserProfileData = async () => {
-            const {userid, username, bio} = await getUserData(targetUserUID);
+            const {found_user, username, bio} = await getUserData(targetUserUID);
 
-            if(!userid){
-                console.log('error parsing response from request for profile with uid: ' + targetUserUID);
+            if(!found_user){
+                console.log('error parsing response from request for profile with id: ' + targetUserUID);
             }else{
                 // response was valid, so parse and save the output
-                console.log(userid);
+                console.log(targetUserUID);
+                console.log('found user id:' + found_user);
                 console.log(username);
                 console.log(bio);
                 setUserName(username);
                 setUserBio(bio);
+                setDisplayMemoryDetails(false);
+
+                // update map to include icons from that user
             }
         }
         getUserProfileData();
-    }, [targetUserUID]);
+    }, [targetUserUID || displayUser]);
 
 
 

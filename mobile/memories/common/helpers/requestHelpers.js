@@ -37,20 +37,26 @@ const getUserData = async (userid) => {
   const request_address = endpointURL + query_string
   console.log('request made to: ' + request_address)
 
+  // error handling
+  let found_user = false;
+
   const response = await axios.get(request_address).catch((err) => {
     console.log('error during retrieval response: ', err);
-    return false;
   });
 
-  let username = 'a';
-  let bio = 'a';
+  let username = 'default username';
+  let bio = 'default bio';
 
   if (response) {
     username = response.data.username;
     bio = response.data.bio;
+    found_user= true
   }
 
-  return { userid, username, bio };
+  // set to true for testing purposes - TODO: remove
+  found_user = true;
+
+  return { found_user, username, bio };
 }
 
 
@@ -219,6 +225,16 @@ const createMemorySuccessful = async ( memoryDescription, memoryVisibility, memo
 
   return false;
 }
+
+
+const getMemoriesFromUser = () => {
+
+  // get a list of id's, lats, and longs of each memory from this user
+
+  
+
+
+};
 
 
 export { isValidUser, createUserSuccessful, getUserData, getMemoryDetails, followUser, createMemorySuccessful };

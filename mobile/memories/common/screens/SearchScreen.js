@@ -75,7 +75,7 @@ export const SearchCriteria = {
 const SearchScreen = ({ navigation }) => {
 
     // CONTEXTS:
-    const { mapView, setDisplayUser, setTargetUserUID } = useContext(CurrentUserContext);
+    const { mapView, setDisplayUser, setDisplayMemoryDetails, setTargetUserUID } = useContext(CurrentUserContext);
 
     const [searchCriteria, setSearchCriteria] = useState(SearchCriteria.NAME);
     const [searchText, setSearchText] = useState('');
@@ -87,6 +87,8 @@ const SearchScreen = ({ navigation }) => {
 
 
     // COMPONENTS
+
+
 
     // A button for selecting a search criteria
     const SelectFocusButton = ({criteriaName}) => {
@@ -106,6 +108,7 @@ const SearchScreen = ({ navigation }) => {
                 onPress={() => {
                     setTargetUserUID(userId);
                     setDisplayUser(true);
+                    setDisplayMemoryDetails(false);
                     navigation.navigate('MainScreen');
                 }}
             >
@@ -143,7 +146,6 @@ const SearchScreen = ({ navigation }) => {
                     setDisplayUser(false);
                     console.log(lat, long)
                     goTo(mapView, lat, long);
-                    // setCurrentLocation()
                     navigation.navigate('MainScreen');
                 }}>
                 <Image style={styles.icon} />
