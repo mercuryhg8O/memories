@@ -1,7 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import * as Location from 'expo-location';
 import { CurrentUserContext } from '../context/contexts';
 import {selectMemory, getCurrentLatLong} from '../helpers/helpers';
 
@@ -15,7 +14,7 @@ const Map = ({ memory_locations, navigation }) => {
     // set initial default region
 
     const getInitRegion = () => {
-        // const {lat, long} = getCurrentLatLong();
+        const {lat, long} = getCurrentLatLong();
         return {
             latitude: 42.7328086,
             longitude: -73.685083,

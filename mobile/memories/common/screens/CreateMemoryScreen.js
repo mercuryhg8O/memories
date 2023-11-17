@@ -101,14 +101,13 @@ const CreateMemoryScreen = ({ navigation }) => {
             <View /* visibility, tag & create memory button container */ style={styles.inputContainer}>
                 {/* TODO: replace with drop down */}
                 <View style={{flexDirection: 'row'}}>
-                    <Text style={{padding: 10}}>Visibility:</Text>
+                    <CustomInput
+                        placeholder={'tags (delineated by ,)'}
+                        setValue={parseTags}
+                        label={'tags input field'}
+                    />
                     <Dropdown label="Viewable to..." data={data} onSelect={setMemoryVisibility}/>
                 </View>
-                <CustomInput
-                    placeholder={'tags (delineated by ,)'}
-                    setValue={parseTags}
-                    label={'tags input field'}
-                />
                 <CustomButton
                     placeholder={'Create Memory'}
                     onPress={() => { attemptMemoryCreation() }}

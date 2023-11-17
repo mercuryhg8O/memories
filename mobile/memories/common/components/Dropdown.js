@@ -92,7 +92,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#efefef',
     height: 'auto',
     // zIndex: 1,
-    width: width
+    width: width,
+    position: 'absolute',
+    left: '50%',
   },
   buttonText: {
     flex: 1,
@@ -102,7 +104,8 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   dropdown: {
-    position: 'absolute',
+    position: 'relative',
+    left: '50%',
     backgroundColor: '#fff',
     width: width,
     shadowColor: '#000000',
