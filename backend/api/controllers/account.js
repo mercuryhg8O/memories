@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Account = require('../models/account');
 const bcrpyt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const UserID = require('../models/userid')
 
 exports.signup = (req, res, next) => {
     Account.find({ email: req.body.email })
