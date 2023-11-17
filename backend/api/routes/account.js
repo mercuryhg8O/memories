@@ -16,6 +16,8 @@ router.get('/', accountController.getAllAccounts);
 
 router.get('/:accountID', accountController.getById);
 
+router.get('/:accountID/mutuals', accountController.getMutuals);
+
 router.patch('/edit', accountController.edit);
 
 router.post('/:accountID/:self/follow', accountController.follow);

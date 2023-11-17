@@ -125,7 +125,7 @@ exports.login = (req, res, next) => {
                 );
                 return res.status(200).json({
                     message: "Auth successful",
-                    token: token
+                    accountID: account[0]._id
                 })
             }
             res.status(401).json({
@@ -221,8 +221,7 @@ exports.edit = (req, res, next) => {
 
 exports.follow = (req, res, next) => {
     const accountID = req.params.accountID;
-    console.log(req);
-    const userID = req.params.selfID;
+    const userID = req.params.self;
     const account = Account.findById(accountID)
         .exec()
         .then(account => {
@@ -232,9 +231,8 @@ exports.follow = (req, res, next) => {
                 });
             }
             const index = account.followers.indexOf(userID);
-            console.log(index);
             if (index == -1) {
-                account.followers.push(req.params.selfID);
+                account.followers.push(req.params.self);
                 account.save();
                 res.status(200).json({
                     account: account,
@@ -244,60 +242,23 @@ exports.follow = (req, res, next) => {
                         url: 'http://localhost:3000/memory/' + account._id
                     } 
                 });
+                me = Account.findById(userID)
+                    .exec()
+                    .then(me => {
+                        const index1 = me.followers.indexOf(accountID);
+                        if (index1 != -1) {
+                            me.mutuals.push(accountID);
+                            me.save();
+                            account.mutuals.push(userID);
+                            account.save();
+                        }
+                    })
             } else {
                 res.status(404).json({
                     message: "You're Already Following this User"
                 })
             }   
         })
-    // const id = req.params.accountID;
-    // const account = Account.findById(id)
-    //     .exec()
-    //     .then(account => {
-    //         if (!account) {
-    //             return res.status(404).json({
-    //                 message: "Account Not Found",
-    //             });
-    //         }
-    //         console.log('227')
-    //         const index = account.followers.indexOf(req.userData.id);
-    //         console.log(index);
-    //         if (index == -1) {
-    //             account.followers.push(req.userData.id);
-    //             account.save();
-    //             // memory.likes++;
-    //             res.status(200).json({
-    //                 memory: memory,
-    //                 message: 'Memory Liked',
-    //                 request: {
-    //                     type: 'GET',
-    //                     url: 'http://localhost:3000/memory/' + memory._id
-    //                 }
-    //             });
-    //         } else {
-    //             res.status(404).json({
-    //                 message: "Already Following User Liked Memory"
-    //             })
-    //         }
-    //     })
-    
-    // account.followers.push(req.user._id)
-    // .exec()
-    // .then(doc => {
-    //     if (doc) {
-    //         console.log(account.followers);
-    //         res.status(200).json({ doc });
-    //     } else {
-    //         res.status(404).json({
-    //             message: "No found entry found for provided ID"
-    //         });
-    //     }
-    // })
-    // .catch(err => {
-    //     res.status(500).json({
-    //         error: err
-    //     });
-    // });
 }
 
 exports.unfollow = (req, res, next) => {
@@ -327,7 +288,6 @@ exports.unfollow = (req, res, next) => {
                         url: 'http://localhost:3000/memory/' + memory._id
                     } 
                 })
-                // memory.likes--;
             }
         }
     })   
@@ -336,6 +296,25 @@ exports.unfollow = (req, res, next) => {
         res.status(500).json({
             error: err
         });
+    })
+}
+
+exports.getMutuals = (req, res, next) => {
+    const accountID = req.params.accountID;
+    const account = Account.findById(accountID)
+    .select()
+    .exec()
+    .then(account => {
+        if (!account) {
+            return res.status(404).json({
+                message: "User Not Found",
+            });
+        } else {
+            return res.status(200).json ({
+                mutuals: account.mutuals,
+                message: 'Retrieved Mutuals'
+            })  
+        }
     })
 }
 

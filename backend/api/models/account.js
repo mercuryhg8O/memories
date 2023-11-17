@@ -36,6 +36,9 @@ const accountSchema = mongoose.Schema({
   followers: {
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'account' }],
   },
+  mutuals: {
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'account' }],
+  },
   likedMemories: {
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'memory' }],
     default: mongoose.Types.ObjectId['memory']
