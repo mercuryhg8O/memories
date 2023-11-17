@@ -176,7 +176,6 @@ router.patch('/:memoryID/:accountID/unlike', checkAuth, (res, req, next) => {
 
 // FINDING MEMORIES THAT ARE PUBLIC
 router.get('/public', (req, res, next) => {
-    //console.log(visibility)
     Memory.find()
         .where('visibility').equals("Public")
         .select('_id accountID bodyText tags images likes visibility')
@@ -212,8 +211,16 @@ router.get('/public', (req, res, next) => {
 // if the two users are mutuals, they can view all memories besides private. if not, they can just view public memories
 router.get('/:accountID', (res, req, next) => {
     const id = req.params.accountID;
-    Memory.find()
+    const mutuals = true;
+    const account1 = Account.findById(id);
+    const index1 = account1.followers.indexOf(id);
+    const account2 = Account.findById(req.userData.id);
+    const index2 = account2.followers.indeexOf(req.userData.id)
+    if (index1 != -1 && index2 != -1) {
+        Memory.find()
         .where('accountID').equals(id)
+        .where('visibility').equals("Public")
+        .where('visibility').equals("Mutuals")
         .select('_id accountID bodyText tags images likes visibility')
         .exec()
         .then(docs => {
@@ -240,6 +247,37 @@ router.get('/:accountID', (res, req, next) => {
                 error: err
             });
         });
+    } else {
+        Memory.find()
+        .where('accountID').equals(id)
+        .where('visibility').equals("Public")
+        .select('_id accountID bodyText tags images likes visibility')
+        .exec()
+        .then(docs => {
+            res.status(200).json({
+                count: docs.length,
+                memory: docs.map(doc => {
+                    return {
+                        id: doc._id,
+                        account: doc.accountID,
+                        tags: doc.tags,
+                        images: doc.images,
+                        likes: doc.likes,
+                        visibility: doc.visibility
+                    }
+                }),
+                request: {
+                    type: "GET",
+                    url: 'http://localhost/3000/memory/' + docs._id
+                }
+            })
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err
+            });
+        });
+    }
 })
 
 
