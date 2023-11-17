@@ -271,7 +271,9 @@ exports.getUserMemories = (req, res, next) => {
                                 tags: doc.tags,
                                 images: doc.images,
                                 likes: doc.likes,
-                                visibility: doc.visibility
+                                visibility: doc.visibility,
+                                latitude: doc.latitude,
+                                longitude: doc.longitude
                             }
                         }),
                         request: {
@@ -301,14 +303,12 @@ exports.getUserMemories = (req, res, next) => {
                                 tags: doc.tags,
                                 images: doc.images,
                                 likes: doc.likes,
-                                visibility: doc.visibility,
-                                latitude: doc.latitude,
-                                longitude: doc.longitude
+                                visibility: doc.visibility
                             }
                         }),
                         request: {
                             type: "GET",
-                            url: 'http://localhost/3000/memory/' + doc._id
+                            url: 'http://localhost/3000/memory/' + docs._id
                         }
                     })
                 })
