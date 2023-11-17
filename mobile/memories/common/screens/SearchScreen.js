@@ -88,18 +88,6 @@ const SearchScreen = ({ navigation }) => {
 
     // COMPONENTS
 
-
-
-    // A button for selecting a search criteria
-    const SelectFocusButton = ({criteriaName}) => {
-        return (
-            <TouchableOpacity style={styles.btnContainer}
-            onPress={() => {setSearchCriteria(criteriaName)}}>
-                <Text>{criteriaName}</Text>
-            </TouchableOpacity>
-        )
-    }
-
     // returns an instance of a user to be displayed as a search option
     const userDetails = (username, userId) => { // TODO request info based on id
         return (
@@ -230,9 +218,9 @@ const SearchScreen = ({ navigation }) => {
 
     return (
         <SafeAreaView style={styles.modal}>
-            <View style={styles.topRow}>
+            <View style={styles.searchingLine}>
                 <TextInput
-                    style={styles.input_alt}
+                    style={styles.input}
                     placeholder='What are you looking for?'
                     onChangeText={newText => setSearchText(newText)}
                     onSubmitEditing={() => {
@@ -258,21 +246,13 @@ const vw = Dimensions.get('window').width;
 const styles = StyleSheet.create({
     searchingLine: {
         flexDirection: 'row',
-        left: '10%',
-        width: '80%',
-        top: 75,
-        backgroundColor: 'cyan',
-    },
-    btn: {
-        backgroundColor: 'lime',
-        left: 10
     },
     input: {
-        // borderWidth: 1,
-        width: '70%',
-        fontSize: 15,
-        backgroundColor: 'azure',
-        left: 0
+        borderBottomWidth: 1,
+        borderRadius: 12 / 1.25,
+        padding: 10,
+        width: '50%',
+        height: 40
     },
     modal: {
         height: '100%',
@@ -300,37 +280,6 @@ const styles = StyleSheet.create({
         width: 40, height: 40, // make sure these values are the same
         borderRadius: 50,
     },
-    tag: {
-        fontSize: 50
-    },
-    input_alt: {
-        flex: 1,
-        margin: 12,
-        borderBottomWidth: 1,
-        borderRadius: 12 / 1.25,
-        padding: 10,
-        width: '70%'
-    },
-    select_area_view: {
-        flex: 1,
-        flexDirection: 'row',
-    },
-    btnContainer: {
-        flex:1,
-        width: vw / 4,
-        backgroundColor: "#dba7c3",
-        borderRadius: 60,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    criteria: {
-        flexDirection: 'row'
-    },
-    topRow: {
-        height: 50,
-        width: '100%',
-        flexDirection: 'row'
-    }
 
 });
 

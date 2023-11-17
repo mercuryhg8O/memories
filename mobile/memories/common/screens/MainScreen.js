@@ -41,25 +41,23 @@ function MainScreen({ navigation }) {
                 <Text style={{color: 'white', top: 10, left: 10}}>For demo only</Text>
              </View> */}
 
+            <Map
+                navigation={navigation}
+                memory_locations={memory_locations} />
             <View /* Buttons for navigation*/ style={styles.navbar}>
                 {/* Temporary: the navigateTo is set to the screen name as defined in nav */}
-                <NavigationButton navigation={navigation} navigateTo={'Search'}/>
-                <NavigationButton navigation={navigation} navigateTo={'UserScreen'}/>
-                <NavigationButton navigation={navigation} navigateTo={'CreateMemory'}/>
-                <TouchableOpacity
+                <NavigationButton label="?" navigation={navigation} navigateTo={'Search'}/>
+                <NavigationButton label="_" navigation={navigation} navigateTo={'UserScreen'}/>
+                <NavigationButton label="+" navigation={navigation} navigateTo={'CreateMemory'}/>
+                {/* <TouchableOpacity
                     onPress={() => {
                         const {lat, long} =  getCurrentLatLong();
                         goTo(mapView, lat, long);
                     }}
                     >
                     <Text> navigate to current location</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </View>
-
-
-            <Map
-                navigation={navigation}
-                memory_locations={memory_locations} />
             <Profile/>
             <MemoryModal/>
         </View>
@@ -72,12 +70,14 @@ const styles = StyleSheet.create({
     },
 
     navbar: {
-        // position: 'absolute',
-        // top: 50, bottom: 20,
-        width: '100%',
-        height: '5%',
+        position: 'absolute',
+        left: '87%',
+        top: 10,
+        width: '10%',
+        gap: 10,
+        height: 'auto',
         alignContent: 'center',
-        flexDirection: 'row'
+        flexDirection: 'column'
     }
 });
 

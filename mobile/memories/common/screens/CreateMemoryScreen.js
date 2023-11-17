@@ -100,7 +100,7 @@ const CreateMemoryScreen = ({ navigation }) => {
 
             <View /* visibility, tag & create memory button container */ style={styles.inputContainer}>
                 {/* TODO: replace with drop down */}
-                <View style={{flexDirection: 'row'}}>
+                <View style={{flexDirection: 'row', width: '100%'}}>
                     <CustomInput
                         placeholder={'tags (delineated by ,)'}
                         setValue={parseTags}
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
         borderRadius: 35
     },
     inputContainer: {
-        paddingTop: .05 * vh,
+        paddingTop: .07 * vh,
         alignItems: "center",
         gap: 0.025 * vh,
     },
@@ -152,6 +152,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 5,
         paddingVertical: 10,
+        marginTop: .05*vh,
         alignItems: "center",
     },
 });
