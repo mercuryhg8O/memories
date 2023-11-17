@@ -34,9 +34,9 @@ router.get('/:memoryID', (req, res, next) => {
         });
 });
 
-router.post('/like', (req, res, next) => {
+router.post('/:memoryID/:accountID/like', (req, res, next) => {
     const memoryID = req.body.memoryID;
-    const accountID = req.userData.id;
+    const accountID = req.params.accountID;
     const memory = Memory.findById(memoryID)
         .exec()
         .then(memory => {
@@ -67,9 +67,9 @@ router.post('/like', (req, res, next) => {
         })
 })
 
-router.post('/unlike', (req, res, next) => {
+router.post('/:memoryID/:accountID/unlike', (req, res, next) => {
     const memoryID = req.body.memoryID;
-    const accountID = req.userData.accountID;
+    const accountID = req.params.accountID;
     const memory = Memory.findById(memoryID)
     .exec()
     .then(memory => {
