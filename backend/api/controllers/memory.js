@@ -36,7 +36,7 @@ const upload = multer({
 // upload.array('images', 2),
 
 //CREATE MEMORY CONTROLLER
-exports.createMemory =  (req, res, next) => {
+exports.createMemory = (upload.array('images') ,(req, res, next) => {
     const memory = new Memory({
         _id: new mongoose.Types.ObjectId(),
         accountID: req.body.accountID,
@@ -45,8 +45,8 @@ exports.createMemory =  (req, res, next) => {
         tags: req.body.tags,
         likes: 0,
         likedBy: [],
-        latitude: req.params.latitude,
-        longitude: req.params.longitude,
+        latitude: req.body.latitude,
+        longitude: req.body.longitude,
         // images: req.file.path
     });
     memory.save()
@@ -74,7 +74,7 @@ exports.createMemory =  (req, res, next) => {
             error: err
         })
     });
-}
+})
 
 //GET ALL MEMORIES
 exports.getAllMemories = (req, res, next) => {
