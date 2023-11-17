@@ -8,18 +8,26 @@ exports.searchUser = (req, res, next) => {
       }
     const term = req.query.search;
     //Check if the search term is a UserID
-    if(!isNaN(term) && term.length == 4){ 
-        const ID = Number(term);
-        Account.findOne({userid : ID})
+    if(isNaN(term)){
+        Account.find()
+        .or([{email: {$regex: '.*' + term + '.*', $options: 'i'}},
+            {username: {$regex: '.*' + term + '.*', $options: 'i'}}])
         .exec()
         .then(user =>
-            res.status(200).json({user}));
+            res.status(200).json({user}))
+        .catch(err =>
+            res.status(500).json({err}));
     }
-    else{
-        //Temporarily no other function
-        res.status(500).json({"Error": "Currently Not Supported"});
+        else{
+            Account.find({userid : term})
+            .exec()
+            .then(user =>
+                res.status(200).json({user}))
+            .catch(err =>
+                res.status(500).json({err}));
     }
 }
+
 
 exports.searchPlace = (req, res, next) => {
     //Needs some garbage data for location
