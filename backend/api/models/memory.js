@@ -18,6 +18,9 @@ const memorySchema = mongoose.Schema({
     },
     tags: [String],
     likes: Number,
+    likedBy: {
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'account' }]
+    },
     location: {
         // required: true,
     },

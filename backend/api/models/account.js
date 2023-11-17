@@ -38,6 +38,14 @@ const accountSchema = mongoose.Schema({
     type: Boolean,
     default: false
   },
+  followers: {
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'account' }],
+    default: mongoose.Types.ObjectId['account']
+  },
+  likedMemories: {
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'memory' }],
+    default: mongoose.Types.ObjectId['memory']
+  }
 });
 
 Object.assign(accountSchema.statics, {
