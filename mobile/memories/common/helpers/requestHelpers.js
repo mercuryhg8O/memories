@@ -3,7 +3,7 @@ import { Alert } from 'react-native';
 import axios from 'axios';
 import { CurrentUserContext } from '../context/contexts';
 
-const endpointURL = ''
+const endpointURL = 'https://memories-test-server.onrender.com'
 
 
 const mockMemoryResponse = {
@@ -14,20 +14,30 @@ const mockMemoryResponse = {
 }
 
 const isValidUser = async (email, password) => {
-  const query_string = `/api/isvaliduser?email=${email}&password=${password}`
+  const query_string = `/account/login?email=${email}&password=${password}`
   const request_address = endpointURL + query_string
   console.log('request made to: ' + request_address)
+  let signed_in_worked = false;
+  let userId = 'tempuserid'
+
+  const request_body = {
+    "email": email,
+    "password": password
+  };
 
 
-  const response = await axios.get(request_address,).catch((err) => {
+  const response = await axios.post(request_address,request_body).catch((err) => {
     console.log('error during retrieval of when getting response: ', err);
   });
 
-  if (response && response.data.isvaliduser === 'true') {
-    return true;
+  console.log(response);
+
+  if (response && response.data.message === 'Auth successful') {
+    userId = response.data.accountID;
+    signed_in_worked = true;
   }
 
-  return true;
+  return {signed_in_worked, userId};
 }
 
 
@@ -99,22 +109,38 @@ const followUser = async (current_user, user_to_follow) => {
   
 }
 
-
 const createUserSuccessful = async (username, email, password, bio) => {
-  const query_string = `/api/createaccount?email=${email}&password=${password}&username=${username}&bio=${bio}`
-  const request_address = endpointURL + query_string;
+  // TODO: reminder that email needs a '@<something>.com'
+  const query_string = `/account/signup`
+  const request_address = endpointURL + query_string
   console.log('request made to: ' + request_address);
+  let created_account = true;
+  let userId = '';
 
-  const response = await axios.get(request_address).catch((err) => {
-    // console.log('error during retrieval of when getting response: ', err);
-    return false;
+  const request_body = {
+    "email": email,
+    "username": username,
+    "password": password,
+    "label": "Blog",
+    "bio": bio,
+  };
+
+  console.log(request_body)
+
+
+  const response = await axios.post(request_address, request_body).catch((err) => {
+    console.log('error during retrieval of when getting response: ', err);
+    created_account = false;
   });
 
-  if (response && response.data.isvaliduser === 'true') {
-    return true;
+  if(created_account){
+    userId = response.data.createdAccount._id
+    console.log('created account')
   }
+  console.log('response:');
+  console.log(response.data);
 
-  return true;
+  return {created_account, userId};
 }
 
 const getMemoryDetails = async (memoryId) => {

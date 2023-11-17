@@ -28,12 +28,14 @@ const SignInScreen = ({ navigation }) => {
             
             // if the user exists, then they should be loggedin
             isValidUser(email, password).then((userLoginStatus) => {
-                if(userLoginStatus){ // valid login
+                if(userLoginStatus.signed_in_worked){ // valid login
 
                     // should parse request for userid to make future requests
-                    setCurrentUser(email); // save email for future requests (temporary solution)
+                    // setCurrentUser(email); // save email for future requests (temporary solution)
+                    console.log('id set:', userLoginStatus.userId);
+                    setCurrentUser(userLoginStatus.userId); // set user context to MongoDB user ids instead
                     navigation.navigate('MainScreen'); // navigate to map
-                }else{
+                } else {
                     console.warn('no account exists with that email & password.');
                 }
             }).catch(

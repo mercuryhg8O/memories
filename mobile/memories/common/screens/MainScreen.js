@@ -15,12 +15,12 @@ import NavigationButton from '../components/NavigationButton.js'
 // Main page
 function MainScreen({ navigation }) {
 
-    const { displayUser, setDisplayUser } = useContext(CurrentUserContext);
+    const { displayUser, setDisplayUser, currentUserID } = useContext(CurrentUserContext);
 
     useEffect(() => {
         const { memories, error } = ParseMemoriesDetails();
         setMemoryLocations(memories)
-    }, []);
+    }, [currentUserID]);
     [memory_locations, setMemoryLocations] = useState([]);
 
     const displayUserModal = () => {

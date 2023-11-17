@@ -21,43 +21,37 @@ const SignUpScreen = ({ navigation }) => {
 
         if(userName === ''){
             Alert.alert('Enter userName', 'login requires userName', [
-                {text: 'OK'},                
+                {text: 'OK'},
               ]);
         } else if(email === ''){
             Alert.alert('Enter email', 'login requires email', [
-                {text: 'OK'},                
+                {text: 'OK'},
               ]);
         } else if(password === ''){
             Alert.alert('Enter password', 'login requires password', [
-                {text: 'OK'},                
+                {text: 'OK'},
               ]);
         } else{
 
             // create and login user if possible
             createUserSuccessful(userName, email, password, bio).then((userLoginStatus) => {
-                if(userLoginStatus){ // valid login
+                if(userLoginStatus.created_account){ // valid login
 
                     // should parse request for userid to make future requests
-                    setCurrentUser(email); // save email for future requests (temporary solution)
+                    console.log('setting current user to: ', userLoginStatus.account_id);
+                    setCurrentUser(userLoginStatus.account_id); // save email for future requests (temporary solution)
                     navigation.navigate('MainScreen'); // navigate to map
                 }else{
-                    console.warn('no account exists with that email & password.');
+                    console.warn('could not create an account with that email & password.');
                 }
             }).catch(
                 (err) => {console.log(err)});
 
-            if (true){ // valid login (replace with request)
-                navigation.navigate('MainScreen'); // navigate to map
-                setCurrentUser(userName); // save username for future requests
-            } else{
-                console.warn('cannot create an account with that information.')
-                // TODO: parse to provide informative error of why account creation didn't succeed
-            }
         }
     }
 
     const [userIcon, setUserIcon] = useState('https://cdn-icons-png.flaticon.com/512/3177/3177440.png');
-    
+
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
