@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 const Account = require('../models/account');
-const UserID = require('../models/userid');
 
+//Function for searching for a User through ID, Username, or Email
 exports.searchUser = (req, res, next) => {
     if(req.query.constructor === Object && Object.keys(req.query).length === 0) {
         res.status(404).json({"Error": "Got Nothing"});    
       }
     const term = req.query.search;
-    //Check if the search term is a UserID
+    //Check if the search term is a Number
     if(isNaN(term)){
         Account.find()
         .or([{email: {$regex: '.*' + term + '.*', $options: 'i'}},
@@ -18,6 +18,7 @@ exports.searchUser = (req, res, next) => {
         .catch(err =>
             res.status(500).json({err}));
     }
+    //If the search term is a number, may be UserID
         else{
             Account.find()
             .or([{userid : term},
