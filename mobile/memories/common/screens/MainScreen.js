@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useState, useEffect, useContext } from 'react';
 import { StyleSheet, View, Text, Button, TouchableOpacity } from 'react-native';
-import { ParseMemoriesDetails } from '../helpers/helpers';
+import { ParseMemoriesDetails, getCurrentLatLong, goTo } from '../helpers/helpers';
 import { StatusBar } from 'expo-status-bar';
 import SearchButton from '../components/SearchButton.js';
 import Map from '../components/Map';
@@ -15,7 +15,7 @@ import NavigationButton from '../components/NavigationButton.js'
 // Main page
 function MainScreen({ navigation }) {
 
-    const { displayUser, setDisplayUser, currentUserID } = useContext(CurrentUserContext);
+    const { mapView, displayUser, setDisplayUser, currentUserID } = useContext(CurrentUserContext);
 
     useEffect(() => {
         const { memories, error } = ParseMemoriesDetails();
@@ -46,7 +46,14 @@ function MainScreen({ navigation }) {
                 <NavigationButton navigation={navigation} navigateTo={'Search'}/>
                 <NavigationButton navigation={navigation} navigateTo={'UserScreen'}/>
                 <NavigationButton navigation={navigation} navigateTo={'CreateMemory'}/>
-                <TouchableOpacity><Text> navigate to current location</Text></TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => {
+                        const {lat, long} =  getCurrentLatLong();
+                        goTo(mapView, lat, long);
+                    }}
+                    >
+                    <Text> navigate to current location</Text>
+                </TouchableOpacity>
             </View>
 
 
