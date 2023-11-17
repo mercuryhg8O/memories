@@ -39,7 +39,7 @@ const CreateMemoryScreen = ({ navigation }) => {
 
             const { latitude, longitude } = await getCurrentLatLong();
             // create request to back end to create a memory
-            const created_memory = await createMemorySuccessful(memoryDescription, memoryVisibility, memoryTags, latitude, longitude);
+            const created_memory = await createMemorySuccessful(currentUserID, memoryDescription, memoryVisibility, memoryTags, latitude, longitude);
             if(created_memory){
                 // created a memory, should move the mapview to the 
                 // users current location (aka where the memory was made) and display map view
