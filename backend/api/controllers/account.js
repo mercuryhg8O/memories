@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Account = require('../models/account');
 const bcrpyt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const UserID = require('../models/userid')
 
 exports.signup = (req, res, next) => {
     Account.find({ email: req.body.email })
@@ -18,39 +19,42 @@ exports.signup = (req, res, next) => {
                             error: err
                         });
                     } else {
-                        const account = new Account({
-                            _id: new mongoose.Types.ObjectId(),
-                            email: req.body.email,
-                            password: hash,
-                            username: req.body.username,
-                            label: req.body.label,
-                            bio: req.body.bio,
-                            profilePic: req.body.profilePic,
-                            verified: false
-                        })
-                        account.save()
-                        .then(result => {
-                            console.log(result);
-                            res.status(201).json({
-                                message: 'Created account successfully',
-                                createdAccount: {
-                                    _id: result._id,
-                                    email: result.email,
-                                    username: result.username,
-                                    label: result.label,
-                                    bio: result.bio,
-                                    request: {
-                                        type: 'GET',
-                                        url: 'http://localhost:3000/account/' + result._id
+                        newid().then(id => {
+                            const account = new Account({
+                                _id: new mongoose.Types.ObjectId(),
+                                userid : id,
+                                email: req.body.email,
+                                password: hash,
+                                username: req.body.username,
+                                label: req.body.label,
+                                bio: req.body.bio,
+                                profilePic: req.body.profilePic,
+                                verified: false
+                            })
+                            account.save()
+                            .then(result => {
+                                console.log(result);
+                                res.status(201).json({
+                                    message: 'Created account successfully',
+                                    createdAccount: {
+                                        _id: result._id,
+                                        email: result.email,
+                                        username: result.username,
+                                        label: result.label,
+                                        bio: result.bio,
+                                        request: {
+                                            type: 'GET',
+                                            url: 'http://localhost:3000/account/' + result._id
+                                        }
                                     }
-                                }
+                                })
                             })
-                        })
-                        .catch(err => {
-                            console.log(err);
-                            res.status(500).json({
-                                error: err
-                            })
+                            .catch(err => {
+                                console.log(err);
+                                res.status(500).json({
+                                    error: err
+                                })
+                            });
                         });
                     }
                 });
@@ -252,3 +256,18 @@ exports.delete = (req, res, next) => {
         });
     });
 }
+
+//Generate new ID for user
+const newid = async () => {
+    const currentVal = await UserID.getCurrent();
+    const newID = currentVal+1;
+    UserID.updateOne({name : "Counter"}, {current : newID})
+    .exec()
+    .then(err => {
+        if (err) {
+            console.error(err);
+          } 
+        });
+    return newID;
+}
+
