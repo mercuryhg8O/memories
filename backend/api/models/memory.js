@@ -24,15 +24,15 @@ const memorySchema = mongoose.Schema({
     likedBy: {
         type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'account' }]
     },
-    // latitude: {
-    //     type: Number,
-    //     required: true
-    // },
-    // latitude: {
-    //     type: Number,
-    //     required: true
-    // },
-    // images: ,
+    latitude: {
+        type: Number,
+        required: true
+    },
+    latitude: {
+        type: Number,
+        required: true
+    },
+    // images: {},
     visibility: {
         type: String,
         enum: Object.values(visibility),

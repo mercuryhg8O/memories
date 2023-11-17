@@ -1,9 +1,11 @@
 const Account = require('../models/account');
+const UserID = require('../models/userid');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const bcrpyt = require('bcrypt');
 
+//STORE AN UPLOADED IMAGE
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './profilePics');
@@ -12,6 +14,8 @@ const storage = multer.diskStorage({
         cb(null, file.originalname);
     }
 });
+
+//FILTERS ANY FILES THAT AREN'T JPEG OR PNG
 const fileFilter = (req, file, cb) => {
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image.png') {
         cb(null, false);
@@ -23,6 +27,7 @@ const fileFilter = (req, file, cb) => {
     }
 };
 
+//UPLOAD IMAGE
 const upload = multer({
     storage: storage,
     limits: {
@@ -30,8 +35,8 @@ const upload = multer({
     },
     fileFilter: fileFilter
 });
-const UserID = require('../models/userid')
 
+//SIGN UP CONTROLLER
 exports.signup = (upload.single('profilePic'), (req, res, next) => {
     Account.find({ email: req.body.email })
         .exec()
@@ -97,6 +102,7 @@ exports.signup = (upload.single('profilePic'), (req, res, next) => {
         })
 })
 
+//LOGIN CONTROLLER
 exports.login = (req, res, next) => {
     Account.find({ email: req.body.email })
     .exec()
@@ -135,6 +141,7 @@ exports.login = (req, res, next) => {
     })
 }
 
+//RETURNS ALL MEMORIES ACCOUNTS
 exports.getAllAccounts = (req, res, next) => {
     Account.find()
     .select('_id email username label bio')
@@ -172,6 +179,7 @@ exports.getAllAccounts = (req, res, next) => {
     })
 }
 
+//GET ACCOUNT BY ID
 exports.getById = (req, res, next) => {
     const id = req.params.accountID;
     Account.findById(id)
@@ -193,6 +201,7 @@ exports.getById = (req, res, next) => {
     });  
 }
 
+//EDIT AN ACCOUNTS LABEL, USERNAME, 
 exports.edit = (req, res, next) => {
     const id = req.params.accountId;
     const updateOps = {};
@@ -219,9 +228,12 @@ exports.edit = (req, res, next) => {
         })
 }
 
+//FOLLOW ANOTHER USER 
 exports.follow = (req, res, next) => {
-    const accountID = req.params.accountID;
-    const userID = req.params.self;
+    const accountID = req.post.accountID;
+    console.log(req);
+    const userID = req.post.self;
+    //SEARCH FOR USER
     const account = Account.findById(accountID)
         .exec()
         .then(account => {
@@ -230,9 +242,11 @@ exports.follow = (req, res, next) => {
                     message: "User Not Found",
                 });
             }
+            //CONFIRM YOU AREN'T ALREADY FOLLOWING THE USER
             const index = account.followers.indexOf(userID);
+            console.log(index);
             if (index == -1) {
-                account.followers.push(req.params.self);
+                account.followers.push(req.post.self);
                 account.save();
                 res.status(200).json({
                     account: account,
@@ -261,9 +275,11 @@ exports.follow = (req, res, next) => {
         })
 }
 
+//UNFOLLOW A USER
 exports.unfollow = (req, res, next) => {
-    const userID = req.params.self;
-    const accountID = req.params.accountID;
+    const userID = req.post.self;
+    const accountID = req.post.accountID;
+    //SEARCH FOR USER
     Account.findById(accountID)
     .exec()
     .then(account => {
@@ -272,6 +288,7 @@ exports.unfollow = (req, res, next) => {
                 message: "User Not Found",
             });
         } else {
+            //CONFIRM YOU ARE FOLLOWING THE USER
             const index = account.followers.indexOf(userID);
             if (index == -1) {
                 res.status(404).json({
@@ -318,6 +335,7 @@ exports.getMutuals = (req, res, next) => {
     })
 }
 
+//DELETE ACCOUNT CONTROLLER
 exports.delete = (req, res, next) => {
     const id = req.params.accountID;
     Account.deleteOne({ _id: id })
