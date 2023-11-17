@@ -30,6 +30,7 @@ const upload = multer({
 const Memory = require('../models/memory');
 const Account = require('../models/account');
 const checkAuth = require('../auth/check-auth');
+const Tags = require('../models/tags');
 const memoryController = require('../controllers/memory')
 
 router.post('/', checkAuth, upload.single('images'), memoryController.createMemory, (req, res, next) => {
@@ -64,8 +65,8 @@ router.get('/:memoryID', (req, res, next) => {
 });
 
 router.patch('/like', checkAuth, (req, res, next) => {
-    const memoryID = req.body.memoryID;
-    const accountID = req.body.accountID;
+    const memoryID = req.query.memoryID;
+    const accountID = req.query.accountID;
     const memory = Memory.findById(memoryID);
     if (!memory) {
         return res.status(404).json({
@@ -161,5 +162,7 @@ router.delete('/:memoryID', checkAuth, (res, req, next) => {
         });
     });
 })
+
+
 
 module.exports = router;
