@@ -1,11 +1,11 @@
+const multer = require('multer');
 const express = require('express');
 const mongoose = require('mongoose');
-const multer = require('multer');
-const router = express.Router();
 const Memory = require('../models/memory');
 const Account = require('../models/account');
+const router = express.Router();
 
-
+//STORAGE FOR UPLOADED IMAGES
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './uploads');
@@ -14,6 +14,8 @@ const storage = multer.diskStorage({
         cb(null, file.originalname);
     }
 });
+
+//FILTERS ANY FILES THAT AREN'T JPEG OR PNG
 const fileFilter = (req, file, cb) => {
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image.png') {
         cb(null, false);
@@ -22,6 +24,7 @@ const fileFilter = (req, file, cb) => {
     }
 };
 
+//UPLOAD IMAGE
 const upload = multer({
     storage: storage,
     limits: {
@@ -30,21 +33,13 @@ const upload = multer({
     fileFilter: fileFilter
 });
 
-const success = (position) => {
-    coord = position.coords;
-}
+// upload.array('images', 2),
 
-const error = ((req, res, next) => {
-    res.status(404).json({
-        message: "Could not retrieve location"    
-    })
-})
-
-exports.createMemory = (upload.array('images', 2), (req, res, next) => {
-    console.log(req.file);
+//CREATE MEMORY CONTROLLER
+exports.createMemory =  (req, res, next) => {
     const memory = new Memory({
         _id: new mongoose.Types.ObjectId(),
-        accountID: req.params.accountID,
+        accountID: req.body.accountID,
         bodyText: req.body.bodyText,
         visibility: req.body.visibility,
         tags: req.body.tags,
@@ -52,7 +47,7 @@ exports.createMemory = (upload.array('images', 2), (req, res, next) => {
         likedBy: [],
         latitude: req.params.latitude,
         longitude: req.params.longitude,
-        images: req.file.path
+        // images: req.file.path
     });
     memory.save()
     .then(result => {
@@ -79,10 +74,157 @@ exports.createMemory = (upload.array('images', 2), (req, res, next) => {
             error: err
         })
     });
-})
+}
 
+//GET ALL MEMORIES
 exports.getAllMemories = (req, res, next) => {
     Memory.find()
+    .select('_id accountID bodyText tags images likes visibility')
+    .exec()
+    .then(docs => {
+        res.status(200).json({
+            count: docs.length,
+            memory: docs.map(doc => {
+                return {
+                    id: doc._id,
+                    account: doc.accountID,
+                    tags: doc.tags,
+                    images: doc.images,
+                    likes: doc.likes,
+                    visibility: doc.visibility, 
+                    likedBy: doc.likedBy
+                }
+            }),
+            request: {
+                type: "GET",
+                url: 'http://localhost/3000/memory/' + docs._id
+            }
+        })
+    })
+    .catch(err => {
+        res.status(500).json({
+            error: err
+        });
+    });
+}
+
+//GET A MEMORY BY ID
+exports.getById = (req, res, next) => {
+    const id = req.params.memoryID
+    const memory = Memory.findById(id)
+    .exec()
+    .then(docs => {
+        res.status(200).json({
+            count: docs.length,
+            memory: docs.map(doc => {
+                return {
+                    id: doc._id,
+                    account: doc.accountID,
+                    tags: doc.tags,
+                    images: doc.images,
+                    likes: doc.likes,
+                    visibility: doc.visibility
+                }
+            }),
+            request: {
+                type: "GET",
+                url: 'http://localhost/3000/memory/' + docs._id
+            }
+        })
+    })
+    .catch(err => {
+        res.status(500).json({
+            error: err
+        });
+    });
+}
+
+//LIKE A MEMORY
+exports.like = (req, res, next) => {
+    const memoryID = req.body.memoryID;
+    const accountID = req.body.accountID;
+    //SEARCH FOR MEMORY
+    const memory = Memory.findById(memoryID)
+    .exec()
+    .then(memory => {
+        if (!memory) {
+            return res.status(404).json({
+                message: "Memory Not Found",
+            });
+        }
+        //CONFIRM YOU HAVEN'T ALREADY LIKED THE MEMORY
+        const index = memory.likedBy.indexOf(accountID);
+        console.log(index);
+        if (index == -1) {
+            //ADDED TO LIST OF USERS WHO LIKED THE MEMORY
+            memory.likedBy.push(accountID);
+            memory.save();
+            // memory.likes++;
+            res.status(200).json({
+                memory: memory,
+                message: 'Memory Liked',
+                request: {
+                    type: 'GET',
+                    url: 'http://localhost:3000/memory/' + memory._id
+                } 
+            });
+        } else {
+            res.status(404).json({
+                message: "User Already Liked Memory"
+            })
+        }   
+    })
+}
+
+//UNLIKE A MEMORY
+exports.unlike = (req, res, next) => {
+    const memoryID = req.body.memoryID;
+    const accountID = req.body.accountID;
+    //FIND MEMORY
+    const memory = Memory.findById(memoryID)
+    .exec()
+    .then(memory => {
+        if (!memory) {
+            return res.status(404).json({
+                message: "Memory Not Found",
+            });
+        } else {
+            //CONFIRM YOU HAVE ALREADY LIKED IT
+            const index = memory.likedBy.indexOf(accountID);
+            if (index == -1) {
+                res.status(404).json({
+                    likedBy: memory.likedBy,
+                    accountID: accountID,
+                    message: "User Never Liked Memory"
+                })
+            } else {
+                //REMOVE USER FROM LIST OF USERS WHO LIKED THE MEMORY
+                memory.likedBy.splice(index, 1);
+                memory.save();
+                res.status(200).json({
+                    memory: memory,
+                    message: 'Memory Unliked',
+                    request: {
+                        type: 'GET',
+                        url: 'http://localhost:3000/memory/' + memory._id
+                    } 
+                })
+                // memory.likes--;
+            }
+        }
+    })   
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    })
+}
+
+//GET ALL PUBLIC MEMORIES
+exports.getPublicMemories = (req, res, next) => {
+    Memory.find()
+        .where('visibility').equals("Public")
         .select('_id accountID bodyText tags images likes visibility')
         .exec()
         .then(docs => {
@@ -95,8 +237,7 @@ exports.getAllMemories = (req, res, next) => {
                         tags: doc.tags,
                         images: doc.images,
                         likes: doc.likes,
-                        visibility: doc.visibility, 
-                        likedBy: doc.likedBy
+                        visibility: doc.visibility
                     }
                 }),
                 request: {
@@ -112,18 +253,97 @@ exports.getAllMemories = (req, res, next) => {
         });
 }
 
-exports.getById = (res, req, next) => {
-
+//GET THE PUBLIC AND MUTUAL MEMORIES OF ANOTHER USER
+exports.getUserMemories = (req, res, next) => {
+    const id = req.params.accountID;
+    const account1 = Account.findById(id)
+    .exec()
+    .then(account1 => {
+        index1 = account1.followers.indexOf(id);
+        account2 = Account.findById(req.params.self)
+        .exec()
+        .then(account2 => {
+            index2 = account2.followers.indexOf(req.params.self);
+            if (index1 != -1 && index2 != -1) {
+                Memory.find()
+                .where('accountID').equals(id)
+                .where('visibility').equals("Public")
+                .where('visibility').equals("Mutuals")
+                .select('_id accountID bodyText tags images likes visibility')
+                .exec()
+                .then(docs => {
+                    res.status(200).json({
+                        count: docs.length,
+                        memory: docs.map(doc => {
+                            return {
+                                id: doc._id,
+                                account: doc.accountID,
+                                tags: doc.tags,
+                                images: doc.images,
+                                likes: doc.likes,
+                                visibility: doc.visibility
+                            }
+                        }),
+                        request: {
+                            type: "GET",
+                            url: 'http://localhost/3000/memory/' + docs._id
+                        }
+                    })
+                })
+                .catch(err => {
+                    res.status(500).json({
+                        error: err
+                    });
+                });
+            } else {
+                Memory.find()
+                .where('accountID').equals(id)
+                .where('visibility').equals("Public")
+                .select('_id accountID bodyText tags images likes visibility')
+                .exec()
+                .then(docs => {
+                    res.status(200).json({
+                        count: docs.length,
+                        memory: docs.map(doc => {
+                            return {
+                                id: doc._id,
+                                account: doc.accountID,
+                                tags: doc.tags,
+                                images: doc.images,
+                                likes: doc.likes,
+                                visibility: doc.visibility
+                            }
+                        }),
+                        request: {
+                            type: "GET",
+                            url: 'http://localhost/3000/memory/' + docs._id
+                        }
+                    })
+                })
+                .catch(err => {
+                    res.status(500).json({
+                        error: err
+                    });
+                });
+            }
+        })
+    })
 }
 
-exports.like = (req, res, next) => {
-
-}
-
-exports.unlike = (req, res, next) => {
-
-}
-
-exports.delete = (req, res, next) => {
-    
+//DELETE A MEMORY
+exports.delete = (res, req, next) => {
+    const id = req.params.memoryID;
+    Memory.deleteOne({ _id: id })
+    .exec()
+    .then(result => {
+        res.status(200).json({
+            message: 'Memory Deleted',
+        });
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });
 }
