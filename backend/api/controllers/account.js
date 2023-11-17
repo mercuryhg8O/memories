@@ -256,6 +256,8 @@ exports.follow = (req, res, next) => {
                         url: 'http://localhost:3000/memory/' + account._id
                     } 
                 });
+                // CHECK TO SEE IF THE USER YOU ARE FOLLOWING FOLLOWS YOU
+                // IF SO, ADD BOTH USERS INTO EACH OTHERS MUTUALS
                 me = Account.findById(userID)
                     .exec()
                     .then(me => {
@@ -316,6 +318,7 @@ exports.unfollow = (req, res, next) => {
     })
 }
 
+// RETURN ALL MUTUALS OF THE USER THAT REQUESTED
 exports.getMutuals = (req, res, next) => {
     const accountID = req.params.accountID;
     const account = Account.findById(accountID)

@@ -14,9 +14,10 @@ router.post('/signup', accountController.signup);
 //LOG INTO A MEMORY ACCOUNT
 router.post('/login', accountController.login);
 
-//EDIT A MEMORY ACCOUNT
+//GET MUTUALS OF A MEMORY ACCOUNT
 router.get('/:accountID/mutuals', accountController.getMutuals);
 
+//EDIT A MEMORY ACCOUNT
 router.patch('/edit', accountController.edit);
 
 //FOLLOW ANOTHER USER
