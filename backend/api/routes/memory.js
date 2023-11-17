@@ -7,13 +7,13 @@ const memoryController = require('../controllers/memory');
 const router = express.Router();
 
 //CREATE A MEMORY
-router.post('/:accountID', memoryController.createMemory);
+router.post('/', memoryController.createMemory);
 
 //LIKING A MEMORY
-router.post('/:memoryID/:accountID/like', memoryController.like); 
+router.post('/like', memoryController.like); 
 
 //UNLIKING A MEMORY
-router.post('/:memoryID/:accountID/unlike', memoryController.unlike);
+router.post('/unlike', memoryController.unlike);
 
 //GET ALL MEMORIES
 router.get('/', memoryController.getAllMemories);
