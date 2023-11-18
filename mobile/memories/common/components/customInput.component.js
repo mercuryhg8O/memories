@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, TextInput, StyleSheet, KeyboardAvoidingView} from 'react-native';
 
-const CustomInput = ({value, setValue, placeholder, isMultiLine, label}) => {
+const CustomInput = ({value, setValue, placeholder, isMultiLine, label, defaultValue}) => {
     return (
         <KeyboardAvoidingView 
             style={isMultiLine ? styles.multiline_container: styles.singleline_container}
@@ -11,6 +11,7 @@ const CustomInput = ({value, setValue, placeholder, isMultiLine, label}) => {
             <TextInput 
                 value={value}
                 onChangeText={setValue}
+                defaultValue={defaultValue}
                 placeholder={placeholder} 
                 style={styles.input}
                 />
