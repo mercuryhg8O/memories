@@ -79,15 +79,11 @@ const SearchScreen = ({ navigation }) => {
     const { mapView, setDisplayUser, setDisplayMemoryDetails, setTargetUserUID } = useContext(CurrentUserContext);
 
     const [searchCriteria, setSearchCriteria] = useState(SearchCriteria.NAME);
-    const [searchText, setSearchText] = useState('');
-    const [usersList, setUsersList] = useState([]);
+    const [searchText, setSearchText] = useState('a');
+    const [usersList, setUsersList] = useState(userMockData.users);
     const [searchButtonPressed, setSearchButtonPressed] = useState(false);
 
-    // USE EFFECTS
-    useEffect(() => {
-        console.log('update query: ' + searchText)
-    }, [searchText]);
-    
+
     const fetchUsers = (searchString) => {
 
         // get the latest users by username, then render
@@ -97,14 +93,32 @@ const SearchScreen = ({ navigation }) => {
 
                     setUsersList(response.users_list);
             }else{
-                console.log('there was an error with the search')
+                console.log('there was an error with the search');
             }
 
 
         }).catch((err) => {console.log('there was an error', err)})
-
-
     }
+
+
+
+    // USE EFFECTS
+    useEffect(() => {
+        console.log('update query: ' + searchText);        
+        fetchUsers(searchText);
+
+        console.log(usersList);
+    }, [searchText]);
+
+    // update the list of users (for rerender)
+    useEffect(() => {
+
+        console.log('populate thing again')
+
+
+    }, [usersList]);
+    
+    
 
 
     // COMPONENTS
@@ -115,6 +129,11 @@ const SearchScreen = ({ navigation }) => {
             <TouchableOpacity
                 style={styles.item}
                 onPress={() => {
+
+                    // call backend
+                    // fetchUsers(searchText);
+
+
                     setTargetUserUID(userId);
                     setDisplayUser(true);
                     setDisplayMemoryDetails(false);
@@ -125,7 +144,7 @@ const SearchScreen = ({ navigation }) => {
                 <Text
                     style={styles.itemtext}
                 >
-                    {username}#{userId}
+                    {username}
                 </Text>
             </TouchableOpacity>
         );
@@ -136,7 +155,7 @@ const SearchScreen = ({ navigation }) => {
         return (
             <View style={styles.criteria_view}>
                 <FlatList
-                    data={userMockData.users}
+                    data={usersList}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item, index }) => (
                         userDetails(item.username, item.userid)
@@ -246,8 +265,7 @@ const SearchScreen = ({ navigation }) => {
                     onChangeText={newText => setSearchText(newText)}
                     onSubmitEditing={() => {
                         // TODO send request to search for stuff
-                        setSearchButtonPressed(false);// to have on effect run 
-                        setSearchButtonPressed(true);
+                        
                         console.log('HI!');
                     }} />
                 <Dropdown preLabel="Searching for" label="..." data={data} onSelect={setSearchCriteria}/>

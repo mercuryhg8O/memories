@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Alert } from 'react-native';
 import * as Location from 'expo-location';
-import {getMemoryDetails} from './requestHelpers';
+import {getMemoryDetails, getMemoriesFromUser} from './requestHelpers';
 
 
 const MockResponse = {
@@ -29,15 +29,40 @@ const defaultLatLong = {
 }
 
 
-const ParseMemoriesDetails = async () => {
+const ParseMemoriesDetails = async (currentUserId, desiredUserId) => {
+
+  error = false;
+
+  console.log('attempting to find memories for a user')
 
   // Make Back-end call here to get Json, and parse similarly to the mock response.
-  
+  const { search_worked, memories_list} = await getMemoriesFromUser(currentUserId, desiredUserId);
+  // assuming response is a list
 
+  let memory_locations_source = MockResponse; // set default
+
+  //console.log(memories_list)
+  //console.log('search_worked: ', search_worked);
+
+  if(search_worked){
+    memory_locations_source = memories_list
+    console.log('using the memories gotten from the request');
+    
+  }else{
+    console.log('there was an error when getting memories');
+    error = true;
+  }
+
+  console.log(memory_locations_source)
 
   {/*Parse memory */ }
-  memories = MockResponse.memories.map((memory) => ({ latitude: memory.latitude, longitude: memory.longitude, title: memory.title, id: memory.id }))
-  error = false;
+  memories = memory_locations_source.map((memory) => ({ latitude: memory.latitude, longitude: memory.longitude, id: memory.id }))
+  
+
+  console.log('memories after request: ');
+  console.log(memories)
+
+  console.log('was error during parsing: ', error);
 
   return { memories, error }
 }
