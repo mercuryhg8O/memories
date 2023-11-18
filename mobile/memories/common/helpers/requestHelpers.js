@@ -43,7 +43,7 @@ const isValidUser = async (email, password) => {
 
 
 const getUserData = async (userid) => {
-  const query_string = `/api/userid?userid=${userid}`
+  const query_string = `/account/${userid}`
   const request_address = endpointURL + query_string
   console.log('request made to: ' + request_address)
 
@@ -57,16 +57,16 @@ const getUserData = async (userid) => {
   let username = 'default username';
   let bio = 'default bio';
 
+
   if (response) {
-    username = response.data.username;
-    bio = response.data.bio;
+    username = response.data.doc.username;
+    bio = response.data.doc.bio;
     found_user= true
   }
-
   // set to true for testing purposes - TODO: remove
   found_user = true;
 
-  return { found_user, username, bio };
+  return { found_user, username, bio, };
 }
 
 
@@ -149,13 +149,13 @@ const getMemoryDetails = async (memoryId) => {
 
 
 
-  // TEMPORARY: short circuit request logic to provide mock memory details
-  // TODO: remove once route is established on backend.
-  return mockMemoryResponse;
-
+  // // TEMPORARY: short circuit request logic to provide mock memory details
+  // // TODO: remove once route is established on backend.
+  // return mockMemoryResponse;
+  // testing of a memory :
 
   // create request to backend to get details about a memory and package it in a memory object
-  const query_string = `/api/getmemorydetails?memoryid=${memoryId}`
+  const query_string = `/memory/id/${memoryId}`
   const request_address = endpointURL + query_string
   console.log('request should be made to: ' + request_address);
 
@@ -181,21 +181,25 @@ const getMemoryDetails = async (memoryId) => {
   }
 
   // if the request was successful parse the response 
-  const response_data = response?.data;
-  const user_name = response_data?.username;
-  const memory_description = response_data?.memoryDescription;
-  const number_of_likes = response_data?.numOfLikes;
+  const response_data = response?.data?.memory;
+  const user_name = response_data?.accountName; // account id
+  const memory_description = response_data?.bodyText;
+  const likes_by_people = response_data?.likedBy;
   const tags = response_data?.tags;
+
+  console.log(memory_description)
+  
+  // console.log('response parsed: ', user_name, memory_description, tags);
 
   if(user_name !== undefined && 
       memory_description !== undefined && 
-      number_of_likes !== undefined && 
+      likes_by_people !== undefined && 
       tags !== undefined && !error_during_request){
 
           created_memory = {
             username: user_name,
             memoryDescription: memory_description,
-            numOfLikes: number_of_likes,
+            numOfLikes: likes_by_people.length,
             tags: tags
           }
 
@@ -214,8 +218,6 @@ const createMemorySuccessful = async ( accountID, memoryDescription, memoryVisib
   const query_string = `/memory`
   const request_address = endpointURL + query_string;
   console.log('request made to: ' + request_address);
-  console.log('the contents of the request body are as follow:', memoryDescription, memoryVisibility, memoryTags);
-  console.log('at this location', latitude, longitude);
   
   // error handling and return value handling:
   let error_during_request = false;
@@ -255,35 +257,50 @@ const createMemorySuccessful = async ( accountID, memoryDescription, memoryVisib
 
 const getMemoriesFromUser = async (currentuserid, memories_of_this_user) => {
 
+
+  console.log('attempting to find memories for a user and about to make a request ')
+
   // get a list of id's, lats, and longs of each memory from this user
-  const query_string = `/memory/${currentuserid}/${memories_of_this_user}`
+  const query_string = `/memory/${memories_of_this_user}/${currentuserid}`
   const request_address = endpointURL + query_string
   console.log('request made to: ' + request_address)
+
+  if(currentuserid === undefined || memories_of_this_user === undefined){
+    console.log('currentuserid: ', currentuserid, ' memories_of_this_user: ', memories_of_this_user)
+    console.log('setting both to 0')
+    currentuserid = 0
+    memories_of_this_user = 0
+  }
   let search_worked = false;
-  let users_list = []
+  let memories_list = []
 
 
   const response = await axios.get(request_address).catch((err) => {
     console.log('error during retrieval of when getting response: ', err);
+
+    // search_worked = false
   });
 
-  console.log(response);
+  console.log(response.data);
 
-  if (response && response.data.message === 'successful') {
-    users_list = response.data.userslist;
+  if (response && response.data?.count !== undefined) {
+    memories_list = response.data.memory;
     search_worked = true;
   }
 
-  return {search_worked, users_list};
+  //console.log(memories_list)
+  console.log('search_worked: ', search_worked)
+
+  return {search_worked, memories_list};
 
 
 };
 
 const getUsersFromSearch = async (searchString) => {
 
-  const query_string = `/searchbyuser?searchstring=${searchString}`
+  const query_string = `/search/user?search=${searchString}` 
   const request_address = endpointURL + query_string
-  console.log('request made to: ' + request_address)
+  // console.log('request made to: ' + request_address)
   let search_worked = false;
   let users_list = []
 
@@ -292,15 +309,26 @@ const getUsersFromSearch = async (searchString) => {
     console.log('error during retrieval of when getting response: ', err);
   });
 
-  console.log(response);
 
-  if (response && response.data.message === 'successful') {
-    users_list = response.data.userslist;
+  if (response && response.status === 200) {
+
+    
+    for (let key of response.data.user.keys()) {
+
+      person_detail = {
+        userid: response.data.user[key]._id,
+        username: response.data.user[key].username,
+      }
+
+      users_list.push(person_detail);
+    }
     search_worked = true;
   }
+
+  // console.log(users_list);
 
   return {search_worked, users_list};
 };
 
 
-export { isValidUser, createUserSuccessful, getUserData, getMemoryDetails, followUser, createMemorySuccessful, getUsersFromSearch };
+export { isValidUser, createUserSuccessful, getUserData, getMemoryDetails, followUser, getMemoriesFromUser, createMemorySuccessful, getUsersFromSearch };

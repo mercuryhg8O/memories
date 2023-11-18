@@ -32,12 +32,17 @@ const MemoryModal = () => {
                 setMemoryDescription(memory_description);
                 setNumberOfLikes(number_of_likes);
                 setMemoryTags(tags);
+
+                console.log('oaidjosaijowniaiwj')
             }else{
 
                 console.log("A field inside of the currentMemoryDetails object was not able to be retrieved");
             }
 
-    }, [displayMemoryDetails]);
+    }, [displayMemoryDetails || currentMemoryDetails]);
+
+    // re-render: whenever an aspect about a memory changes
+    useEffect(() => { console.log('re rendering', memoryDescription) }, [memoryDescription]);
 
 
     // ternary expression:
@@ -51,7 +56,7 @@ const MemoryModal = () => {
                     <Text style={styles.name}> {userName} </Text>
                 </View>
                 <SafeAreaView style={styles.bioView}>
-                    <Text>{memoryDescription}</Text>
+                    <Text>Memory description: {memoryDescription}</Text>
                 </SafeAreaView>
                 <SafeAreaView style={styles.bioView}>
                     <Text>Likes: {numberOfLikes}</Text> 

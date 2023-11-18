@@ -14,6 +14,9 @@ const Profile = () => {
     // Once the targetUserUID gets updated, a request to get the profile of the targetUserUID is created
     // and the username and bio information gets updated.
     useEffect(()=>{
+
+        console.log('on effect in userprofile')
+
         const getUserProfileData = async () => {
             const {found_user, username, bio} = await getUserData(targetUserUID);
 
@@ -21,12 +24,15 @@ const Profile = () => {
                 console.log('error parsing response from request for profile with id: ' + targetUserUID);
             }else{
                 // response was valid, so parse and save the output
-                console.log(targetUserUID);
-                console.log('found user id:' + found_user);
-                console.log(username);
-                console.log(bio);
                 setUserName(username);
-                setUserBio(bio);
+
+                // set that there is no bio if the user does not have  bio
+                if(bio === ''){
+                    setUserBio('no bio');
+                }else{
+                    setUserBio(bio);
+                }
+                
                 setDisplayMemoryDetails(false);
 
                 // update map to include icons from that user
@@ -45,7 +51,7 @@ const Profile = () => {
             <View style={styles.content}>
                 <View style={styles.iconnname}>
                     <Image style={styles.icon} />
-                    <Text style={styles.name}>{userName + '#' + targetUserUID}</Text>
+                    <Text style={styles.name}>{userName}</Text>
                 </View>
                 <SafeAreaView style={styles.bioview}>
                     <Text>{userBio}</Text>

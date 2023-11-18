@@ -16,15 +16,34 @@ import NavigationButton from '../components/NavigationButton.js'
 function MainScreen({ navigation }) {
 
     const { mapView, displayUser, setDisplayUser, currentUserID, targetUserUID } = useContext(CurrentUserContext);
+    [memory_locations, setMemoryLocations] = useState([]);
 
     useEffect(() => {
 
-        ParseMemoriesDetails(currentUserID, targetUserUID).then().catch(() => {console.log('there was an error while trying to retrieve the memories')});
+        console.log("hiihihihoihoihoio", currentUserID, targetUserUID);
 
-        // const { memories, error } = 
-        setMemoryLocations(memories)
+
+
+        const setMapInfo = () => {
+
+            ParseMemoriesDetails(currentUserID, targetUserUID).then(({memories, error}) => {
+
+                if(error){
+                    console.log('an error happened when parsing route info')
+                }
+                else{
+                    setMemoryLocations(memories);
+                }
+            }).catch(() => {console.log('there was an error while trying to retrieve the memories from memory list parser')});
+
+
+        }
+
+        setMapInfo();
+
+
     }, [targetUserUID]);
-    [memory_locations, setMemoryLocations] = useState([]);
+    
 
     const displayUserModal = () => {
         console.log('sleep, my bestie');
