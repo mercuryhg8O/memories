@@ -73,7 +73,7 @@ const getUserData = async (userid) => {
 const followUser = async (current_user, user_to_follow) => {
 
   // create back-end request to ask to follow the user
-  const query_string =  `/api/followuser?requesting_user=${current_user}&usertofollow=${user_to_follow}`;
+  const query_string =  `/account/${user_to_follow}/${current_user}/follow`;
   const request_address = endpointURL + query_string;
 
   // error handling and return value handling:
@@ -82,30 +82,36 @@ const followUser = async (current_user, user_to_follow) => {
 
   // send request to back-end
   console.log('sending request to:' + request_address);
-  const response = await axios.get(request_address).catch((err) => {
+  const response = await axios.post(request_address).catch((err) => {
     console.log('error during axios request: ', err);
     error_during_request = true;
   });
 
+
   // parse response to see if follow request was sent & process successfully
   if(response !== undefined){
+    console.log(response.status);
+
+
+    // create alert if request was sent
+    if(!error_during_request && follow_request_sent === true){
+      Alert.alert('Send follow request', 'You sent a follow request to. You may already follow them.' + user_to_follow, [
+        { text: 'Awesome' }
+      ]);
+  }
+
     follow_request_sent = response?.follow_request_sent;
     if(follow_request_sent === undefined){
       follow_request_sent = false;
     }
   }
 
-
-  // create alert if request was sent
-  if(!error_during_request && follow_request_sent === true){
-    Alert.alert('Send follow request', 'You sent a follow request to' + user_to_follow, [
-      { text: 'Awesome' }
-    ]);
-  }
-  
   if(!follow_request_sent){
-    console.log('follow request was not sent');
+    // console.log('follow request was not sent');
+    return false;
   }
+
+  return true;
   
 }
 
