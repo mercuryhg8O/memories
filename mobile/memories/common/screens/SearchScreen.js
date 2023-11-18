@@ -80,7 +80,7 @@ const SearchScreen = ({ navigation }) => {
 
     const [searchCriteria, setSearchCriteria] = useState(SearchCriteria.NAME);
     const [searchText, setSearchText] = useState('a');
-    const [usersList, setUsersList] = useState(userMockData.users);
+    const [usersList, setUsersList] = useState([]);
     const [searchButtonPressed, setSearchButtonPressed] = useState(false);
 
 
