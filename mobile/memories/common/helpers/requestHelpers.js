@@ -107,8 +107,11 @@ const followUser = async (current_user, user_to_follow) => {
   }
 
   if(!follow_request_sent){
-    console.log('follow request was not sent');
+    // console.log('follow request was not sent');
+    return false;
   }
+
+  return true;
   
 }
 

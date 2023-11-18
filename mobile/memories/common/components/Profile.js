@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect, useContext } from 'react';
-import { Text, View, StyleSheet, Image, SafeAreaView, Dimensions, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, Image, SafeAreaView, Dimensions, TouchableOpacity, Alert } from 'react-native';
 import { CurrentUserContext } from '../context/contexts';
 import axios from 'axios';
 import {getUserData, followUser } from '../helpers/requestHelpers';
@@ -57,7 +57,14 @@ const Profile = () => {
                 </SafeAreaView>
 
                 <SafeAreaView>
-                    <TouchableOpacity onPress={()=> {followUser(currentUserID, targetUserUID)}}>
+                    <TouchableOpacity onPress={()=> {
+                        
+                        followUser(currentUserID, targetUserUID);
+                        Alert.alert('Send follow request', 'You may already follow them.', [
+                            { text: 'Awesome' }
+                          ]);
+                        
+                        }}>
                         <Text>follow user</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=> {setDisplayUser(false)}}>
