@@ -248,7 +248,6 @@ exports.follow = (req, res, next) => {
             console.log(index);
             if (index == -1) {
                 account.followers.push(req.params.self);
-                account.save();
                 res.status(200).json({
                     account: account,
                     message: 'User Followed',
@@ -265,11 +264,11 @@ exports.follow = (req, res, next) => {
                         const index1 = me.followers.indexOf(accountID);
                         if (index1 != -1) {
                             me.mutuals.push(accountID);
-                            me.save();
                             account.mutuals.push(userID);
                             account.save();
                         }
                     })
+                    account.save();
             } else {
                 res.status(404).json({
                     message: "You're Already Following this User"

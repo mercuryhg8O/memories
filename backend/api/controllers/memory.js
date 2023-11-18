@@ -79,7 +79,7 @@ exports.createMemory = (upload.array('images') ,(req, res, next) => {
 //GET ALL MEMORIES
 exports.getAllMemories = (req, res, next) => {
     Memory.find()
-    .select('_id accountID bodyText tags images likes visibility')
+    .select('_id accountID bodyText tags likedBy visibility latitude longitude')
     .exec()
     .then(docs => {
         res.status(200).json({
@@ -216,7 +216,7 @@ exports.unlike = (req, res, next) => {
 exports.getPublicMemories = (req, res, next) => {
     Memory.find()
         .where('visibility').equals("Public")
-        .select('_id accountID bodyText tags images likes visibility')
+        .select('_id accountID bodyText tags likedBy visibility latitude longitude')
         .exec()
         .then(docs => {
             res.status(200).json({
@@ -272,7 +272,7 @@ exports.getUserMemories = (req, res, next) => {
                     .where('accountID').equals(id)
                     .where('visibility').equals("Public")
                     .where('visibility').equals("Mutuals")
-                    .select('_id accountID bodyText tags images likes visibility')
+                    .select('_id accountID bodyText tags likedBy visibility latitude longitude')
                     .exec()
                     .then(docs => {
                         res.status(200).json({
@@ -304,7 +304,7 @@ exports.getUserMemories = (req, res, next) => {
                     Memory.find()
                     .where('accountID').equals(id)
                     .where('visibility').equals("Public")
-                    .select('_id accountID bodyText tags images likes visibility')
+                    .select('_id accountID bodyText tags likedBy visibility latitude longitude')
                     .exec()
                     .then(docs => {
                         res.status(200).json({
