@@ -2,9 +2,10 @@ import React from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 
 
-const NavigationButton = ({ navigation, navigateTo, label }) => {
+const NavigationButton = ({ navigation, navigateTo, label, accLabel }) => {
     return <View>
         <TouchableOpacity style={styles.btn}
+            accessibilityLabel={accLabel}
             // replace with help screen
             onPress={() => navigation.navigate(navigateTo)}> 
             <Text style={{ padding: 10 }}>{label}</Text>

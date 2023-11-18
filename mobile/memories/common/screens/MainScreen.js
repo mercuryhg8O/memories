@@ -45,11 +45,6 @@ function MainScreen({ navigation }) {
     }, [targetUserUID]);
     
 
-    const displayUserModal = () => {
-        console.log('sleep, my bestie');
-        setDisplayUser(true);
-    }
-
     return (
         <View style={styles.container}>
             <StatusBar style="auto" />
@@ -68,9 +63,9 @@ function MainScreen({ navigation }) {
                 memory_locations={memory_locations} />
             <View /* Buttons for navigation*/ style={styles.navbar}>
                 {/* Temporary: the navigateTo is set to the screen name as defined in nav */}
-                <NavigationButton label="?" navigation={navigation} navigateTo={'Search'}/>
-                <NavigationButton label="_" navigation={navigation} navigateTo={'UserScreen'}/>
-                <NavigationButton label="+" navigation={navigation} navigateTo={'CreateMemory'}/>
+                <NavigationButton label="🔍" accLabel="Search" navigation={navigation} navigateTo={'Search'}/>
+                <NavigationButton label="➕" accLabel="Create Memory" navigation={navigation} navigateTo={'CreateMemory'}/>
+                <NavigationButton label="⚙️" accLabel="Settings" navigation={navigation} navigateTo={'SettingsHome'}/>
                 {/* <TouchableOpacity
                     onPress={() => {
                         const {lat, long} =  getCurrentLatLong();
