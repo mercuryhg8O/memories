@@ -256,6 +256,7 @@ exports.follow = (req, res, next) => {
                         url: 'http://localhost:3000/memory/' + account._id
                     } 
                 });
+                account.save();
                 // CHECK TO SEE IF THE USER YOU ARE FOLLOWING FOLLOWS YOU
                 // IF SO, ADD BOTH USERS INTO EACH OTHERS MUTUALS
                 me = Account.findById(userID)
@@ -266,9 +267,10 @@ exports.follow = (req, res, next) => {
                             me.mutuals.push(accountID);
                             account.mutuals.push(userID);
                             account.save();
+                            me.save();
                         }
                     })
-                    account.save();
+
             } else {
                 res.status(404).json({
                     message: "You're Already Following this User"

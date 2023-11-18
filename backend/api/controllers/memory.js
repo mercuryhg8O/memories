@@ -37,36 +37,42 @@ const upload = multer({
 
 //CREATE MEMORY CONTROLLER
 exports.createMemory = (upload.array('images') ,(req, res, next) => {
-    const memory = new Memory({
-        _id: new mongoose.Types.ObjectId(),
-        accountID: req.body.accountID,
-        bodyText: req.body.bodyText,
-        visibility: req.body.visibility,
-        tags: req.body.tags,
-        likedBy: [],
-        latitude: req.body.latitude,
-        longitude: req.body.longitude,
-        // images: req.file.path
-    });
-    memory.save()
+    Account.findById(req.body.accountID)
+    .exec()
     .then(result => {
-        console.log(result);
-        res.status(201).json({
-            message: 'Created memory successfully',
-            createdMemory: {
-                _id: result._id,
-                bodyText: result.bodyText,
-                accountID: result.accountID,
-                visibility: result.visibility,
-                //likedBy: result.likedBy,
-                longitude: result.longitude,
-                latitude: result.latitude,
-                request: {
-                    type: 'GET',
-                    url: 'http://localhost:3000/memory/' + result._id
+        const memory = new Memory({
+            _id: new mongoose.Types.ObjectId(),
+            accountName: result.username,
+            accountID: req.body.accountID,
+            bodyText: req.body.bodyText,
+            visibility: req.body.visibility,
+            tags: req.body.tags,
+            likedBy: [],
+            latitude: req.body.latitude,
+            longitude: req.body.longitude,
+            // images: req.file.path
+        });
+        memory.save()
+        .then(result => {
+            console.log(result);
+            res.status(201).json({
+                message: 'Created memory successfully',
+                createdMemory: {
+                    _id: result._id,
+                    accountName: result.accountName,
+                    bodyText: result.bodyText,
+                    accountID: result.accountID,
+                    visibility: result.visibility,
+                    //likedBy: result.likedBy,
+                    longitude: result.longitude,
+                    latitude: result.latitude,
+                    request: {
+                        type: 'GET',
+                        url: 'http://localhost:3000/memory/' + result._id
+                    }
                 }
-            }
-        })
+            })
+        });
     })
     .catch(err => {
         console.log(err);
@@ -79,7 +85,7 @@ exports.createMemory = (upload.array('images') ,(req, res, next) => {
 //GET ALL MEMORIES
 exports.getAllMemories = (req, res, next) => {
     Memory.find()
-    .select('_id accountID bodyText tags likedBy visibility latitude longitude')
+    .select('_id accountID accountName bodyText tags likedBy visibility latitude longitude')
     .exec()
     .then(docs => {
         res.status(200).json({
@@ -88,6 +94,7 @@ exports.getAllMemories = (req, res, next) => {
                 return {
                     id: doc._id,
                     account: doc.accountID,
+                    accountName: doc.accountName,
                     tags: doc.tags,
                     //images: doc.images,
                     visibility: doc.visibility, 
@@ -216,7 +223,7 @@ exports.unlike = (req, res, next) => {
 exports.getPublicMemories = (req, res, next) => {
     Memory.find()
         .where('visibility').equals("Public")
-        .select('_id accountID bodyText tags likedBy visibility latitude longitude')
+        .select('_id accountID accountName bodyText tags likedBy visibility latitude longitude')
         .exec()
         .then(docs => {
             res.status(200).json({
@@ -225,6 +232,7 @@ exports.getPublicMemories = (req, res, next) => {
                     return {
                         id: doc._id,
                         account: doc.accountID,
+                        accountName: doc.accountName,
                         tags: doc.tags,
                         //images: doc.images,
                         likedBy: doc.likedBy,
@@ -272,7 +280,7 @@ exports.getUserMemories = (req, res, next) => {
                     .where('accountID').equals(id)
                     .where('visibility').equals("Public")
                     .where('visibility').equals("Mutuals")
-                    .select('_id accountID bodyText tags likedBy visibility latitude longitude')
+                    .select('_id accountID accountName bodyText tags likedBy visibility latitude longitude')
                     .exec()
                     .then(docs => {
                         res.status(200).json({
@@ -281,6 +289,7 @@ exports.getUserMemories = (req, res, next) => {
                                 return {
                                     id: doc._id,
                                     account: doc.accountID,
+                                    accountName: doc.accountName,
                                     tags: doc.tags,
                                     //images: doc.images,
                                     likedBy: doc.likedBy,
@@ -304,7 +313,7 @@ exports.getUserMemories = (req, res, next) => {
                     Memory.find()
                     .where('accountID').equals(id)
                     .where('visibility').equals("Public")
-                    .select('_id accountID bodyText tags likedBy visibility latitude longitude')
+                    .select('_id accountID accountName bodyText tags likedBy visibility latitude longitude')
                     .exec()
                     .then(docs => {
                         res.status(200).json({
@@ -313,6 +322,7 @@ exports.getUserMemories = (req, res, next) => {
                                 return {
                                     id: doc._id,
                                     account: doc.accountID,
+                                    accountName: doc.accountName,
                                     tags: doc.tags,
                                     //images: doc.images,
                                     likedBy: doc.likedBy,
