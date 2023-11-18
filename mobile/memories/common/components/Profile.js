@@ -9,7 +9,7 @@ const Profile = () => {
     {/* Once the  */}
     const [userName, setUserName] = useState('');
     const [userBio, setUserBio] = useState('');
-    const { displayUser, setDisplayMemoryDetails, targetUserUID, currentUserID } = useContext(CurrentUserContext);
+    const { displayUser, setDisplayUser, setDisplayMemoryDetails, targetUserUID, currentUserID } = useContext(CurrentUserContext);
 
     // Once the targetUserUID gets updated, a request to get the profile of the targetUserUID is created
     // and the username and bio information gets updated.
@@ -56,9 +56,12 @@ const Profile = () => {
                     }
                 </SafeAreaView>
 
-                <SafeAreaView style={styles.bioview}>
+                <SafeAreaView>
                     <TouchableOpacity onPress={()=> {followUser(currentUserID, targetUserUID)}}>
                         <Text>follow user</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={()=> {setDisplayUser(false)}}>
+                        <Text>close profile</Text>
                     </TouchableOpacity>
                     
                 </SafeAreaView>
