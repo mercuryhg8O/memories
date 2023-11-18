@@ -27,11 +27,7 @@ const Profile = () => {
                 setUserName(username);
 
                 // set that there is no bio if the user does not have  bio
-                if(bio === ''){
-                    setUserBio('no bio');
-                }else{
-                    setUserBio(bio);
-                }
+                setUserBio(bio);
                 
                 setDisplayMemoryDetails(false);
 
@@ -54,7 +50,10 @@ const Profile = () => {
                     <Text style={styles.name}>{userName}</Text>
                 </View>
                 <SafeAreaView style={styles.bioview}>
-                    <Text>{userBio}</Text>
+                    {userBio != '' ? 
+                        <Text>{userBio}</Text>
+                        : <Text style={{fontStyle: 'italic', color: 'grey'}}>None bio left beef</Text>
+                    }
                 </SafeAreaView>
 
                 <SafeAreaView style={styles.bioview}>
