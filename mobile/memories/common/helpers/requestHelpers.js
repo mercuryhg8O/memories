@@ -95,7 +95,7 @@ const followUser = async (current_user, user_to_follow) => {
 
     // create alert if request was sent
     if(!error_during_request && follow_request_sent === true){
-      Alert.alert('Send follow request', 'You sent a follow request to' + user_to_follow, [
+      Alert.alert('Send follow request', 'You sent a follow request to. You may already follow them.' + user_to_follow, [
         { text: 'Awesome' }
       ]);
   }
