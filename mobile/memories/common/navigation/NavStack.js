@@ -9,6 +9,7 @@ import SettingsScreen from '../screens/SettingsScreen.js';
 
 const Stack = createNativeStackNavigator();
 const NavStack = () => {
+    // ELEPHANT MAKE SURE TO CHANGE INIT ROUTE BACK TO SIGN IN
     return(
     <Stack.Navigator initialRouteName="SignIn">
         <Stack.Screen name="MainScreen" component={MainScreen} />

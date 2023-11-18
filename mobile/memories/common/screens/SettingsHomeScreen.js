@@ -99,10 +99,13 @@ const styles = StyleSheet.create({
     heading: {
         fontSize: 30,
         marginTop: .05*vh,
+        color: 'white',
     },
     container: {
         alignItems: 'center',
-        gap: .03*vh
+        gap: .03*vh,
+        backgroundColor: '#dba7c3',
+        height: '100%'
     },
     btn: {
         backgroundColor: '#c5effc',
