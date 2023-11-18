@@ -265,8 +265,8 @@ exports.follow = (req, res, next) => {
                         const index1 = me.followers.indexOf(accountID);
                         if (index1 != -1) {
                             me.mutuals.push(accountID);
-                            account.mutuals.push(userID);
-                            account.save();
+                            Account.findByIdAndUpdate(accountID, {$push : {mutuals : userID}})
+                            .exec();
                             me.save();
                         }
                     })
