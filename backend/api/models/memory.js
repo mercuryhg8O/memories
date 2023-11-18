@@ -24,7 +24,7 @@ const memorySchema = mongoose.Schema({
     likedBy: {
         type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'account' }]
     },
-    latitude: {
+    longitude: {
         type: Number,
         required: true
     },

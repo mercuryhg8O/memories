@@ -61,6 +61,8 @@ exports.createMemory = (upload.array('images') ,(req, res, next) => {
                 visibility: result.visibility,
                 likes: result.likes,
                 likedBy: result.likedBy,
+                longitude: result.longitude,
+                latitude: result.latitude,
                 request: {
                     type: 'GET',
                     url: 'http://localhost:3000/memory/' + result._id
@@ -92,7 +94,9 @@ exports.getAllMemories = (req, res, next) => {
                     images: doc.images,
                     likes: doc.likes,
                     visibility: doc.visibility, 
-                    likedBy: doc.likedBy
+                    likedBy: doc.likedBy,
+                    longitude: doc.longitude,
+                    latitude: doc.latitude
                 }
             }),
             request: {
@@ -227,7 +231,9 @@ exports.getPublicMemories = (req, res, next) => {
                         tags: doc.tags,
                         images: doc.images,
                         likes: doc.likes,
-                        visibility: doc.visibility
+                        visibility: doc.visibility,
+                        longitude: doc.longitude,
+                        latitude: doc.latitude
                     }
                 }),
                 request: {
