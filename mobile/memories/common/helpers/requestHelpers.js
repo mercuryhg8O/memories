@@ -333,5 +333,22 @@ const getUsersFromSearch = async (searchString) => {
   return {search_worked, users_list};
 };
 
+const getMutuals = async (currentUserId) => {
+  const query_string = `/account/${currentUserId}/mutuals`;
+  const request_address = endpointURL + query_string;
+
+  const response = await axios.get(request_address).catch((err) => {
+    console.log('failed getting mutuals list, here\'s yer \'rror', err);
+  });
+
+  if (response && response.status === 200) {
+    for (let key of response.data.user.keys()) {
+      person_detail = {
+        // TODO waiting on backend to be fully implemented
+      }
+    }
+  }
+}
+
 
 export { isValidUser, createUserSuccessful, getUserData, getMemoryDetails, followUser, getMemoriesFromUser, createMemorySuccessful, getUsersFromSearch };
