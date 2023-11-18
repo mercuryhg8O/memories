@@ -230,9 +230,10 @@ exports.edit = (req, res, next) => {
 
 //FOLLOW ANOTHER USER 
 exports.follow = (req, res, next) => {
-    const accountID = req.post.accountID;
+    const accountID = req.params.accountID;
     console.log(req);
-    const userID = req.post.self;
+    const userID = req.params.self;
+
     //SEARCH FOR USER
     const account = Account.findById(accountID)
         .exec()
@@ -246,7 +247,7 @@ exports.follow = (req, res, next) => {
             const index = account.followers.indexOf(userID);
             console.log(index);
             if (index == -1) {
-                account.followers.push(req.post.self);
+                account.followers.push(req.params.self);
                 account.save();
                 res.status(200).json({
                     account: account,
@@ -279,8 +280,8 @@ exports.follow = (req, res, next) => {
 
 //UNFOLLOW A USER
 exports.unfollow = (req, res, next) => {
-    const userID = req.post.self;
-    const accountID = req.post.accountID;
+    const userID = req.params.self;
+    const accountID = req.params.accountID;
     //SEARCH FOR USER
     Account.findById(accountID)
     .exec()
