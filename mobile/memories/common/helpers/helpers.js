@@ -82,7 +82,7 @@ const fetchData = (URI) => {
 }
 
 
-const goTo = (mapView, lat, long, latDelta = .01, longDelta = .01) => {
+const goTo = (mapView, lat, long, latDelta = .005, longDelta = .005) => {
   const region = {
     latitude: lat,
     longitude: long,
@@ -147,7 +147,7 @@ const selectMemory = async (mapView, memoryId, setCurrentMemoryDetails, setDispl
   */
 
   // update the map to move to the memory location (optional)
-  goTo(mapView, lat, long);
+  goTo(mapView, lat, long, 0.0005, 0.0005);
 
   // send request to backend (await on)
   const created_memory = await getMemoryDetails(memoryId);
@@ -156,6 +156,7 @@ const selectMemory = async (mapView, memoryId, setCurrentMemoryDetails, setDispl
   setCurrentMemoryDetails(created_memory);
 
   // set displayMemoryDetails if able to retrieve all details
+  setDisplayMemoryDetails(false);
   setDisplayMemoryDetails(true);
 }
 

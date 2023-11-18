@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect, useContext } from 'react';
-import { Text, View, StyleSheet, Image, SafeAreaView, Dimensions } from 'react-native';
+import { Text, View, StyleSheet, Image, SafeAreaView, Dimensions, TouchableOpacity } from 'react-native';
 import { CurrentUserContext } from '../context/contexts';
 import axios from 'axios';
 import {getUserData} from '../helpers/requestHelpers';
@@ -10,8 +10,9 @@ const MemoryModal = () => {
     const [userName, setUserName] = useState('');
     const [memoryDescription, setMemoryDescription] = useState('');
     const [numberOfLikes, setNumberOfLikes] = useState(0)
+    const [liked, setLiked] = useState(false);
     const [memoryTags, setMemoryTags] = useState('no tags found');
-    const { displayMemoryDetails, currentMemoryDetails } = useContext(CurrentUserContext);
+    const { displayMemoryDetails, setDisplayMemoryDetails, currentMemoryDetails } = useContext(CurrentUserContext);
 
     // Once the displayMemoryDetails gets updated, it should parse the currentMemoryDetails object (if not empty)
     useEffect(() => {
@@ -66,6 +67,16 @@ const MemoryModal = () => {
                 </SafeAreaView>
                 
             </View>
+            <SafeAreaView>
+                <TouchableOpacity onPress={()=> {
+                    setLiked(!liked);
+                }}>
+                    <Text style={{fontSize: 30}}>{liked ? "💔" : "❤️"}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=> {setDisplayMemoryDetails(false)}}>
+                    <Text>close memory</Text>
+                </TouchableOpacity>
+            </SafeAreaView>
             
         </SafeAreaView> : <View></View>
     );

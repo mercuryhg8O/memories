@@ -36,7 +36,6 @@ const CreateMemoryScreen = ({ navigation }) => {
             ]);
         } else {
 
-
             const { latitude, longitude } = await getCurrentLatLong();
             // create request to back end to create a memory
             const created_memory = await createMemorySuccessful(currentUserID, memoryDescription, memoryVisibility, memoryTags, latitude, longitude);

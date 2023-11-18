@@ -9,6 +9,7 @@ const Profile = () => {
     {/* Once the  */}
     const [userName, setUserName] = useState('');
     const [userBio, setUserBio] = useState('');
+    const [followed, setFollowed] = useState('false');
     const { displayUser, setDisplayUser, setDisplayMemoryDetails, targetUserUID, currentUserID } = useContext(CurrentUserContext);
 
     // Once the targetUserUID gets updated, a request to get the profile of the targetUserUID is created
@@ -57,8 +58,11 @@ const Profile = () => {
                 </SafeAreaView>
 
                 <SafeAreaView>
-                    <TouchableOpacity onPress={()=> {followUser(currentUserID, targetUserUID)}}>
-                        <Text>follow user</Text>
+                    <TouchableOpacity onPress={()=> {
+                        followUser(currentUserID, targetUserUID);
+                        setFollowed(!followed);
+                    }}>
+                        <Text style={{fontSize: 20}}>{followed ? "➖" : "➕"}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=> {setDisplayUser(false)}}>
                         <Text>close profile</Text>
