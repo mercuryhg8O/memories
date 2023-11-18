@@ -265,6 +265,7 @@ exports.getUserMemories = (req, res, next) => {
                     message: "Account Not Found",
                 });
             }
+            //CHECK IF USER IS A FOLLOWER
             index1 = account1.followers.indexOf(id);
             const account2 = Account.findById(req.params.self)
             .exec()
@@ -274,7 +275,9 @@ exports.getUserMemories = (req, res, next) => {
                         message: "Account Not Found",
                     });
                 }   
+                //CHECK IF ACCOUNT IS FOLLOWING USER
                 index2 = account2.followers.indexOf(req.params.self);
+                //THE TWO ACCOUNTS ARE MUTUALS
                 if (index1 != -1 && index2 != -1) {
                     Memory.find()
                     .where('accountID').equals(id)
@@ -309,7 +312,9 @@ exports.getUserMemories = (req, res, next) => {
                             error: err
                         });
                     });
-                } else {
+                } 
+                //THE TWO ACCOUNTS ARE NOT MUTUALS
+                else {
                     Memory.find()
                     .where('accountID').equals(id)
                     .where('visibility').equals("Public")

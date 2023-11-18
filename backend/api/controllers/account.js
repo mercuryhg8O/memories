@@ -46,12 +46,14 @@ exports.signup = (upload.single('profilePic'), (req, res, next) => {
                     message: 'An account with this email already exist'
                 });
             } else {
+                //Hash the password
                 bcrpyt.hash(req.body.password, 10, (err, hash) => {
                     if (err) {
                         return res.status(500).json({
                             error: err
                         });
                     } else {
+                        //Generate a new ID and create Account
                         newid().then(id => {
                             const account = new Account({
                                 _id: new mongoose.Types.ObjectId(),
@@ -65,6 +67,7 @@ exports.signup = (upload.single('profilePic'), (req, res, next) => {
                                 verified: false,
                                 followers: []
                             })
+                            //Saves the newly created account and return the successfully created account
                             account.save()
                             .then(result => {
                                 console.log(result);
@@ -112,6 +115,7 @@ exports.login = (req, res, next) => {
                 message: "Email not found, user does not exist"
             });
         }
+        //Check if the password is correct
         bcrpyt.compare(req.body.password, account[0].password, (err, result) => {
             if (err) {
                 return res.status(401).json({
@@ -358,7 +362,7 @@ exports.delete = (req, res, next) => {
     });
 }
 
-//Generate new ID for user
+//GENERATE A NEW ID
 const newid = async () => {
     const currentVal = await UserID.getCurrent();
     const newID = currentVal+1;
