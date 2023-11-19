@@ -12,14 +12,7 @@ import {
 } from 'react-native';
 // import { Icon } from 'react-native-elements';
 
-// const Props =  {
-// //   label: string;
-//   label: 'string',
-//   data: Array<{ label: string; value: string }>,
-// //   onSelect: (item: { label: string; value: string }) => void;
-//   onSelect: (item) => void
-// }
-
+// Custom dropdown component for recycling throughout pages
 const Dropdown = ({ preLabel, label, data, onSelect }) => {
   const DropdownButton = useRef();
   const [visible, setVisible] = useState(false);

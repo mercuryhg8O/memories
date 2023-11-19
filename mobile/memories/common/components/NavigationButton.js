@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 
-
+// Custom navigation button component for easy reuse as needed on main screen
 const NavigationButton = ({ navigation, navigateTo, label, accLabel }) => {
     return <View>
         <TouchableOpacity style={styles.btn}
@@ -12,8 +12,6 @@ const NavigationButton = ({ navigation, navigateTo, label, accLabel }) => {
         </TouchableOpacity>
     </View>
 };
-
-
 
 const styles = StyleSheet.create({
     btn: {

@@ -78,7 +78,7 @@ export class Search extends Component {
                     <TextInput
                         style={styles.input}
                         placeholder='What are you looking for?'
-                        
+
                     />
                     <View style={styles.content}>
                         {this.createPerson()}

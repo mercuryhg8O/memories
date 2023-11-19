@@ -2,9 +2,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useState, useEffect, useContext } from 'react';
 import { StyleSheet, View, Text, Button, TouchableOpacity } from 'react-native';
-import { ParseMemoriesDetails, getCurrentLatLong, goTo } from '../helpers/helpers';
+import { ParseMemoriesDetails, getCurrentLatLong, goTo, setCurrentLocation } from '../helpers/helpers';
 import { StatusBar } from 'expo-status-bar';
-import SearchButton from '../components/SearchButton.js';
 import Map from '../components/Map';
 import Profile from '../components/Profile';
 import MemoryModal from '../components/MemoryModal.js'
@@ -12,7 +11,7 @@ import { CurrentUserContext } from '../context/contexts';
 import NavigationButton from '../components/NavigationButton.js'
 
 
-// Main page
+// Main page with map display
 function MainScreen({ navigation }) {
 
     const { mapView, displayUser, setDisplayUser, currentUserID, targetUserUID } = useContext(CurrentUserContext);
@@ -23,18 +22,18 @@ function MainScreen({ navigation }) {
         console.log("hiihihihoihoihoio", currentUserID, targetUserUID);
 
 
-
+        //
         const setMapInfo = () => {
 
-            ParseMemoriesDetails(currentUserID, targetUserUID).then(({memories, error}) => {
+            ParseMemoriesDetails(currentUserID, targetUserUID).then(({ memories, error }) => {
 
-                if(error){
+                if (error) {
                     console.log('an error happened when parsing route info')
                 }
-                else{
+                else {
                     setMemoryLocations(memories);
                 }
-            }).catch(() => {console.log('there was an error while trying to retrieve the memories from memory list parser')});
+            }).catch(() => { console.log('there was an error while trying to retrieve the memories from memory list parser') });
 
 
         }
@@ -43,40 +42,31 @@ function MainScreen({ navigation }) {
 
 
     }, [targetUserUID]);
-    
+
 
     return (
         <View style={styles.container}>
             <StatusBar style="auto" />
-            {/* Buttons for interim demo only */}
-            {/* <View style={{backgroundColor: 'black', width: '100%', flexDirection: 'row'}}>
-                need to hardcode real user ids from the database once we have those
-                <TestingProfileButton navigation={navigation} userId={1234}/>
-                <TestingProfileButton navigation={navigation} userId={2341}/>
-                <TestingProfileButton navigation={navigation} userId={3412}/>
-                <TestingProfileButton navigation={navigation} userId={4123}/>
-                <Text style={{color: 'white', top: 10, left: 10}}>For demo only</Text>
-             </View> */}
 
             <Map
                 navigation={navigation}
-                memory_locations={memory_locations} />
+                memory_locations={memory_locations}
+            />
             <View /* Buttons for navigation*/ style={styles.navbar}>
-                {/* Temporary: the navigateTo is set to the screen name as defined in nav */}
-                <NavigationButton label="🔍" accLabel="Search" navigation={navigation} navigateTo={'Search'}/>
-                <NavigationButton label="➕" accLabel="Create Memory" navigation={navigation} navigateTo={'CreateMemory'}/>
-                <NavigationButton label="⚙️" accLabel="Settings" navigation={navigation} navigateTo={'SettingsHome'}/>
+                <NavigationButton label="🔍" accLabel="Search" navigation={navigation} navigateTo={'Search'} />
+                <NavigationButton label="➕" accLabel="Create Memory" navigation={navigation} navigateTo={'CreateMemory'} />
+                <NavigationButton label="⚙️" accLabel="Settings" navigation={navigation} navigateTo={'SettingsHome'} />
                 {/* <TouchableOpacity
                     onPress={() => {
-                        const {lat, long} =  getCurrentLatLong();
-                        goTo(mapView, lat, long);
+                        setCurrentLocation(mapView);
                     }}
+                    style={{backgroundColor: 'black'}}
                     >
                     <Text> navigate to current location</Text>
                 </TouchableOpacity> */}
             </View>
-            <Profile/>
-            <MemoryModal/>
+            <Profile />
+            <MemoryModal />
         </View>
     );
 }

@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { Alert } from 'react-native';
 import * as Location from 'expo-location';
-import {getMemoryDetails, getMemoriesFromUser} from './requestHelpers';
+import { getMemoryDetails, getMemoriesFromUser } from './requestHelpers';
 
 
+// default memory response used for error checking
 const MockResponse = {
   "memories": [
     {
@@ -23,12 +24,13 @@ const MockResponse = {
   ]
 }
 
+// default location is location permissions are not available
 const defaultLatLong = {
   latitude: 42,
   longitude: 42,
 }
 
-
+// parse memory details
 const ParseMemoriesDetails = async (currentUserId, desiredUserId) => {
 
   error = false;
@@ -36,7 +38,7 @@ const ParseMemoriesDetails = async (currentUserId, desiredUserId) => {
   console.log('attempting to find memories for a user')
 
   // Make Back-end call here to get Json, and parse similarly to the mock response.
-  const { search_worked, memories_list} = await getMemoriesFromUser(currentUserId, desiredUserId);
+  const { search_worked, memories_list } = await getMemoriesFromUser(currentUserId, desiredUserId);
   // assuming response is a list
 
   let memory_locations_source = MockResponse; // set default
@@ -44,11 +46,11 @@ const ParseMemoriesDetails = async (currentUserId, desiredUserId) => {
   //console.log(memories_list)
   //console.log('search_worked: ', search_worked);
 
-  if(search_worked){
+  if (search_worked) {
     memory_locations_source = memories_list
     console.log('using the memories gotten from the request');
-    
-  }else{
+
+  } else {
     console.log('there was an error when getting memories');
     error = true;
   }
@@ -57,7 +59,7 @@ const ParseMemoriesDetails = async (currentUserId, desiredUserId) => {
 
   {/*Parse memory */ }
   memories = memory_locations_source.map((memory) => ({ latitude: memory.latitude, longitude: memory.longitude, id: memory.id }))
-  
+
 
   console.log('memories after request: ');
   console.log(memories)
@@ -67,7 +69,7 @@ const ParseMemoriesDetails = async (currentUserId, desiredUserId) => {
   return { memories, error }
 }
 
-
+// testing for fetching backend data
 const fetchData = (URI) => {
   // Invoking the get method to perform a GET request
   axios.get(`${baseUrl}` + URI).then((response) => {
@@ -81,7 +83,7 @@ const fetchData = (URI) => {
   });
 }
 
-
+// move the current mapt to the given coords
 const goTo = (mapView, lat, long, latDelta = .005, longDelta = .005) => {
   const region = {
     latitude: lat,
@@ -92,7 +94,7 @@ const goTo = (mapView, lat, long, latDelta = .005, longDelta = .005) => {
   mapView.current.animateToRegion(region, 1000); // args: (region, duration)
 }
 
-
+// get the current lat and long
 const getCurrentLatLong = async () => {
 
   // set default lat and long
@@ -128,7 +130,7 @@ const getCurrentLatLong = async () => {
 
 };
 
-
+// set the current location of the map to wherever the user is
 const setCurrentLocation = async (mapView) => {
   // sets mapView to current location if possible, or a default location (if location settings are not enabled).
 
@@ -139,8 +141,8 @@ const setCurrentLocation = async (mapView) => {
   await goTo(mapView, latitude, longitude);
 };
 
-
-const selectMemory = async (mapView, memoryId, setCurrentMemoryDetails, setDisplayMemoryDetails, lat=0, long=0)  => {
+// select a memory
+const selectMemory = async (mapView, memoryId, setCurrentMemoryDetails, setDisplayMemoryDetails, lat = 0, long = 0) => {
   /* selectMemory does the following:
   - move the mapview to the location of the memory
   - set the current memory details (makes a call to request helper function to get data from backend)

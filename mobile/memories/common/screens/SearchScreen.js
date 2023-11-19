@@ -2,9 +2,8 @@ import { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Modal, TouchableOpacity, ScrollView, Image, SafeAreaView, FlatList, TextInput, Dimensions } from "react-native";
 import { CurrentUserContext } from '../context/contexts';
 import { useContext } from 'react';
-import SearchButton from '../components/SearchButton';
 import { goTo } from '../helpers/helpers';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 import Dropdown from '../components/Dropdown';
 import { getUsersFromSearch } from '../helpers/requestHelpers';
 
@@ -66,6 +65,7 @@ const tagMockData = {
     ]
 }
 
+// Enum for searching criteria
 export const SearchCriteria = {
     NAME: 'people by name',
     ID: 'people by ID',
@@ -73,6 +73,7 @@ export const SearchCriteria = {
     TAG: 'tags'
 }
 
+// Search page screen
 const SearchScreen = ({ navigation }) => {
 
     // CONTEXTS:
@@ -89,22 +90,22 @@ const SearchScreen = ({ navigation }) => {
         // get the latest users by username, then render
         getUsersFromSearch(searchString).then((response) => {
 
-            if(response.search_worked){
+            if (response.search_worked) {
 
-                    setUsersList(response.users_list);
-            }else{
+                setUsersList(response.users_list);
+            } else {
                 console.log('there was an error with the search');
             }
 
 
-        }).catch((err) => {console.log('there was an error', err)})
+        }).catch((err) => { console.log('there was an error', err) })
     }
 
 
 
     // USE EFFECTS
     useEffect(() => {
-        console.log('update query: ' + searchText);        
+        console.log('update query: ' + searchText);
         fetchUsers(searchText);
 
         console.log(usersList);
@@ -117,8 +118,8 @@ const SearchScreen = ({ navigation }) => {
 
 
     }, [usersList]);
-    
-    
+
+
 
 
     // COMPONENTS
@@ -236,23 +237,23 @@ const SearchScreen = ({ navigation }) => {
 
         switch (searchCriteria) {
             case SearchCriteria.NAME:
-                return (<SearchUsersView/>);
+                return (<SearchUsersView />);
             case SearchCriteria.ID:
-                return (<SearchUsersView/>);
+                return (<SearchUsersView />);
             case SearchCriteria.PLACE:
-                return (<SearchPlacesView/>);
+                return (<SearchPlacesView />);
             case SearchCriteria.TAG:
-                return (<SearchTagsView/>);
+                return (<SearchTagsView />);
             default:
-                return (<SearchUsersView/>);
+                return (<SearchUsersView />);
         }
     };
 
     const data = [
-        {label: SearchCriteria.NAME, value: SearchCriteria.NAME},
-        {label: SearchCriteria.ID, value: SearchCriteria.ID},
-        {label: SearchCriteria.PLACE, value: SearchCriteria.PLACE},
-        {label: SearchCriteria.TAG, value: SearchCriteria.TAG},
+        { label: SearchCriteria.NAME, value: SearchCriteria.NAME },
+        { label: SearchCriteria.ID, value: SearchCriteria.ID },
+        { label: SearchCriteria.PLACE, value: SearchCriteria.PLACE },
+        { label: SearchCriteria.TAG, value: SearchCriteria.TAG },
     ];
 
 
@@ -265,16 +266,16 @@ const SearchScreen = ({ navigation }) => {
                     onChangeText={newText => setSearchText(newText)}
                     onSubmitEditing={() => {
                         // TODO send request to search for stuff
-                        
+
                         console.log('HI!');
                     }} />
-                <Dropdown preLabel="Searching for" label="..." data={data} onSelect={setSearchCriteria}/>
+                <Dropdown preLabel="Searching for" label="..." data={data} onSelect={setSearchCriteria} />
             </View>
 
             <View style={styles.content}>
                 {/* set view to be conditional set by searchCriteria*/}
                 {/* <SearchPlacesView/> */}
-                <DisplayBasedOnCriteria/>
+                <DisplayBasedOnCriteria />
             </View>
 
         </SafeAreaView>

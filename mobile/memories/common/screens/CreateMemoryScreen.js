@@ -1,7 +1,7 @@
 import { useState, useEffect, createContext, useContext, } from 'react';
 import { StyleSheet, View, Text, SafeAreaView, Alert, Image, TouchableOpacity, Dimensions } from 'react-native';
-import CustomInput from '../components/customInput.component';
-import CustomButton from '../components/customButton.component';
+import CustomInput from '../components/CustomInput';
+import CustomButton from '../components/CustomButton';
 import Dropdown from '../components/Dropdown';
 import { CurrentUserContext } from '../context/contexts';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
@@ -10,12 +10,14 @@ import { setCurrentLocation, getCurrentLatLong, goTo } from '../helpers/helpers'
 
 import * as ImagePicker from 'expo-image-picker';
 
+// Enum for memory visibility
 const Visibility = {
     PRIVATE: 'Private',
     MUTUALS: 'Mutuals',
     PUBLIC: 'Public'
 }
 
+// Memory creation form screen
 const CreateMemoryScreen = ({ navigation }) => {
     const { currentUserID, mapView } = useContext(CurrentUserContext);
 
@@ -24,7 +26,6 @@ const CreateMemoryScreen = ({ navigation }) => {
     const [memoryVisibility, setMemoryVisibility] = useState(Visibility.PUBLIC);
     const [memoryImage, setMemoryImage] = useState('https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F000%2F349%2F672%2Foriginal%2Fcamera-vector-icon.jpg&f=1&nofb=1&ipt=6e208aea39071b070fe8a7d5258de9fe3a859b0fba678b495ec39b29e67b791d&ipo=images');
     const [memoryTags, setMemoryTags] = useState('');
-    
 
     const attemptMemoryCreation = async () => {
         console.log('attempting to create a memory')
@@ -35,17 +36,16 @@ const CreateMemoryScreen = ({ navigation }) => {
                 { text: 'OK' },
             ]);
         } else {
-
             const { latitude, longitude } = await getCurrentLatLong();
             // create request to back end to create a memory
             const created_memory = await createMemorySuccessful(currentUserID, memoryDescription, memoryVisibility, memoryTags, latitude, longitude);
-            if(created_memory){
+            if (created_memory) {
                 // created a memory, should move the mapview to the 
                 // users current location (aka where the memory was made) and display map view
                 await setCurrentLocation(mapView);
                 console.log('created a memory and navigating to current location on the map');
                 navigation.navigate('MainScreen');
-            }else{
+            } else {
                 console.log('could not create a memory - please check the logs.');
             }
         }
@@ -69,10 +69,10 @@ const CreateMemoryScreen = ({ navigation }) => {
         }
     };
 
-    const data = [
-        {label: Visibility.PRIVATE, value: Visibility.PRIVATE},
-        {label: Visibility.MUTUALS, value: Visibility.MUTUALS},
-        {label: Visibility.PUBLIC, value: Visibility.PUBLIC},
+    const data = [ // data for dropdown
+        { label: Visibility.PRIVATE, value: Visibility.PRIVATE },
+        { label: Visibility.MUTUALS, value: Visibility.MUTUALS },
+        { label: Visibility.PUBLIC, value: Visibility.PUBLIC },
     ];
 
     return <View style={styles.container}>
@@ -83,7 +83,7 @@ const CreateMemoryScreen = ({ navigation }) => {
                     placeholder={'memory description goes here'}
                     setValue={setMemoryDescription}
                     isMultiLine={true}
-                    label={'memory description input field'}/>
+                    label={'memory description input field'} />
             </View>
 
             <View /* image selector container */ style={styles.logo_container}>
@@ -92,20 +92,19 @@ const CreateMemoryScreen = ({ navigation }) => {
                         style={styles.logo}
                         source={{
                             uri: memoryImage,
-                        }}/>
+                        }} />
                 </TouchableOpacity>
             </View>
 
 
             <View /* visibility, tag & create memory button container */ style={styles.inputContainer}>
-                {/* TODO: replace with drop down */}
-                <View style={{flexDirection: 'row', width: '100%'}}>
+                <View style={{ flexDirection: 'row', width: '100%' }}>
                     <CustomInput
                         placeholder={'tags (delineated by ,)'}
                         setValue={parseTags}
                         label={'tags input field'}
                     />
-                    <Dropdown label="Viewable to..." data={data} onSelect={setMemoryVisibility}/>
+                    <Dropdown label="Viewable to..." data={data} onSelect={setMemoryVisibility} />
                 </View>
                 <CustomButton
                     placeholder={'Create Memory'}
@@ -151,7 +150,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 5,
         paddingVertical: 10,
-        marginTop: .05*vh,
+        marginTop: .05 * vh,
         alignItems: "center",
     },
 });

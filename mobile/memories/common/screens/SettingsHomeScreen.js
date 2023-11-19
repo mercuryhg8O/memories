@@ -1,23 +1,25 @@
-import { useState, useEffect, useContext} from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Text, TouchableOpacity, SafeAreaView, View, Linking } from 'react-native';
 import { CurrentUserContext } from '../context/contexts.js';
 import { Image, Dimensions } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import CustomInput from '../components/customInput.component.js';
-import CustomButton from '../components/customButton.component.js';
-import {getUserData } from '../helpers/requestHelpers.js';
+import CustomInput from '../components/CustomInput.js';
+import CustomButton from '../components/CustomButton.js';
+import { getUserData } from '../helpers/requestHelpers.js';
 
+
+// Home page for settings with form for changing user information
 function SettingsHomeScreen({ navigation }) {
 
     const { currentUserId } = useContext(CurrentUserContext);
-    
+
     const [userIcon, setUserIcon] = useState('https://cdn-icons-png.flaticon.com/512/3177/3177440.png');
     const [userName, setUserName] = useState('Cheetah');
     const [bio, setBio] = useState('rawr xD');
-    
-    useEffect(()=>{
+
+    useEffect(() => {
         const getUserProfileData = async () => {
-            const {found_user, username, bio} = await getUserData(currentUserId);
+            const { found_user, username, bio } = await getUserData(currentUserId);
 
             if (!found_user) {
                 console.log('error parsing response from request for profile with id: ' + currentUserId);
@@ -93,17 +95,17 @@ const vh = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
     logo: {
-        width: .25*vh, height: .25*vh,
+        width: .25 * vh, height: .25 * vh,
         borderRadius: 100,
     },
     heading: {
         fontSize: 30,
-        marginTop: .05*vh,
+        marginTop: .05 * vh,
         color: 'white',
     },
     container: {
         alignItems: 'center',
-        gap: .03*vh,
+        gap: .03 * vh,
         backgroundColor: '#dba7c3',
         height: '100%'
     },

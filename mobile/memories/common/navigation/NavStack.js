@@ -9,17 +9,17 @@ import SettingsScreen from '../screens/SettingsScreen.js';
 
 const Stack = createNativeStackNavigator();
 const NavStack = () => {
-    // ELEPHANT MAKE SURE TO CHANGE INIT ROUTE BACK TO SIGN IN
-    return(
-    <Stack.Navigator initialRouteName="SignIn">
-        <Stack.Screen name="MainScreen" component={MainScreen} />
-        <Stack.Screen name="SignIn" component={SignInScreen} />
-        <Stack.Screen name="SignUp" component={SignUpScreen} />
-        <Stack.Screen name="Search" component={SearchScreen} />
-        <Stack.Screen name="CreateMemory" component={CreateMemoryScreen} />
-        <Stack.Screen name="SettingsHome" component={SettingsHomeScreen} />
-        <Stack.Screen name="Settings" component={SettingsScreen} />
-    </Stack.Navigator>)
+
+    return (
+        <Stack.Navigator initialRouteName="SignIn">
+            <Stack.Screen name="MainScreen" component={MainScreen} />
+            <Stack.Screen name="SignIn" component={SignInScreen} />
+            <Stack.Screen name="SignUp" component={SignUpScreen} />
+            <Stack.Screen name="Search" component={SearchScreen} />
+            <Stack.Screen name="CreateMemory" component={CreateMemoryScreen} />
+            <Stack.Screen name="SettingsHome" component={SettingsHomeScreen} />
+            <Stack.Screen name="Settings" component={SettingsScreen} />
+        </Stack.Navigator>)
 };
 
 

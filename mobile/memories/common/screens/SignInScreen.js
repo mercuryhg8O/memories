@@ -1,11 +1,12 @@
 import { useState, useEffect, createContext, useContext, } from 'react';
 import { StyleSheet, View, Text, SafeAreaView, Image, Alert, Dimensions, ScrollView } from 'react-native';
-import CustomInput from '../components/customInput.component';
-import CustomButton from '../components/customButton.component';
+import CustomInput from '../components/CustomInput';
+import CustomButton from '../components/CustomButton';
 import { CurrentUserContext } from '../context/contexts';
 import axios from 'axios';
 import { isValidUser } from '../helpers/requestHelpers';
 
+// Screen for login
 const SignInScreen = ({ navigation }) => {
     const { setCurrentUser } = useContext(CurrentUserContext);
 
@@ -43,6 +44,7 @@ const SignInScreen = ({ navigation }) => {
         }
     }
 
+    //this function encapsulates error messages for bad attempts
     const AlertHelper = ( message) => {
         Alert.alert('Alert', message, [
             {text: 'OK'},                

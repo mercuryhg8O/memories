@@ -4,9 +4,9 @@ import { CurrentUserContext } from '../context/contexts';
 import axios from 'axios';
 import {getUserData} from '../helpers/requestHelpers';
 
+// Popup that displays memory information
 const MemoryModal = () => {
 
-    {/* Once the  */}
     const [userName, setUserName] = useState('');
     const [memoryDescription, setMemoryDescription] = useState('');
     const [numberOfLikes, setNumberOfLikes] = useState(0)
