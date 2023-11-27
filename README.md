@@ -19,6 +19,12 @@ The Memories application relies on the following:
 
 ### Prerequisites
 
+You need to make sure you have Node.js and NPM for this application.
+
+[Download Node.js](https://nodejs.org/en/download)
+
+[Downloading and installing Node.js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+
 To avoid issues with cloning and testing the repository, ensure the following technologies are up to date:
 1. npm
     ```sh
