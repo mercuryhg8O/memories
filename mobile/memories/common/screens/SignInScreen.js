@@ -1,11 +1,12 @@
 import { useState, useEffect, createContext, useContext, } from 'react';
 import { StyleSheet, View, Text, SafeAreaView, Image, Alert, Dimensions, ScrollView } from 'react-native';
-import CustomInput from '../components/customInput.component';
-import CustomButton from '../components/customButton.component';
+import CustomInput from '../components/CustomInput';
+import CustomButton from '../components/CustomButton';
 import { CurrentUserContext } from '../context/contexts';
 import axios from 'axios';
 import { isValidUser } from '../helpers/requestHelpers';
 
+// Screen for login
 const SignInScreen = ({ navigation }) => {
     const { setCurrentUser } = useContext(CurrentUserContext);
 
@@ -14,7 +15,7 @@ const SignInScreen = ({ navigation }) => {
     [password, SetPassword] = useState('');
     [loginInValid, setLoginValid] = useState(false);
 
-    // attemp to log in function that creates back-end request
+    // attempt to log in function that creates back-end request
     const attemptLogin = () => {
         if(email === ''){
             Alert.alert('Enter email', 'login requires email', [
@@ -28,12 +29,14 @@ const SignInScreen = ({ navigation }) => {
             
             // if the user exists, then they should be loggedin
             isValidUser(email, password).then((userLoginStatus) => {
-                if(userLoginStatus){ // valid login
+                if(userLoginStatus.signed_in_worked){ // valid login
 
                     // should parse request for userid to make future requests
-                    setCurrentUser(email); // save email for future requests (temporary solution)
+                    // setCurrentUser(email); // save email for future requests (temporary solution)
+                    console.log('id set:', userLoginStatus.userId);
+                    setCurrentUser(userLoginStatus.userId); // set user context to MongoDB user ids instead
                     navigation.navigate('MainScreen'); // navigate to map
-                }else{
+                } else {
                     console.warn('no account exists with that email & password.');
                 }
             }).catch(
@@ -41,6 +44,7 @@ const SignInScreen = ({ navigation }) => {
         }
     }
 
+    //this function encapsulates error messages for bad attempts
     const AlertHelper = ( message) => {
         Alert.alert('Alert', message, [
             {text: 'OK'},                
