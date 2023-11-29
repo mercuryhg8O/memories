@@ -36,28 +36,25 @@ _The following steps allow a new developer to install the main repository and be
    ```sh
    git clone https://github.com/mercuryhg31/memories.git
    ```
-2. ```sh
-	cd memories
-	```
 ### Front-End
 
-3. Navigate to backend directory
+2. Navigate to backend directory
    ```sh
     cd mobile/memories
     ```
-4. Install NPM packages in the memories folder
+3. Install NPM packages in the memories folder
    ```sh
    npm install
    ```
-5. Install yarn package manager
+4. Install yarn package manager
     ```
     npm install -g yarn
     ```
-6. Install react native maps package:
+5. Install react native maps package:
    ```
     npx expo install react-native-maps
     ```
-7. Install navigator package(s):
+6. Install navigator package(s):
     ```
     yarn add @react-navigation/native
     yarn add @react-navigation/native-stack
@@ -66,9 +63,13 @@ _The following steps allow a new developer to install the main repository and be
     ```
 
 ### Back-End
+2. Install NestJS
+   ```sh
+   npm install -g @nestjs/cli
+   ```
 3. Navigate to backend directory
    ```sh
-    cd backend
+    cd memory-backend-nest
     ```
 4. Install NPM packages
     ```sh
@@ -79,11 +80,11 @@ _The following steps allow a new developer to install the main repository and be
 
 1. Navigate to backend directory
    ```sh
-    cd backend
+    cd memory-backend-nest
     ```
 2. To start the node server
     ```sh
-    npm start
+    nest start
     ```
 3. Navigate to http://localhost:3000/URI for testing
 
@@ -94,17 +95,11 @@ _The following steps allow a new developer to install the main repository and be
     cd mobile/memories
     ```
 2. Start development server
-	Local Only:
     ```sh
     npx expo start
-	```	
-	Local and Non-Local
-	```sh
-	npx expo start --tunnel 
     ```
-3. Open the Expo app ( [IOS](https://apps.apple.com/us/app/expo-go/id982107779) [Android](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en_US&gl=US) )
-	OR
-	Scan QR Code on phone (iOS only)
+2. Open the Expo app ( [IOS](https://apps.apple.com/us/app/expo-go/id982107779) [Android](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en_US&gl=US) )
+3. Scan QR Code on phone
 
 
 
