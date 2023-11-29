@@ -1,19 +1,21 @@
 import React from 'react';
-import {View, Text, TextInput, StyleSheet, KeyboardAvoidingView} from 'react-native';
+import {TextInput, StyleSheet, KeyboardAvoidingView} from 'react-native';
 
-const CustomInput = ({value, setValue, placeholder, isMuliLine, label}) => {
+// Custom input component for recycling throughout pages
+const CustomInput = ({value, setValue, placeholder, isMultiLine, label, defaultValue}) => {
     return (
-        <KeyboardAvoidingView 
-            style={isMuliLine ? styles.multiline_container: styles.singleline_container}
+        <KeyboardAvoidingView
+            style={isMultiLine ? styles.multiline_container: styles.singleline_container}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             accessibilityLabel={label}
             >
-            <TextInput 
+            <TextInput
                 value={value}
                 onChangeText={setValue}
-                placeholder={placeholder} 
+                defaultValue={defaultValue}
+                placeholder={placeholder}
                 style={styles.input}
-                />
+            />
         </KeyboardAvoidingView>
     );
 };

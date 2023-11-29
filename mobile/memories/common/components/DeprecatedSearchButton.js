@@ -18,7 +18,7 @@ const SearchButton = ({navigation}) => {
     //   Icon
     // </Button>
     <TouchableOpacity
-      onPressIn={navigation.navigate("SearchScreen")}>
+      onPressIn={navigation.navigate("MainScreen")}>
       <Image/>
     </TouchableOpacity>
   );
