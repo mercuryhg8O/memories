@@ -1,6 +1,5 @@
 # MEMORIES CODING STANDARDS AND GUIDELINES
 
-## READABILITY
 
 No more than one statement per line
 
