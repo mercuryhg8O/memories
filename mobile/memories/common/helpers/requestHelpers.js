@@ -42,22 +42,17 @@ const getUserData = async (userid) => {
 
   // error handling
   let found_user = false;
-
-  const response = await axios.get(request_address).catch((err) => {
-    console.log('error during retrieval response: ', err);
-  });
-
-  let username = 'default username';
+  let username = 'default username'; 
   let bio = 'default bio';
 
-
-  if (response) {
+  axios.get(request_address)
+  .then((response) => {
     username = response.data.doc.username;
     bio = response.data.doc.bio;
     found_user = true
-  }
-
-  found_user = true;
+  }).catch((err) => {
+    console.log('error during retrieval response: ', err);
+  });
 
   return { found_user, username, bio, };
 }
@@ -124,6 +119,7 @@ const createUserSuccessful = async (username, email, password, bio) => {
 
   const response = await axios.post(request_address, request_body).catch((err) => {
     console.log('error during retrieval of when getting response: ', err);
+    console.warn('an account with that email address already exists.')
     created_account = false;
   });
 
@@ -248,13 +244,17 @@ const getMemoriesFromUser = async (currentuserid, memories_of_this_user) => {
   const request_address = endpointURL + query_string
   console.log('request made to: ' + request_address)
 
+  // error checking (back-end cannot accept undefined user requests)
+  let search_worked = false;
+
   if (currentuserid === undefined || memories_of_this_user === undefined) {
     console.log('currentuserid: ', currentuserid, ' memories_of_this_user: ', memories_of_this_user)
     console.log('setting both to 0')
     currentuserid = 0
     memories_of_this_user = 0
+    return { search_worked, memories_list };
   }
-  let search_worked = false;
+  
   let memories_list = []
 
 
