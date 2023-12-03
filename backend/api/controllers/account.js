@@ -2,42 +2,10 @@ const Account = require('../models/account');
 const UserID = require('../models/userid');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-const multer = require('multer');
 const bcrpyt = require('bcrypt');
 
-//STORE AN UPLOADED IMAGE
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './profilePics');
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname);
-    }
-});
-
-//FILTERS ANY FILES THAT AREN'T JPEG OR PNG
-const fileFilter = (req, file, cb) => {
-    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image.png') {
-        cb(null, false);
-    } else {
-        cb(null, true);
-        res.status(404).json({
-            message: "Only jpeg or png"
-        })
-    }
-};
-
-//UPLOAD IMAGE
-const upload = multer({
-    storage: storage,
-    limits: {
-        fileSize: 1024 * 1024 *5
-    },
-    fileFilter: fileFilter
-});
-
 //SIGN UP CONTROLLER
-exports.signup = (upload.single('profilePic'), (req, res, next) => {
+exports.signup = (req, res, next) => {
     Account.find({ email: req.body.email })
         .exec()
         .then(account => {
@@ -63,7 +31,7 @@ exports.signup = (upload.single('profilePic'), (req, res, next) => {
                                 username: req.body.username,
                                 label: req.body.label,
                                 bio: req.body.bio,
-                                profilePic: req.body.profilePic,
+                                pfp: req.file.path,
                                 verified: false,
                                 followers: []
                             })
@@ -93,7 +61,7 @@ exports.signup = (upload.single('profilePic'), (req, res, next) => {
                                 })
                             });
                         });
-                    }
+                    } 
                 });
             }
         })
@@ -103,7 +71,7 @@ exports.signup = (upload.single('profilePic'), (req, res, next) => {
                 error: err
             });
         })
-})
+}
 
 //LOGIN CONTROLLER
 exports.login = (req, res, next) => {
