@@ -13,6 +13,9 @@ const memorySchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, ref: 'account',
         // required: true
     },
+    accountName: {
+        type: String,
+    },
     bodyText: {
         type: String,
         minLength: 3,
@@ -23,7 +26,7 @@ const memorySchema = mongoose.Schema({
     likedBy: {
         type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'account' }]
     },
-    latitude: {
+    longitude: {
         type: Number,
         required: true
     },

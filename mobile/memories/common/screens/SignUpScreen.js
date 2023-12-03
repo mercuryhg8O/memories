@@ -1,13 +1,14 @@
 import { useState, useEffect, createContext, useContext, } from 'react';
 import { StyleSheet, View, Text, SafeAreaView, Alert, Image, TouchableOpacity, Dimensions } from 'react-native';
-import CustomInput from '../components/customInput.component';
-import CustomButton from '../components/customButton.component';
+import CustomInput from '../components/CustomInput';
+import CustomButton from '../components/CustomButton';
 import { CurrentUserContext } from '../context/contexts';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { createUserSuccessful } from '../helpers/requestHelpers';
 
 import * as ImagePicker from 'expo-image-picker';
 
+// Screen for signing up for an account
 const SignUpScreen = ({ navigation }) => {
     const { setCurrentUser } = useContext(CurrentUserContext);
 
@@ -19,45 +20,39 @@ const SignUpScreen = ({ navigation }) => {
 
     const attemptSignUp = () => {
 
-        if(userName === ''){
+        if (userName === '') {
             Alert.alert('Enter userName', 'login requires userName', [
-                {text: 'OK'},                
-              ]);
-        } else if(email === ''){
+                { text: 'OK' },
+            ]);
+        } else if (email === '') {
             Alert.alert('Enter email', 'login requires email', [
-                {text: 'OK'},                
-              ]);
-        } else if(password === ''){
+                { text: 'OK' },
+            ]);
+        } else if (password === '') {
             Alert.alert('Enter password', 'login requires password', [
-                {text: 'OK'},                
-              ]);
-        } else{
+                { text: 'OK' },
+            ]);
+        } else {
 
             // create and login user if possible
             createUserSuccessful(userName, email, password, bio).then((userLoginStatus) => {
-                if(userLoginStatus){ // valid login
+                if (userLoginStatus.created_account) { // valid login
 
                     // should parse request for userid to make future requests
-                    setCurrentUser(email); // save email for future requests (temporary solution)
+                    console.log('setting current user to: ', userLoginStatus.account_id);
+                    setCurrentUser(userLoginStatus.account_id); // save email for future requests (temporary solution)
                     navigation.navigate('MainScreen'); // navigate to map
-                }else{
-                    console.warn('no account exists with that email & password.');
+                } else {
+                    console.warn('could not create an account with that email & password.');
                 }
             }).catch(
-                (err) => {console.log(err)});
+                (err) => { console.log(err) });
 
-            if (true){ // valid login (replace with request)
-                navigation.navigate('MainScreen'); // navigate to map
-                setCurrentUser(userName); // save username for future requests
-            } else{
-                console.warn('cannot create an account with that information.')
-                // TODO: parse to provide informative error of why account creation didn't succeed
-            }
         }
     }
 
     const [userIcon, setUserIcon] = useState('https://cdn-icons-png.flaticon.com/512/3177/3177440.png');
-    
+
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
@@ -90,29 +85,29 @@ const SignUpScreen = ({ navigation }) => {
                     placeholder={'username'}
                     setValue={setUserName}
                     label={'Username input field'}
-                    />
+                />
                 <CustomInput
                     placeholder={'email'}
                     setValue={SetEmail}
                     label={'Email input field'}
-                    />
+                />
                 <CustomInput
                     placeholder={'password'}
                     setValue={SetPassword}
                     label={'Password input field'}
-                    />
+                />
                 <CustomInput
                     placeholder={'[optional]Bio  '}
                     setValue={setBio}
-                    isMuliLine={true}
+                    isMultiLine={true}
                     label={'Bio input field'}
-                    />
+                />
                 <CustomButton
                     placeholder={'Create Account'}
                     onPress={() => attemptSignUp()}
                     button_type={styles.createAccountBtn}
                     label={'Create account button'}
-                    />
+                />
 
             </View>
 
@@ -133,16 +128,16 @@ const styles = StyleSheet.create({
     },
     logo_container: {
         alignItems: "center",
-        paddingTop: .05*vh,
+        paddingTop: .05 * vh,
     },
     logo: {
-        width: .25*vh, height: .25*vh,
+        width: .25 * vh, height: .25 * vh,
         borderRadius: 100
     },
     inputContainer: {
-        paddingTop: .05*vh,
+        paddingTop: .05 * vh,
         alignItems: "center",
-        gap: 0.025*vh,
+        gap: 0.025 * vh,
     },
 
     createAccountBtn: {

@@ -46,11 +46,12 @@ router.post('/unlike', memoryController.unlike);
 //GET ALL MEMORIES
 router.get('/', memoryController.getAllMemories);
 
-//GET A MEMORY BY ITS ID
-// router.get('/:memoryID', memoryController.getById); 
-
 // FINDING MEMORIES THAT ARE PUBLIC
 router.get('/public', memoryController.getPublicMemories);
+
+//GET A MEMORY BY ITS ID
+router.get('/id/:memoryID', memoryController.getById); 
+
 
 // FINDING MEMORIES FOR A SPECIFIC USER
 // based on the specific user requesting, finding the posts for that user.

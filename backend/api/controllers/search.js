@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 const Account = require('../models/account');
-const UserID = require('../models/userid');
 
+//SEARCH FOR USER BY ID, EMAIL, OR USERNAME
 exports.searchUser = (req, res, next) => {
     if(req.query.constructor === Object && Object.keys(req.query).length === 0) {
         res.status(404).json({"Error": "Got Nothing"});    
       }
     const term = req.query.search;
-    //Check if the search term is a UserID
+    //USERID CANNOT BE NAN
     if(isNaN(term)){
         Account.find()
         .or([{email: {$regex: '.*' + term + '.*', $options: 'i'}},
@@ -18,6 +18,7 @@ exports.searchUser = (req, res, next) => {
         .catch(err =>
             res.status(500).json({err}));
     }
+    //ALLOW USERID TO BE QUERIED IF NOT NAN
         else{
             Account.find()
             .or([{userid : term},
@@ -32,10 +33,3 @@ exports.searchUser = (req, res, next) => {
 }
 
 
-exports.searchPlace = (req, res, next) => {
-    //Needs some garbage data for location
-    return null;
-}
-exports.searchTags = (req, res, next) => {
-    return null;
-}

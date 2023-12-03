@@ -14,12 +14,14 @@ exports.signup = (req, res, next) => {
                     message: 'An account with this email already exist'
                 });
             } else {
+                //Hash the password
                 bcrpyt.hash(req.body.password, 10, (err, hash) => {
                     if (err) {
                         return res.status(500).json({
                             error: err
                         });
                     } else {
+                        //Generate a new ID and create Account
                         newid().then(id => {
                             const account = new Account({
                                 _id: new mongoose.Types.ObjectId(),
@@ -33,6 +35,7 @@ exports.signup = (req, res, next) => {
                                 verified: false,
                                 followers: []
                             })
+                            //Saves the newly created account and return the successfully created account
                             account.save()
                             .then(result => {
                                 console.log(result);
@@ -80,6 +83,7 @@ exports.login = (req, res, next) => {
                 message: "Email not found, user does not exist"
             });
         }
+        //Check if the password is correct
         bcrpyt.compare(req.body.password, account[0].password, (err, result) => {
             if (err) {
                 return res.status(401).json({
@@ -198,9 +202,10 @@ exports.edit = (req, res, next) => {
 
 //FOLLOW ANOTHER USER 
 exports.follow = (req, res, next) => {
-    const accountID = req.post.accountID;
+    const accountID = req.params.accountID;
     console.log(req);
-    const userID = req.post.self;
+    const userID = req.params.self;
+
     //SEARCH FOR USER
     const account = Account.findById(accountID)
         .exec()
@@ -214,8 +219,7 @@ exports.follow = (req, res, next) => {
             const index = account.followers.indexOf(userID);
             console.log(index);
             if (index == -1) {
-                account.followers.push(req.post.self);
-                account.save();
+                account.followers.push(req.params.self);
                 res.status(200).json({
                     account: account,
                     message: 'User Followed',
@@ -224,6 +228,7 @@ exports.follow = (req, res, next) => {
                         url: 'http://localhost:3000/memory/' + account._id
                     } 
                 });
+                account.save();
                 // CHECK TO SEE IF THE USER YOU ARE FOLLOWING FOLLOWS YOU
                 // IF SO, ADD BOTH USERS INTO EACH OTHERS MUTUALS
                 me = Account.findById(userID)
@@ -232,13 +237,14 @@ exports.follow = (req, res, next) => {
                         const index1 = me.followers.indexOf(accountID);
                         if (index1 != -1) {
                             me.mutuals.push(accountID);
+                            Account.findByIdAndUpdate(accountID, {$push : {mutuals : userID}})
+                            .exec();
                             me.save();
-                            account.mutuals.push(userID);
-                            account.save();
                         }
                     })
+
             } else {
-                res.status(404).json({
+                res.status(200).json({
                     message: "You're Already Following this User"
                 })
             }   
@@ -247,8 +253,8 @@ exports.follow = (req, res, next) => {
 
 //UNFOLLOW A USER
 exports.unfollow = (req, res, next) => {
-    const userID = req.post.self;
-    const accountID = req.post.accountID;
+    const userID = req.params.self;
+    const accountID = req.params.accountID;
     //SEARCH FOR USER
     Account.findById(accountID)
     .exec()
@@ -324,7 +330,7 @@ exports.delete = (req, res, next) => {
     });
 }
 
-//Generate new ID for user
+//GENERATE A NEW ID
 const newid = async () => {
     const currentVal = await UserID.getCurrent();
     const newID = currentVal+1;
