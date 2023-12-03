@@ -45,6 +45,26 @@ exports.createMemory = (req, res, next) => {
     });
 }
 
+exports.getImage = (req, res, next) => {
+    const id = req.params.memoryID;
+    const memory = Memory.findById(id)
+    .exec()
+    .then(memory => {
+        if (!memory) {
+             return res.status(404).json({
+                message: "Memory Not Found",
+            });
+        }
+        const options = {
+            root: path.join(__dirname)
+        };
+        if (memory.image != "C://Users//Michael//Documents//Memories//memories//uploads//i1Abv.png") {
+            res.sendFile(memory.image);
+        }
+    })
+    .catch()
+}
+
 //GET ALL MEMORIES
 exports.getAllMemories = (req, res, next) => {
     Memory.find()
@@ -61,7 +81,7 @@ exports.getAllMemories = (req, res, next) => {
                     image: doc.image,
                     likes: doc.likes,
                     visibility: doc.visibility, 
-                    likedBy: doc.likedBy
+                    likedBy: doc.likedBy,
                 }
             }),
             request: {

@@ -31,7 +31,10 @@ const memorySchema = mongoose.Schema({
         type: Number,
         required: true
     },
-    image: String,
+    image: {
+        type: String,
+        default: 'C:/Users/Michael/Documents/Memories/memories/uploads/i1Abv.png'
+    },
     visibility: {
         type: String,
         enum: Object.values(visibility),
