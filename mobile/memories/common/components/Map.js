@@ -1,11 +1,11 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useContext} from 'react';
 import MapView, { Marker } from 'react-native-maps';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { CurrentUserContext } from '../context/contexts';
 import {selectMemory, getCurrentLatLong} from '../helpers/helpers';
 
 // Map component on main screen
-const Map = ({ memory_locations, navigation }) => {
+const Map = ({ memory_locations }) => {
 
     // check that memory_locations is not empty. If it is then display  
     // as message that there was no (item of interest as defined in the context)

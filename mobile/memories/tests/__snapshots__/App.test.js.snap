@@ -1,0 +1,368 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<App/> renders correctly 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <RNSScreenStack
+    style={
+      {
+        "flex": 1,
+      }
+    }
+  >
+    <RNSScreen
+      collapsable={false}
+      gestureResponseDistance={
+        {
+          "bottom": -1,
+          "end": -1,
+          "start": -1,
+          "top": -1,
+        }
+      }
+      nativeBackButtonDismissalEnabled={false}
+      onAppear={[Function]}
+      onDisappear={[Function]}
+      onDismissed={[Function]}
+      onHeaderBackButtonClicked={[Function]}
+      onNativeDismissCancelled={[Function]}
+      onTransitionProgress={[Function]}
+      onWillDisappear={[Function]}
+      replaceAnimation="push"
+      sheetAllowedDetents="large"
+      sheetCornerRadius={-1}
+      sheetExpandsWhenScrolledToEdge={true}
+      sheetGrabberVisible={false}
+      sheetLargestUndimmedDetent="all"
+      stackPresentation="push"
+      style={
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+      swipeDirection="horizontal"
+    >
+      <View
+        accessibilityElementsHidden={false}
+        importantForAccessibility="auto"
+        style={
+          {
+            "flex": 1,
+            "flexDirection": "column-reverse",
+          }
+        }
+      >
+        <View
+          collapsable={false}
+          style={
+            [
+              {
+                "flex": 1,
+              },
+              {
+                "backgroundColor": "rgb(242, 242, 242)",
+              },
+              undefined,
+            ]
+          }
+        >
+          <View
+            style={
+              {
+                "backgroundColor": "#c5effc",
+                "flex": 1,
+              }
+            }
+          >
+            <RCTScrollView>
+              <View>
+                <RCTSafeAreaView>
+                  <View
+                    style={
+                      {
+                        "alignItems": "center",
+                        "paddingTop": 133.4,
+                      }
+                    }
+                  >
+                    <Image
+                      source={
+                        {
+                          "uri": "https://as1.ftcdn.net/v2/jpg/01/04/73/84/1000_F_104738464_uK24Z5qUllReax2nCDZ0HQiVINOf1k7m.jpg",
+                        }
+                      }
+                      style={
+                        {
+                          "borderRadius": 100,
+                          "height": 200.1,
+                          "width": 200.1,
+                        }
+                      }
+                    />
+                    <View
+                      style={
+                        {
+                          "alignItems": "center",
+                          "top": 40.019999999999996,
+                        }
+                      }
+                    >
+                      <Text
+                        style={
+                          {
+                            "fontSize": 20,
+                          }
+                        }
+                      >
+                        Welcome to
+                      </Text>
+                      <Text
+                        style={
+                          {
+                            "fontSize": 40,
+                          }
+                        }
+                      >
+                        Memories
+                      </Text>
+                    </View>
+                  </View>
+                  <View
+                    style={
+                      {
+                        "alignItems": "center",
+                        "gap": 40.019999999999996,
+                        "top": 66.7,
+                      }
+                    }
+                  >
+                    <View
+                      accessibilityLabel="Email input field"
+                      onLayout={[Function]}
+                      style={
+                        [
+                          {
+                            "backgroundColor": "white",
+                            "borderColor": "#e8e8e8",
+                            "borderRadius": 5,
+                            "borderWidth": 1,
+                            "height": 40,
+                            "paddingHorizontal": 10,
+                            "paddingVertical": 10,
+                            "width": "80%",
+                          },
+                          {
+                            "paddingBottom": 0,
+                          },
+                        ]
+                      }
+                    >
+                      <TextInput
+                        onChangeText={[Function]}
+                        placeholder="email"
+                        style={{}}
+                      />
+                    </View>
+                    <View
+                      accessibilityLabel="Password input field"
+                      onLayout={[Function]}
+                      style={
+                        [
+                          {
+                            "backgroundColor": "white",
+                            "borderColor": "#e8e8e8",
+                            "borderRadius": 5,
+                            "borderWidth": 1,
+                            "height": 40,
+                            "paddingHorizontal": 10,
+                            "paddingVertical": 10,
+                            "width": "80%",
+                          },
+                          {
+                            "paddingBottom": 0,
+                          },
+                        ]
+                      }
+                    >
+                      <TextInput
+                        onChangeText={[Function]}
+                        placeholder="password"
+                        style={{}}
+                      />
+                    </View>
+                    <View
+                      accessibilityLabel="Forgot password button"
+                      accessibilityState={
+                        {
+                          "busy": undefined,
+                          "checked": undefined,
+                          "disabled": undefined,
+                          "expanded": undefined,
+                          "selected": undefined,
+                        }
+                      }
+                      accessibilityValue={
+                        {
+                          "max": undefined,
+                          "min": undefined,
+                          "now": undefined,
+                          "text": undefined,
+                        }
+                      }
+                      accessible={true}
+                      collapsable={false}
+                      focusable={false}
+                      onClick={[Function]}
+                      onResponderGrant={[Function]}
+                      onResponderMove={[Function]}
+                      onResponderRelease={[Function]}
+                      onResponderTerminate={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
+                      style={
+                        {
+                          "opacity": 1,
+                        }
+                      }
+                    >
+                      <Text
+                        style={
+                          {
+                            "color": "#858585",
+                          }
+                        }
+                      >
+                        Forgot Password
+                      </Text>
+                    </View>
+                    <View
+                      accessibilityLabel="Login button"
+                      accessibilityState={
+                        {
+                          "busy": undefined,
+                          "checked": undefined,
+                          "disabled": undefined,
+                          "expanded": undefined,
+                          "selected": undefined,
+                        }
+                      }
+                      accessibilityValue={
+                        {
+                          "max": undefined,
+                          "min": undefined,
+                          "now": undefined,
+                          "text": undefined,
+                        }
+                      }
+                      accessible={true}
+                      collapsable={false}
+                      focusable={false}
+                      onClick={[Function]}
+                      onResponderGrant={[Function]}
+                      onResponderMove={[Function]}
+                      onResponderRelease={[Function]}
+                      onResponderTerminate={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
+                      style={
+                        {
+                          "alignItems": "center",
+                          "backgroundColor": "#45d9a8",
+                          "borderColor": "#57ab8f",
+                          "borderRadius": 5,
+                          "borderWidth": 1,
+                          "opacity": 1,
+                          "paddingVertical": 10,
+                          "width": "80%",
+                        }
+                      }
+                    >
+                      <Text>
+                        Login
+                      </Text>
+                    </View>
+                    <View
+                      accessibilityLabel="Sign up button"
+                      accessibilityState={
+                        {
+                          "busy": undefined,
+                          "checked": undefined,
+                          "disabled": undefined,
+                          "expanded": undefined,
+                          "selected": undefined,
+                        }
+                      }
+                      accessibilityValue={
+                        {
+                          "max": undefined,
+                          "min": undefined,
+                          "now": undefined,
+                          "text": undefined,
+                        }
+                      }
+                      accessible={true}
+                      collapsable={false}
+                      focusable={false}
+                      onClick={[Function]}
+                      onResponderGrant={[Function]}
+                      onResponderMove={[Function]}
+                      onResponderRelease={[Function]}
+                      onResponderTerminate={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
+                      style={
+                        {
+                          "alignItems": "center",
+                          "backgroundColor": "#5ba1e3",
+                          "borderColor": "#57ab8f",
+                          "borderRadius": 5,
+                          "borderWidth": 1,
+                          "opacity": 1,
+                          "paddingVertical": 10,
+                          "width": "80%",
+                        }
+                      }
+                    >
+                      <Text>
+                        Sign Up
+                      </Text>
+                    </View>
+                  </View>
+                </RCTSafeAreaView>
+              </View>
+            </RCTScrollView>
+          </View>
+        </View>
+      </View>
+      <RNSScreenStackHeaderConfig
+        backButtonInCustomView={false}
+        backTitleVisible={true}
+        backgroundColor="rgb(255, 255, 255)"
+        color="rgb(0, 122, 255)"
+        direction="ltr"
+        disableBackButtonMenu={false}
+        hidden={false}
+        hideBackButton={false}
+        largeTitleHideShadow={false}
+        title="SignIn"
+        titleColor="rgb(28, 28, 30)"
+        topInsetEnabled={false}
+        translucent={false}
+      />
+    </RNSScreen>
+  </RNSScreenStack>
+</RNCSafeAreaProvider>
+`;
