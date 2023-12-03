@@ -37,6 +37,13 @@ const CreateMemoryScreen = ({ navigation }) => {
             ]);
         } else {
             const { latitude, longitude } = await getCurrentLatLong();
+
+            // let user know that we're going to be trying to create a memory
+            Alert.alert('Attempting to create a memory', 'please wait until you are brought into a new screen - thank you.', [
+                { text: 'OK' },
+            ]);
+
+
             // create request to back end to create a memory
             const created_memory = await createMemorySuccessful(currentUserID, memoryDescription, memoryVisibility, memoryTags, latitude, longitude);
             if (created_memory) {
@@ -47,6 +54,9 @@ const CreateMemoryScreen = ({ navigation }) => {
                 navigation.navigate('MainScreen');
             } else {
                 console.log('could not create a memory - please check the logs.');
+                Alert.alert('We could not create a memory - please take a snapshot of your screen right now and let developers know of the issue.', [
+                    { text: 'OK' },
+                ]);
             }
         }
     }

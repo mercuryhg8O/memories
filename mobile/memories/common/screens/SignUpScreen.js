@@ -35,12 +35,18 @@ const SignUpScreen = ({ navigation }) => {
         } else {
 
             // create and login user if possible
+            console.log('attempting to call createUserSuccessful with the username of: ', userName)
+
             createUserSuccessful(userName, email, password, bio).then((userLoginStatus) => {
-                if (userLoginStatus.created_account) { // valid login
+
+
+                console.log('createUserSuccessful:', userLoginStatus)
+                if (userLoginStatus.created_account && userLoginStatus.userId !== undefined) { // valid login
 
                     // should parse request for userid to make future requests
-                    console.log('setting current user to: ', userLoginStatus.account_id);
-                    setCurrentUser(userLoginStatus.account_id); // save email for future requests (temporary solution)
+                    console.log('setting current user to: ', userLoginStatus.userId);
+                    setCurrentUser(userLoginStatus.userId);
+
                     navigation.navigate('MainScreen'); // navigate to map
                 } else {
                     console.warn('could not create an account with that email & password.');
