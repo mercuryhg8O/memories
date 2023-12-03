@@ -6,7 +6,6 @@ const router = express.Router();
 
 //CREATE MEMORY CONTROLLER
 exports.createMemory = (req, res, next) => {
-    console.log("afdbj", req.file.path)
     const memory = new Memory({
         _id: new mongoose.Types.ObjectId(),
         accountID: req.body.accountID,
@@ -19,8 +18,7 @@ exports.createMemory = (req, res, next) => {
         longitude: req.body.longitude, 
         image: req.file.path,
     });
-    console.log('hiiii prolog')
-    console.log(req.body)
+
     memory.save()
         .then(result => {
         res.status(201).json({
