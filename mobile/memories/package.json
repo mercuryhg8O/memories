@@ -45,9 +45,9 @@
       "!**/node_modules/**",
       "!**/babel.config.js",
       "!**/jest.setup.js"
-    ],
-    "eslint": "^8.55.0",
-    "eslint-plugin-react": "^7.33.2"
+    ]
   },
+  "eslint": "^8.55.0",
+  "eslint-plugin-react": "^7.33.2",
   "private": true
 }
