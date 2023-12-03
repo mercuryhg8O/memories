@@ -6,7 +6,7 @@ import { CurrentUserContext } from '../context/contexts';
 
 
 // endpoint the the backend is deployed at
-const endpointURL = 'https://memories-test-server.onrender.com'
+export const endpointURL = 'https://memories-test-server.onrender.com'
 
 
 // create a request to sign in

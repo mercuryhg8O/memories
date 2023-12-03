@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useState, useEffect, useContext } from 'react';
 import { StyleSheet, View, Text, Button, TouchableOpacity } from 'react-native';
-import { ParseMemoriesDetails, getCurrentLatLong, goTo, setCurrentLocation } from '../helpers/helpers';
+import { ParseMemoriesDetails } from '../helpers/helpers';
 import { StatusBar } from 'expo-status-bar';
 import Map from '../components/Map';
 import Profile from '../components/Profile';
