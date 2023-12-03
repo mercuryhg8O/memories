@@ -55,6 +55,10 @@ router.get('/image/:memoryID', memoryController.getImage);
 // FINDING MEMORIES THAT ARE PUBLIC
 router.get('/public', memoryController.getPublicMemories);
 
+//GET A MEMORY BY ITS ID
+router.get('/id/:memoryID', memoryController.getById); 
+
+
 // FINDING MEMORIES FOR A SPECIFIC USER
 // based on the specific user requesting, finding the posts for that user.
 // if the two users are mutuals, they can view all memories besides private. if not, they can just view public memories

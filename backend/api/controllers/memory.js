@@ -5,6 +5,7 @@ const Account = require('../models/account');
 const router = express.Router();
 
 //CREATE MEMORY CONTROLLER
+
 exports.createMemory = (req, res, next) => {
     const memory = new Memory({
         _id: new mongoose.Types.ObjectId(),
@@ -12,7 +13,6 @@ exports.createMemory = (req, res, next) => {
         bodyText: req.body.bodyText,
         visibility: req.body.visibility,
         tags: req.body.tags,
-        likes: 0,
         likedBy: [],
         latitude: req.body.latitude,
         longitude: req.body.longitude, 
@@ -28,14 +28,16 @@ exports.createMemory = (req, res, next) => {
                 bodyText: result.bodyText,
                 accountID: result.accountID,
                 visibility: result.visibility,
-                likes: result.likes,
                 likedBy: result.likedBy,
+                longitude: result.longitude,
+                latitude: result.latitude,
                 request: {
                     type: 'GET',
                     url: 'http://localhost:3000/memory/' + result._id
+
                 }
-            }
-        })
+            })
+        });
     })
     .catch(err => {
         console.log(err);
@@ -68,7 +70,7 @@ exports.getImage = (req, res, next) => {
 //GET ALL MEMORIES
 exports.getAllMemories = (req, res, next) => {
     Memory.find()
-    .select('_id accountID bodyText tags image likes visibility')
+    .select('_id accountID accountName bodyText tags likedBy visibility latitude longitude')
     .exec()
     .then(docs => {
         res.status(200).json({
@@ -77,11 +79,13 @@ exports.getAllMemories = (req, res, next) => {
                 return {
                     id: doc._id,
                     account: doc.accountID,
+                    accountName: doc.accountName,
                     tags: doc.tags,
                     image: doc.image,
-                    likes: doc.likes,
                     visibility: doc.visibility, 
                     likedBy: doc.likedBy,
+                    longitude: doc.longitude,
+                    latitude: doc.latitude
                 }
             }),
             request: {
@@ -138,7 +142,6 @@ exports.like = (req, res, next) => {
             //ADDED TO LIST OF USERS WHO LIKED THE MEMORY
             memory.likedBy.push(accountID);
             memory.save();
-            // memory.likes++;
             res.status(200).json({
                 memory: memory,
                 message: 'Memory Liked',
@@ -188,7 +191,6 @@ exports.unlike = (req, res, next) => {
                         url: 'http://localhost:3000/memory/' + memory._id
                     } 
                 })
-                // memory.likes--;
             }
         }
     })   
@@ -204,7 +206,7 @@ exports.unlike = (req, res, next) => {
 exports.getPublicMemories = (req, res, next) => {
     Memory.find()
         .where('visibility').equals("Public")
-        .select('_id accountID bodyText tags image likes visibility')
+        .select('_id accountID accountName bodyText tags likedBy visibility latitude longitude')
         .exec()
         .then(docs => {
             res.status(200).json({
@@ -213,10 +215,13 @@ exports.getPublicMemories = (req, res, next) => {
                     return {
                         id: doc._id,
                         account: doc.accountID,
+                        accountName: doc.accountName,
                         tags: doc.tags,
-                        image: doc.image,
-                        likes: doc.likes,
-                        visibility: doc.visibility
+                        image: doc.images,
+                        likedBy: doc.likedBy,
+                        visibility: doc.visibility,
+                        longitude: doc.longitude,
+                        latitude: doc.latitude
                     }
                 }),
                 request: {
@@ -243,6 +248,7 @@ exports.getUserMemories = (req, res, next) => {
                     message: "Account Not Found",
                 });
             }
+            //CHECK IF USER IS A FOLLOWER
             index1 = account1.followers.indexOf(id);
             const account2 = Account.findById(req.params.self)
             .exec()
@@ -252,13 +258,15 @@ exports.getUserMemories = (req, res, next) => {
                         message: "Account Not Found",
                     });
                 }   
+                //CHECK IF ACCOUNT IS FOLLOWING USER
                 index2 = account2.followers.indexOf(req.params.self);
+                //THE TWO ACCOUNTS ARE MUTUALS
                 if (index1 != -1 && index2 != -1) {
                     Memory.find()
                     .where('accountID').equals(id)
                     .where('visibility').equals("Public")
                     .where('visibility').equals("Mutuals")
-                    .select('_id accountID bodyText tags image likes visibility')
+                    .select('_id accountID accountName bodyText tags likedBy visibility latitude longitude')
                     .exec()
                     .then(docs => {
                         res.status(200).json({
@@ -267,9 +275,10 @@ exports.getUserMemories = (req, res, next) => {
                                 return {
                                     id: doc._id,
                                     account: doc.accountID,
+                                    accountName: doc.accountName,
                                     tags: doc.tags,
                                     image: doc.image,
-                                    likes: doc.likes,
+                                    likedBy: doc.likedBy,
                                     visibility: doc.visibility,
                                     latitude: doc.latitude,
                                     longitude: doc.longitude
@@ -286,11 +295,12 @@ exports.getUserMemories = (req, res, next) => {
                             error: err
                         });
                     });
-                } else {
+                } 
+                //THE TWO ACCOUNTS ARE NOT MUTUALS
+                else {
                     Memory.find()
                     .where('accountID').equals(id)
-                    .where('visibility').equals("Public")
-                    .select('_id accountID bodyText tags image likes visibility')
+                    .select('_id accountID accountName bodyText tags likedBy visibility latitude longitude')
                     .exec()
                     .then(docs => {
                         res.status(200).json({
@@ -299,9 +309,10 @@ exports.getUserMemories = (req, res, next) => {
                                 return {
                                     id: doc._id,
                                     account: doc.accountID,
+                                    accountName: doc.accountName,
                                     tags: doc.tags,
                                     image: doc.image,
-                                    likes: doc.likes,
+                                    likedBy: doc.likedBy,
                                     visibility: doc.visibility,
                                     latitude: doc.latitude,
                                     longitude: doc.longitude
