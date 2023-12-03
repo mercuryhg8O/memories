@@ -127,9 +127,9 @@ const createUserSuccessful = async (userName, email, password, bio) => {
     userId = response.data.createdAccount._id
     console.log('created account');
     console.log('the account that was created has the userid of:', userId);
+    console.log('response:');
+    console.log(response.data);
   }
-  console.log('response:');
-  console.log(response.data);
 
   console.log('once the createUserSuccessful function ends, this is the value of the created_account bool: ', created_account)
   console.log('once the createUserSuccessful function ends, this is the value of the userId: ', userId)
