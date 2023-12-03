@@ -1,75 +1,40 @@
-const multer = require('multer');
 const express = require('express');
 const mongoose = require('mongoose');
 const Memory = require('../models/memory');
 const Account = require('../models/account');
 const router = express.Router();
 
-//STORAGE FOR UPLOADED IMAGES
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './uploads');
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname);
-    }
-});
-
-//FILTERS ANY FILES THAT AREN'T JPEG OR PNG
-const fileFilter = (req, file, cb) => {
-    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image.png') {
-        cb(null, false);
-    } else {
-        cb(null, true);
-    }
-};
-
-//UPLOAD IMAGE
-const upload = multer({
-    storage: storage,
-    limits: {
-        fileSize: 1024 * 1024 *5
-    },
-    fileFilter: fileFilter
-});
-
-// upload.array('images', 2),
-
 //CREATE MEMORY CONTROLLER
-exports.createMemory = (upload.array('images') ,(req, res, next) => {
-    Account.findById(req.body.accountID)
-    .exec()
-    .then(result => {
-        const memory = new Memory({
-            _id: new mongoose.Types.ObjectId(),
-            accountName: result.username,
-            accountID: req.body.accountID,
-            bodyText: req.body.bodyText,
-            visibility: req.body.visibility,
-            tags: req.body.tags,
-            likedBy: [],
-            latitude: req.body.latitude,
-            longitude: req.body.longitude,
-            // images: req.file.path
-        });
-        memory.save()
+
+exports.createMemory = (req, res, next) => {
+    const memory = new Memory({
+        _id: new mongoose.Types.ObjectId(),
+        accountID: req.body.accountID,
+        bodyText: req.body.bodyText,
+        visibility: req.body.visibility,
+        tags: req.body.tags,
+        likedBy: [],
+        latitude: req.body.latitude,
+        longitude: req.body.longitude, 
+        image: req.file.path,
+    });
+
+    memory.save()
         .then(result => {
-            console.log(result);
-            res.status(201).json({
-                message: 'Created memory successfully',
-                createdMemory: {
-                    _id: result._id,
-                    accountName: result.accountName,
-                    bodyText: result.bodyText,
-                    accountID: result.accountID,
-                    visibility: result.visibility,
-                    //likedBy: result.likedBy,
-                    longitude: result.longitude,
-                    latitude: result.latitude,
-                    request: {
-                        type: 'GET',
-                        url: 'http://localhost:3000/memory/' + result._id
-                    }
+        res.status(201).json({
+            message: 'Created memory successfully',
+            createdMemory: {
+                _id: result._id,
+                bodyText: result.bodyText,
+                accountID: result.accountID,
+                visibility: result.visibility,
+                likedBy: result.likedBy,
+                longitude: result.longitude,
+                latitude: result.latitude,
+                request: {
+                    type: 'GET',
+                    url: 'http://localhost:3000/memory/' + result._id
+
                 }
             })
         });
@@ -80,7 +45,7 @@ exports.createMemory = (upload.array('images') ,(req, res, next) => {
             error: err
         })
     });
-})
+}
 
 //GET ALL MEMORIES
 exports.getAllMemories = (req, res, next) => {
@@ -96,7 +61,7 @@ exports.getAllMemories = (req, res, next) => {
                     account: doc.accountID,
                     accountName: doc.accountName,
                     tags: doc.tags,
-                    //images: doc.images,
+                    image: doc.image,
                     visibility: doc.visibility, 
                     likedBy: doc.likedBy,
                     longitude: doc.longitude,
@@ -157,7 +122,6 @@ exports.like = (req, res, next) => {
             //ADDED TO LIST OF USERS WHO LIKED THE MEMORY
             memory.likedBy.push(accountID);
             memory.save();
-            // memory.likes++;
             res.status(200).json({
                 memory: memory,
                 message: 'Memory Liked',
@@ -207,7 +171,6 @@ exports.unlike = (req, res, next) => {
                         url: 'http://localhost:3000/memory/' + memory._id
                     } 
                 })
-                // memory.likes--;
             }
         }
     })   
@@ -234,7 +197,7 @@ exports.getPublicMemories = (req, res, next) => {
                         account: doc.accountID,
                         accountName: doc.accountName,
                         tags: doc.tags,
-                        //images: doc.images,
+                        image: doc.images,
                         likedBy: doc.likedBy,
                         visibility: doc.visibility,
                         longitude: doc.longitude,
@@ -294,7 +257,7 @@ exports.getUserMemories = (req, res, next) => {
                                     account: doc.accountID,
                                     accountName: doc.accountName,
                                     tags: doc.tags,
-                                    //images: doc.images,
+                                    image: doc.image,
                                     likedBy: doc.likedBy,
                                     visibility: doc.visibility,
                                     latitude: doc.latitude,
@@ -317,7 +280,6 @@ exports.getUserMemories = (req, res, next) => {
                 else {
                     Memory.find()
                     .where('accountID').equals(id)
-                    .where('visibility').equals("Public")
                     .select('_id accountID accountName bodyText tags likedBy visibility latitude longitude')
                     .exec()
                     .then(docs => {
@@ -329,7 +291,7 @@ exports.getUserMemories = (req, res, next) => {
                                     account: doc.accountID,
                                     accountName: doc.accountName,
                                     tags: doc.tags,
-                                    //images: doc.images,
+                                    image: doc.image,
                                     likedBy: doc.likedBy,
                                     visibility: doc.visibility,
                                     latitude: doc.latitude,

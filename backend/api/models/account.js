@@ -36,10 +36,10 @@ const accountSchema = mongoose.Schema({
     enum: Object.values(label),
     required: true
   },
-
+  
   bio: String,
 
-  profilePic: String,
+  pfp: String,
 
   verified: {
     type: Boolean,
