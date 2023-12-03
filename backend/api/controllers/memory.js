@@ -18,53 +18,53 @@ exports.createMemory = (req, res, next) => {
         longitude: req.body.longitude, 
         image: req.file.path,
     });
-
     memory.save()
+        .exec()
         .then(result => {
-        res.status(201).json({
-            message: 'Created memory successfully',
-            createdMemory: {
-                _id: result._id,
-                bodyText: result.bodyText,
-                accountID: result.accountID,
-                visibility: result.visibility,
-                likedBy: result.likedBy,
-                longitude: result.longitude,
-                latitude: result.latitude,
-                request: {
-                    type: 'GET',
-                    url: 'http://localhost:3000/memory/' + result._id
+            res.status(201).json({
+                message: 'Created memory successfully',
+                createdMemory: {
+                    _id: result._id,
+                    bodyText: result.bodyText,
+                    accountID: result.accountID,
+                    visibility: result.visibility,
+                    likedBy: result.likedBy,
+                    longitude: result.longitude,
+                    latitude: result.latitude,
+                    request: {
+                        type: 'GET',
+                        url: 'http://localhost:3000/memory/' + result._id
 
+                    }
                 }
             })
-        });
-    })
-    .catch(err => {
-        console.log(err);
-        res.status(500).json({
-            error: err
         })
-    });
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            })
+        });
 }
 
 exports.getImage = (req, res, next) => {
     const id = req.params.memoryID;
     const memory = Memory.findById(id)
-    .exec()
-    .then(memory => {
-        if (!memory) {
-             return res.status(404).json({
-                message: "Memory Not Found",
-            });
-        }
-        const options = {
-            root: path.join(__dirname)
-        };
-        if (memory.image != "C://Users//Michael//Documents//Memories//memories//uploads//i1Abv.png") {
-            res.sendFile(memory.image);
-        }
-    })
-    .catch()
+        .exec()
+        .then(memory => {
+            if (!memory) {
+                return res.status(404).json({
+                    message: "Memory Not Found",
+                });
+            }
+            const options = {
+                root: path.join(__dirname)
+            };
+            if (memory.image != "C://Users//Michael//Documents//Memories//memories//uploads//i1Abv.png") {
+                res.sendFile(memory.image);
+            }
+        })
+        .catch();
 }
 
 //GET ALL MEMORIES
