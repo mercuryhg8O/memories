@@ -101,7 +101,7 @@ const followUser = async (current_user, user_to_follow) => {
 }
 
 // request to create a user
-const createUserSuccessful = async (username, email, password, bio) => {
+const createUserSuccessful = async (userName, email, password, bio) => {
   // TODO: reminder that email needs a '@<something>.com'
   const query_string = `/account/signup`
   const request_address = endpointURL + query_string
@@ -111,7 +111,7 @@ const createUserSuccessful = async (username, email, password, bio) => {
 
   const request_body = {
     "email": email,
-    "username": username,
+    "username": userName,
     "password": password,
     "label": "Blog",
     "bio": bio,
@@ -125,10 +125,14 @@ const createUserSuccessful = async (username, email, password, bio) => {
 
   if (created_account) {
     userId = response.data.createdAccount._id
-    console.log('created account')
+    console.log('created account');
+    console.log('the account that was created has the userid of:', userId);
   }
   console.log('response:');
   console.log(response.data);
+
+  console.log('once the createUserSuccessful function ends, this is the value of the created_account bool: ', created_account)
+  console.log('once the createUserSuccessful function ends, this is the value of the userId: ', userId)
 
   return { created_account, userId };
 }
@@ -205,6 +209,12 @@ const createMemorySuccessful = async (accountID, memoryDescription, memoryVisibi
   let error_during_request = false;
   let created_memory = false;
   // in the future add error checking for user-side data validation
+  console.log(accountID)
+
+  // function pre-conditons check (make sure all arguments are not null)
+  if (accountID && memoryDescription && memoryVisibility && memoryTags && latitude && longitude){
+    return false;
+  }
 
   // send a post request to the server to create a memory
   const response = await axios.post(request_address, {
