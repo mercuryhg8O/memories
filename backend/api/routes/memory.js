@@ -1,3 +1,4 @@
+const multer = require('multer');
 const express = require('express');
 const mongoose = require('mongoose');
 const Memory = require('../models/memory');
@@ -6,8 +7,35 @@ const checkAuth = require('../auth/check-auth');
 const memoryController = require('../controllers/memory');
 const router = express.Router();
 
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, '../uploads');
+  },
+  filename: function(req, file, cb) {
+    cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname);
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+  // reject a file
+  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  limits: { 
+    fileSize: 1024 * 1024 * 5
+  },
+  fileFilter: fileFilter
+});
+
+
 //CREATE A MEMORY
-router.post('/', memoryController.createMemory);
+router.post('/', upload.single('image'), memoryController.createMemory);
 
 //LIKING A MEMORY
 router.post('/like', memoryController.like); 

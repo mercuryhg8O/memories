@@ -1,42 +1,12 @@
-const multer = require('multer');
 const express = require('express');
 const mongoose = require('mongoose');
 const Memory = require('../models/memory');
 const Account = require('../models/account');
 const router = express.Router();
 
-//STORAGE FOR UPLOADED IMAGES
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './uploads');
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname);
-    }
-});
-
-//FILTERS ANY FILES THAT AREN'T JPEG OR PNG
-const fileFilter = (req, file, cb) => {
-    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image.png') {
-        cb(null, false);
-    } else {
-        cb(null, true);
-    }
-};
-
-//UPLOAD IMAGE
-const upload = multer({
-    storage: storage,
-    limits: {
-        fileSize: 1024 * 1024 *5
-    },
-    fileFilter: fileFilter
-});
-
-// upload.array('images', 2),
-
 //CREATE MEMORY CONTROLLER
-exports.createMemory = (upload.array('images') ,(req, res, next) => {
+exports.createMemory = (req, res, next) => {
+    console.log("afdbj", req.file.path)
     const memory = new Memory({
         _id: new mongoose.Types.ObjectId(),
         accountID: req.body.accountID,
@@ -46,12 +16,13 @@ exports.createMemory = (upload.array('images') ,(req, res, next) => {
         likes: 0,
         likedBy: [],
         latitude: req.body.latitude,
-        longitude: req.body.longitude,
-        // images: req.file.path
+        longitude: req.body.longitude, 
+        image: req.file.path,
     });
+    console.log('hiiii prolog')
+    console.log(req.body)
     memory.save()
-    .then(result => {
-        console.log(result);
+        .then(result => {
         res.status(201).json({
             message: 'Created memory successfully',
             createdMemory: {
@@ -74,12 +45,12 @@ exports.createMemory = (upload.array('images') ,(req, res, next) => {
             error: err
         })
     });
-})
+}
 
 //GET ALL MEMORIES
 exports.getAllMemories = (req, res, next) => {
     Memory.find()
-    .select('_id accountID bodyText tags images likes visibility')
+    .select('_id accountID bodyText tags image likes visibility')
     .exec()
     .then(docs => {
         res.status(200).json({
@@ -89,7 +60,7 @@ exports.getAllMemories = (req, res, next) => {
                     id: doc._id,
                     account: doc.accountID,
                     tags: doc.tags,
-                    images: doc.images,
+                    image: doc.image,
                     likes: doc.likes,
                     visibility: doc.visibility, 
                     likedBy: doc.likedBy
@@ -215,7 +186,7 @@ exports.unlike = (req, res, next) => {
 exports.getPublicMemories = (req, res, next) => {
     Memory.find()
         .where('visibility').equals("Public")
-        .select('_id accountID bodyText tags images likes visibility')
+        .select('_id accountID bodyText tags image likes visibility')
         .exec()
         .then(docs => {
             res.status(200).json({
@@ -225,7 +196,7 @@ exports.getPublicMemories = (req, res, next) => {
                         id: doc._id,
                         account: doc.accountID,
                         tags: doc.tags,
-                        images: doc.images,
+                        image: doc.image,
                         likes: doc.likes,
                         visibility: doc.visibility
                     }
@@ -269,7 +240,7 @@ exports.getUserMemories = (req, res, next) => {
                     .where('accountID').equals(id)
                     .where('visibility').equals("Public")
                     .where('visibility').equals("Mutuals")
-                    .select('_id accountID bodyText tags images likes visibility')
+                    .select('_id accountID bodyText tags image likes visibility')
                     .exec()
                     .then(docs => {
                         res.status(200).json({
@@ -279,7 +250,7 @@ exports.getUserMemories = (req, res, next) => {
                                     id: doc._id,
                                     account: doc.accountID,
                                     tags: doc.tags,
-                                    images: doc.images,
+                                    image: doc.image,
                                     likes: doc.likes,
                                     visibility: doc.visibility,
                                     latitude: doc.latitude,
@@ -301,7 +272,7 @@ exports.getUserMemories = (req, res, next) => {
                     Memory.find()
                     .where('accountID').equals(id)
                     .where('visibility').equals("Public")
-                    .select('_id accountID bodyText tags images likes visibility')
+                    .select('_id accountID bodyText tags image likes visibility')
                     .exec()
                     .then(docs => {
                         res.status(200).json({
@@ -311,7 +282,7 @@ exports.getUserMemories = (req, res, next) => {
                                     id: doc._id,
                                     account: doc.accountID,
                                     tags: doc.tags,
-                                    images: doc.images,
+                                    image: doc.image,
                                     likes: doc.likes,
                                     visibility: doc.visibility,
                                     latitude: doc.latitude,
