@@ -42,6 +42,9 @@ router.post('/signup', upload.single('pfp'), accountController.signup);
 //LOG INTO A MEMORY ACCOUNT
 router.post('/login', accountController.login);
 
+//GET THE PROFILE PICTURE OF AN ACCOUNT
+router.get('/pfp/:accountID', accountController.getPFP);
+
 //GET MUTUALS OF A MEMORY ACCOUNT
 router.get('/:accountID/mutuals', accountController.getMutuals);
 
