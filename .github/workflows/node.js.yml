@@ -32,5 +32,4 @@ jobs:
         cache: 'yarn'
         cache-dependency-path: mobile/memories/yarn.lock
     - run: yarn
-    - run: yarn start
     - run: yarn test
