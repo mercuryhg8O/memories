@@ -31,6 +31,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
         cache-dependency-path: mobile/memories/package-lock.json
-    - run: yarn
+    - run: npm ci
     - run: npm run start
     - run: npm run test
