@@ -1,3 +1,4 @@
+const path = require('path');
 const mongoose = require('mongoose');
 
 const label = Object.freeze({
@@ -39,7 +40,8 @@ const accountSchema = mongoose.Schema({
   
   bio: String,
 
-  pfp: String,
+  pfp: 
+    String,
 
   verified: {
     type: Boolean,

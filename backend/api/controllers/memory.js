@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const Memory = require('../models/memory');
@@ -16,10 +17,9 @@ exports.createMemory = (req, res, next) => {
         likedBy: [],
         latitude: req.body.latitude,
         longitude: req.body.longitude, 
-        image: req.file.path,
+        image: req.file ? req.file.path : undefined,
     });
     memory.save()
-        .exec()
         .then(result => {
             res.status(201).json({
                 message: 'Created memory successfully',
@@ -57,14 +57,16 @@ exports.getImage = (req, res, next) => {
                     message: "Memory Not Found",
                 });
             }
-            const options = {
-                root: path.join(__dirname)
-            };
-            if (memory.image != "C://Users//Michael//Documents//Memories//memories//uploads//i1Abv.png") {
-                res.sendFile(memory.image);
+            if (memory.image != undefined) {
+                const image = path.join(__dirname.slice(0,-23), memory.image.slice(2))
+                console.log(image);
+                res.sendFile(image);
+            } else {
+                return res.status(404).json({
+                    message: "No Image on this Memory",
+                })
             }
         })
-        .catch();
 }
 
 //GET ALL MEMORIES
