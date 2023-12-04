@@ -279,8 +279,6 @@ const getMemoriesFromUser = async (currentuserid, memories_of_this_user) => {
     // search_worked = false
   });
 
-  console.log(response.data);
-
   if (response && response.data?.count !== undefined) {
     memories_list = response.data.memory;
     search_worked = true;
@@ -310,7 +308,6 @@ const getUsersFromSearch = async (searchString) => {
 
 
   if (response && response.status === 200) {
-
 
     for (let key of response.data.user.keys()) {
 

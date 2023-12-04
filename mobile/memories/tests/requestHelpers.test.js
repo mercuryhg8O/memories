@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { createUserSuccessful, BASE_URL, getUserData, isValidUser, followUser, getMemoryDetails, createMemorySuccessful } from '../common/helpers/requestHelpers';
+import { createUserSuccessful, BASE_URL, getUserData, isValidUser, followUser, getMemoryDetails, createMemorySuccessful, getMemoriesFromUser, getUsersFromSearch } from '../common/helpers/requestHelpers';
 
 jest.mock("axios");
 
@@ -265,6 +265,107 @@ describe('requestHelpers', () => {
                 );
 
                 expect(axios.post).toHaveBeenCalledWith(requestURL, memory);
+                expect(result).toEqual(expected);
+            });
+        });
+    });
+
+    // getMemoriesFromUser
+    describe('getMemoriesFromUser', () => {
+        const otherId = 'notherperson';
+        const requestURL = BASE_URL + `/memory/${otherId}/${id}`;
+        describe("when API call is successful", () => {
+            test("should return success message and list of memories", async () => {
+                const response = {
+                    data: {
+                        count: 3,
+                        memory: ["1", "2", "3?"]
+                    }
+                };
+                const expected = {
+                    search_worked: true,
+                    memories_list: ["1", "2", "3?"]
+                };
+
+                axios.get.mockResolvedValueOnce(response);
+
+                const result = await getMemoriesFromUser(id, otherId);
+
+                expect(axios.get).toHaveBeenCalledWith(requestURL);
+                expect(result).toEqual(expected);
+            });
+        });
+        describe("when API call fails", () => {
+            test("should return fail message and empty list", async () => {
+                const expected = {
+                    search_worked: false,
+                    memories_list: []
+                };
+
+                axios.get.mockRejectedValue(new Error("whoopsie doodle"));
+
+                const result = await getMemoriesFromUser(id, otherId);
+
+                expect(axios.get).toHaveBeenCalledWith(requestURL);
+                expect(result).toEqual(expected);
+            });
+        });
+    });
+
+    // getUsersFromSearch
+    describe('getUsersFromSearch', () => {
+        const query = "cheetah";
+        const requestURL = BASE_URL + `/search/user?search=${query}`;
+        describe("when API call is successful", () => {
+            test("should return success message and list of users", async () => {
+                const response = {
+                    status: 200,
+                    data: {
+                        user: {
+                            a: {
+                                _id: 'a person',
+                                username: 'aaaaaaaaaaaaaaa'
+                            },
+                            b: {
+                                _id: 'bee person',
+                                username: 'zzz'
+                            },
+                            c: {
+                                _id: 'sea person',
+                                username: 'swoosh'
+                            },
+                        }
+                    }
+                };
+                const expected = {
+                    search_worked: true,
+                    users_list: [
+                        {a: {userid: 'a person', username: 'aaaaaaaaaaaaaaa'}},
+                        {b: {userid: 'bee person', username: 'zzz'}},
+                        {c: {userid: 'sea person', username: 'swoosh'}},
+                    ]
+                };
+
+                axios.get.mockResolvedValueOnce(response);
+
+                const result = await getUsersFromSearch(query);
+
+                expect(axios.get).toHaveBeenCalledWith(requestURL);
+                expect(result).toEqual(expected);
+            });
+        });
+        describe("when API call fails", () => {
+            test("should return fail message and empty list", async () => {
+                const expected = {
+                    search_worked: false,
+                    users_list: []
+                };
+
+                axios.get.mockRejectedValue(new Error("whoopsie doodle"));
+
+                const result = await getUsersFromSearch(query);
+
+                expect(axios.get).toHaveBeenCalledWith(requestURL);
                 expect(result).toEqual(expected);
             });
         });
