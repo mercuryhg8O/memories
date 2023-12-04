@@ -20,7 +20,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10.x]
+        node-version: [10.x, 14.x, 16.x, 18.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -30,7 +30,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: mobile/memories/package-lock.json
+        cache-dependency-path: mobile/memories/yarn.lock
     - run: npm ci
-    - run: npm run start
-    - run: npm run test
+    - run: npm start
+    - run: npm test
