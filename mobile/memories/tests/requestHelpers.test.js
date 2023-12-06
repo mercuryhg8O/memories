@@ -250,7 +250,7 @@ describe('requestHelpers', () => {
                 const response = {
                     data: {
                         message: 'Created memory successfully',
-                        created_memory: {
+                        createdMemory: {
                             _id: 'memoryIdentityityity'
                         }
                     }
