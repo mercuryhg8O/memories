@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const Memory = require('../models/memory');
@@ -16,35 +17,56 @@ exports.createMemory = (req, res, next) => {
         likedBy: [],
         latitude: req.body.latitude,
         longitude: req.body.longitude, 
-        image: req.file.path,
+        image: req.file ? req.file.path : undefined,
     });
-
     memory.save()
         .then(result => {
-        res.status(201).json({
-            message: 'Created memory successfully',
-            createdMemory: {
-                _id: result._id,
-                bodyText: result.bodyText,
-                accountID: result.accountID,
-                visibility: result.visibility,
-                likedBy: result.likedBy,
-                longitude: result.longitude,
-                latitude: result.latitude,
-                request: {
-                    type: 'GET',
-                    url: 'http://localhost:3000/memory/' + result._id
+            res.status(201).json({
+                message: 'Created memory successfully',
+                createdMemory: {
+                    _id: result._id,
+                    bodyText: result.bodyText,
+                    accountID: result.accountID,
+                    visibility: result.visibility,
+                    likedBy: result.likedBy,
+                    longitude: result.longitude,
+                    latitude: result.latitude,
+                    request: {
+                        type: 'GET',
+                        url: 'http://localhost:3000/memory/' + result._id
 
+                    }
                 }
             })
-        });
-    })
-    .catch(err => {
-        console.log(err);
-        res.status(500).json({
-            error: err
         })
-    });
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            })
+        });
+}
+
+exports.getImage = (req, res, next) => {
+    const id = req.params.memoryID;
+    const memory = Memory.findById(id)
+        .exec()
+        .then(memory => {
+            if (!memory) {
+                return res.status(404).json({
+                    message: "Memory Not Found",
+                });
+            }
+            if (memory.image != undefined) {
+                const image = path.join(__dirname.slice(0,-23), memory.image.slice(2))
+                console.log(image);
+                res.sendFile(image);
+            } else {
+                return res.status(404).json({
+                    message: "No Image on this Memory",
+                })
+            }
+        })
 }
 
 //GET ALL MEMORIES

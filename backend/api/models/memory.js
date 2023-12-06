@@ -1,3 +1,4 @@
+const path = require('path');
 const mongoose = require('mongoose');
 
 const visibility = Object.freeze({
@@ -13,33 +14,39 @@ const memorySchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, ref: 'account',
         // required: true
     },
-    accountName: {
-        type: String,
-    },
+
     bodyText: {
         type: String,
         minLength: 3,
         maxLength: 1000,
         required: true,
     },
+
     tags: [String],
+
     likedBy: {
         type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'account' }]
     },
+
+    latitude: {
+        type: Number,
+        required: true
+    },
+
     longitude: {
         type: Number,
         required: true
     },
-    longitude: {
-        type: Number,
-        required: true
-    },
-    image: String,
+
+    image: 
+        String
+    ,
+
     visibility: {
         type: String,
         enum: Object.values(visibility),
         required: true
-    },
+    }
 })
 
 module.exports = mongoose.model('memory', memorySchema);

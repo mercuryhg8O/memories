@@ -1,5 +1,5 @@
 import React from 'react';
-import {TextInput, StyleSheet, KeyboardAvoidingView} from 'react-native';
+import {TextInput, StyleSheet, KeyboardAvoidingView, Platform} from 'react-native';
 
 // Custom input component for recycling throughout pages
 const CustomInput = ({value, setValue, placeholder, isMultiLine, label, defaultValue}) => {

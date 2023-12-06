@@ -1,11 +1,11 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useContext} from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
 import { CurrentUserContext } from '../context/contexts';
 import {selectMemory, getCurrentLatLong} from '../helpers/helpers';
 
 // Map component on main screen
-const Map = ({ memory_locations, navigation }) => {
+const Map = ({ memory_locations }) => {
 
     // each time memory location changes, update
     useEffect(() => {}, [memory_locations])

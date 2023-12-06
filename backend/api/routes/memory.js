@@ -46,6 +46,12 @@ router.post('/unlike', memoryController.unlike);
 //GET ALL MEMORIES
 router.get('/', memoryController.getAllMemories);
 
+//GET THE IMAGE ASSOCIATED WITH A MEMORY
+router.get('/image/:memoryID', memoryController.getImage);
+
+//GET A MEMORY BY ITS ID
+// router.get('/:memoryID', memoryController.getById); 
+
 // FINDING MEMORIES THAT ARE PUBLIC
 router.get('/public', memoryController.getPublicMemories);
 

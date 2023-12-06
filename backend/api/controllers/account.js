@@ -3,6 +3,7 @@ const UserID = require('../models/userid');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrpyt = require('bcrypt');
+const path = require('path');
 
 //SIGN UP CONTROLLER
 exports.signup = (req, res, next) => {
@@ -31,7 +32,7 @@ exports.signup = (req, res, next) => {
                                 username: req.body.username,
                                 label: req.body.label,
                                 bio: req.body.bio,
-                                pfp: req.file.path,
+                                pfp: req.file ? req.file.path : undefined,
                                 verified: false,
                                 followers: []
                             })
@@ -111,6 +112,29 @@ exports.login = (req, res, next) => {
             });
         });
     })
+}
+
+//RETURNS AN ACCOUNT PFP
+exports.getPFP = (req, res, next) => {
+    const id = req.params.accountID;
+    const account = Account.findById(id)
+        .exec()
+        .then(account => {
+            if (!account) {
+                return res.status(404).json({
+                    message: "Account Not Found",
+                });
+            }
+            if (account.pfp != undefined) {
+                const image = path.join(__dirname.slice(0,-23), account.pfp.slice(2))
+                console.log(image);
+                res.sendFile(image);
+            } else {
+                return res.status(404).json({
+                    message: "No Profile Pic on this Account",
+                })
+            }
+        })
 }
 
 //RETURNS ALL MEMORIES ACCOUNTS
