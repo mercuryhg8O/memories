@@ -20,6 +20,10 @@ const Profile = () => {
 
         const getUserProfileData = async () => {
             const { found_user, username, bio } = await getUserData(targetUserUID);
+           
+
+            await new Promise(r => setTimeout(r, 2000));
+            console.log('found_user:', found_user, username, bio)
 
             if (!found_user) {
                 console.log('error parsing response from request for profile with id: ' + targetUserUID);
@@ -37,6 +41,9 @@ const Profile = () => {
         }
         getUserProfileData();
     }, [targetUserUID || displayUser]);
+
+    // re render page after a new username is gotten and it's different from before
+    useEffect(() => {}, [userName]);
 
 
 
@@ -86,6 +93,9 @@ const styles = StyleSheet.create({
         width: '100%',
         marginTop: 'auto',
         backgroundColor: 'white',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        borderWidth: 5,
     },
     content: {
         marginTop: 10,

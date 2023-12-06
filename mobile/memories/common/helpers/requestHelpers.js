@@ -6,13 +6,13 @@ import { CurrentUserContext } from '../context/contexts';
 
 
 // endpoint the the backend is deployed at
-export const BASE_URL = 'https://memories-test-server.onrender.com'
+const endpointURL = 'https://memories-test-server.onrender.com'
 
 
 // create a request to sign in
 const isValidUser = async (email, password) => {
   const query_string = `/account/login?email=${email}&password=${password}`
-  const request_address = BASE_URL + query_string
+  const request_address = endpointURL + query_string
   console.log('request made to: ' + request_address)
   let signed_in_worked = false;
   let userId = 'tempuserid'
@@ -37,41 +37,34 @@ const isValidUser = async (email, password) => {
 // request information about a user
 const getUserData = async (userid) => {
   const query_string = `/account/${userid}`
-  const request_address = BASE_URL + query_string
+  const request_address = endpointURL + query_string
   console.log('request made to: ' + request_address)
 
   // error handling
   let found_user = true;
-  let username = 'default username'; 
+  let username = 'default username2'; 
   let bio = 'default bio';
 
   // basic error handling to prevent crash
   if(userid === undefined){
-    { found_user, username, bio };
+    console.log('userid in getUserData is undefined')
+    // return { found_user, username, bio };
   }
 
-  // basic error handling to prevent crash
-  if(userid === undefined){
-    { found_user, username, bio };
-  }
-
-  axios.get(request_address).then((response) => {
-    console.log("HEREEE");
-    console.log(response);
-    username = response.data.doc.username;
-    bio = response.data.doc.bio;
-    console.log("response: " + username + " " + bio);
-    found_user = true;
-  }).catch((err) => {
+  const response = await axios.get(request_address).catch((err) => {
     console.log('error during retrieval response: ', err);
   });
+
+    console.log('lllllllllllllll', response.data.doc.username)
+    username = response.data.doc.username;
+    bio = response.data.doc.bio;
+    found_user = true
+  
 
   return { found_user, username, bio };
 }
 
 // send a request to follow a user
-// param: current_user <- current userid
-// param: user_to_follow <- userid of user to follow
 const followUser = async (current_user, user_to_follow) => {
 
   // error handing for valid input
@@ -81,7 +74,7 @@ const followUser = async (current_user, user_to_follow) => {
 
   // create back-end request to ask to follow the user
   const query_string = `/account/${user_to_follow}/${current_user}/follow`;
-  const request_address = BASE_URL + query_string;
+  const request_address = endpointURL + query_string;
 
   // error handling and return value handling:
   let error_during_request = false;
@@ -123,7 +116,7 @@ const followUser = async (current_user, user_to_follow) => {
 const createUserSuccessful = async (userName, email, password, bio) => {
   // TODO: reminder that email needs a '@<something>.com'
   const query_string = `/account/signup`
-  const request_address = BASE_URL + query_string
+  const request_address = endpointURL + query_string
   console.log('request made to: ' + request_address);
   let created_account = true;
   let userId = '';
@@ -146,9 +139,9 @@ const createUserSuccessful = async (userName, email, password, bio) => {
     userId = response.data.createdAccount._id
     console.log('created account');
     console.log('the account that was created has the userid of:', userId);
-    console.log('response:');
-    console.log(response.data);
   }
+  console.log('response:');
+  console.log(response.data);
 
   console.log('once the createUserSuccessful function ends, this is the value of the created_account bool: ', created_account)
   console.log('once the createUserSuccessful function ends, this is the value of the userId: ', userId)
@@ -249,7 +242,7 @@ const getMemoryDetails = async (memoryId) => {
 const createMemorySuccessful = async (accountID, memoryDescription, memoryVisibility, memoryTags, latitude, longitude, memoryImage, uploadedImage) => {
   // NOTE: requires a minium of 5 characters for memoryDescription
   const query_string = `/memory`
-  const request_address = BASE_URL + query_string;
+  const request_address = endpointURL + query_string;
   console.log('request made to: ' + request_address);
 
   // error handling and return value handling:
@@ -350,13 +343,7 @@ const getMemoriesFromUser = async (currentuserid, memories_of_this_user) => {
   // error checking (back-end cannot accept undefined user requests)
   let search_worked = false;
 
-  if (currentuserid === undefined || memories_of_this_user === undefined) {
-    console.log('currentuserid: ', currentuserid, ' memories_of_this_user: ', memories_of_this_user)
-    console.log('setting both to 0')
-    currentuserid = 0
-    memories_of_this_user = 0
-    return { search_worked, memories_list };
-  }
+  
   
   let memories_list = []
 
@@ -386,7 +373,7 @@ const getMemoriesFromUser = async (currentuserid, memories_of_this_user) => {
 const getUsersFromSearch = async (searchString) => {
 
   const query_string = `/search/user?search=${searchString}`
-  const request_address = BASE_URL + query_string
+  const request_address = endpointURL + query_string
   // console.log('request made to: ' + request_address)
   let search_worked = false;
   let users_list = []
@@ -398,6 +385,7 @@ const getUsersFromSearch = async (searchString) => {
 
 
   if (response && response.status === 200) {
+
 
     for (let key of response.data.user.keys()) {
 
@@ -417,7 +405,7 @@ const getUsersFromSearch = async (searchString) => {
 // get a list of mutuals 
 const getMutuals = async (currentUserId) => {
   const query_string = `/account/${currentUserId}/mutuals`;
-  const request_address = BASE_URL + query_string;
+  const request_address = endpointURL + query_string;
 
   const response = await axios.get(request_address).catch((err) => {
     console.log('failed getting mutuals list, here\'s yer \'rror', err);
