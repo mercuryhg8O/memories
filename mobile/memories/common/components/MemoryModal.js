@@ -7,7 +7,10 @@ import {getUserData} from '../helpers/requestHelpers';
 // Popup that displays memory information
 const MemoryModal = () => {
 
+    const endpointURL = 'https://memories-test-server.onrender.com'
+
     const [userName, setUserName] = useState('');
+    const [memoryId, setMemoryId] = useState('https://reactnative.dev/img/tiny_logo.png');
     const [memoryDescription, setMemoryDescription] = useState('');
     const [numberOfLikes, setNumberOfLikes] = useState(0)
     const [liked, setLiked] = useState(false);
@@ -22,14 +25,22 @@ const MemoryModal = () => {
         const memory_description = currentMemoryDetails?.memoryDescription;
         const number_of_likes = currentMemoryDetails?.numOfLikes;
         const tags = currentMemoryDetails?.tags;
+        const memory_id = currentMemoryDetails?.memory_id;
 
-        if(user_name !== undefined && 
+        console.log('oooooooooooooooooooooooooo', memory_id)
+
+
+        // update the username
+
+
+        if(user_name !== undefined && memory_id !== undefined &&
             memory_description !== undefined && 
             number_of_likes !== undefined && 
             tags !== undefined){
 
                 // all fields of the currentMemoryDetails were retrieved, so update the memory modal to use them
                 setUserName(user_name);
+                setMemoryId(memory_id);
                 setMemoryDescription(memory_description);
                 setNumberOfLikes(number_of_likes);
                 setMemoryTags(tags);
@@ -53,7 +64,13 @@ const MemoryModal = () => {
         <SafeAreaView style={styles.modal} accessibilityLabel='memory modal' accessible={true}>
             <View style={styles.content}>
                 <View style={styles.iconName}>
-                    <Image style={styles.icon} />
+                    {}
+                    {console.log(`${endpointURL}/memory/image/${memoryId}`)}
+                    <Image style={styles.icon} source={require('../../assets/marker_image.png')}
+                    
+                        // uri: `${endpointURL}/memory/image/${memoryId}`,
+                        // source: require('../../assets/marker_image.png')
+                    />
                     <Text style={styles.name}> {userName} </Text>
                 </View>
                 <SafeAreaView style={styles.bioView}>
@@ -90,6 +107,9 @@ const styles = StyleSheet.create({
         width: '100%',
         marginTop: 'auto',
         backgroundColor: 'white',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        borderWidth: 5,
     },
     content: {
         marginTop: 10,
@@ -102,7 +122,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     icon: {
-        backgroundColor: 'purple',
+        // backgroundColor: 'purple',
         width: .20 * vw, height: .20 * vw, // make sure these values are the same
         borderRadius: 50,
     },

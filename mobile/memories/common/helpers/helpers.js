@@ -48,23 +48,23 @@ const ParseMemoriesDetails = async (currentUserId, desiredUserId) => {
 
   if (search_worked) {
     memory_locations_source = memories_list
-    console.log('using the memories gotten from the request');
+    // console.log('using the memories gotten from the request');
 
   } else {
     console.log('there was an error when getting memories');
     error = true;
   }
 
-  console.log(memory_locations_source)
+  // console.log(memory_locations_source)
 
   {/*Parse memory */ }
   memories = memory_locations_source.map((memory) => ({ latitude: memory.latitude, longitude: memory.longitude, id: memory.id }))
 
 
-  console.log('memories after request: ');
-  console.log(memories)
+  // console.log('memories after request: ');
+  // console.log(memories)
 
-  console.log('was error during parsing: ', error);
+  // console.log('was error during parsing: ', error);
 
   return { memories, error }
 }
@@ -83,7 +83,7 @@ const fetchData = (URI) => {
   });
 }
 
-// move the current mapt to the given coords
+// move the current map to the given coords
 const goTo = (mapView, lat, long, latDelta = .005, longDelta = .005) => {
   const region = {
     latitude: lat,
@@ -91,7 +91,10 @@ const goTo = (mapView, lat, long, latDelta = .005, longDelta = .005) => {
     latitudeDelta: latDelta,
     longitudeDelta: longDelta,
   }
-  mapView.current.animateToRegion(region, 1000); // args: (region, duration)
+
+  if(mapView?.current !== undefined && region !== null){
+    mapView.current.animateToRegion(region, 1000) // args: (region, duration)
+  }
 }
 
 // get the current lat and long

@@ -105,16 +105,16 @@ const SearchScreen = ({ navigation }) => {
 
     // USE EFFECTS
     useEffect(() => {
-        console.log('update query: ' + searchText);
+        // console.log('update query: ' + searchText);
         fetchUsers(searchText);
 
-        console.log(usersList);
+        // console.log(usersList);
     }, [searchText]);
 
     // update the list of users (for rerender)
     useEffect(() => {
 
-        console.log('populate thing again')
+        // console.log('populate thing again')
 
 
     }, [usersList]);

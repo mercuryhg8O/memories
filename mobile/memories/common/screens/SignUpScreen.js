@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext, useContext, } from 'react';
-import { StyleSheet, View, Text, SafeAreaView, Alert, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, SafeAreaView, ScrollView, Alert, Image, TouchableOpacity, Dimensions } from 'react-native';
 import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
 import { CurrentUserContext } from '../context/contexts';
@@ -10,7 +10,7 @@ import * as ImagePicker from 'expo-image-picker';
 
 // Screen for signing up for an account
 const SignUpScreen = ({ navigation }) => {
-    const { setCurrentUser } = useContext(CurrentUserContext);
+    const { setCurrentUser, setTargetUserUID } = useContext(CurrentUserContext);
 
     // handle log in functionality and only pass up the user name
     [userName, setUserName] = useState('');
@@ -46,6 +46,7 @@ const SignUpScreen = ({ navigation }) => {
                     // should parse request for userid to make future requests
                     console.log('setting current user to: ', userLoginStatus.userId);
                     setCurrentUser(userLoginStatus.userId);
+                    setTargetUserUID(userLoginStatus.userId);
 
                     navigation.navigate('MainScreen'); // navigate to map
                 } else {
@@ -74,50 +75,61 @@ const SignUpScreen = ({ navigation }) => {
 
     return <View style={styles.container}>
 
+
         <SafeAreaView >
-            <View /* Logo container */ style={styles.logo_container}>
-                <TouchableOpacity onPress={pickImageAsync}>
-                    <Image
-                        style={styles.logo}
-                        source={{
-                            uri: userIcon,
-                        }}
+            <ScrollView>
+
+                <View /* Logo container */ style={styles.logo_container}>
+                    <TouchableOpacity onPress={pickImageAsync}>
+                        <Image
+                            style={styles.logo}
+                            source={{
+                                uri: userIcon,
+                            }}
+                        />
+                    </TouchableOpacity>
+                </View>
+
+                <View /* Registration container */ style={styles.inputContainer}>
+                    <CustomInput
+                        placeholder={'username'}
+                        setValue={setUserName}
+                        label={'Username input field'}
                     />
-                </TouchableOpacity>
-            </View>
+                    <CustomInput
+                        placeholder={'email'}
+                        setValue={SetEmail}
+                        label={'Email input field'}
+                    />
+                    <CustomInput
+                        placeholder={'password'}
+                        setValue={SetPassword}
+                        label={'Password input field'}
+                    />
+                    <CustomInput
+                        placeholder={'[optional]Bio  '}
+                        setValue={setBio}
+                        isMultiLine={true}
+                        label={'Bio input field'}
+                        selectTextOnFocus={true}
+                    />
+                    <CustomButton
+                        placeholder={'Create Account'}
+                        onPress={() => attemptSignUp()}
+                        button_type={styles.createAccountBtn}
+                        label={'Create account button'}
 
-            <View /* Registration container */ style={styles.inputContainer}>
-                <CustomInput
-                    placeholder={'username'}
-                    setValue={setUserName}
-                    label={'Username input field'}
-                />
-                <CustomInput
-                    placeholder={'email'}
-                    setValue={SetEmail}
-                    label={'Email input field'}
-                />
-                <CustomInput
-                    placeholder={'password'}
-                    setValue={SetPassword}
-                    label={'Password input field'}
-                />
-                <CustomInput
-                    placeholder={'[optional]Bio  '}
-                    setValue={setBio}
-                    isMultiLine={true}
-                    label={'Bio input field'}
-                />
-                <CustomButton
-                    placeholder={'Create Account'}
-                    onPress={() => attemptSignUp()}
-                    button_type={styles.createAccountBtn}
-                    label={'Create account button'}
-                />
+                    />
 
-            </View>
+                </View>
+
+
+                <View style={{ height: 200 }} />
+
+            </ScrollView>
 
         </SafeAreaView>
+
     </View>
 };
 

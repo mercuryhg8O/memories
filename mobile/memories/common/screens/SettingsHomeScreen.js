@@ -11,21 +11,25 @@ import { getUserData } from '../helpers/requestHelpers.js';
 // Home page for settings with form for changing user information
 function SettingsHomeScreen({ navigation }) {
 
-    const { currentUserId } = useContext(CurrentUserContext);
+    const { currentUserID } = useContext(CurrentUserContext);
 
     const [userIcon, setUserIcon] = useState('https://cdn-icons-png.flaticon.com/512/3177/3177440.png');
     const [userName, setUserName] = useState('Cheetah');
     const [bio, setBio] = useState('rawr xD');
 
+
     useEffect(() => {
+
         const getUserProfileData = async () => {
-            const { found_user, username, bio } = await getUserData(currentUserId);
+            await new Promise(r => setTimeout(r, 2000));
+            console.log('trying to get a profile for: ', currentUserID)
+            const { found_user, username, bio } = await getUserData(currentUserID);
 
             if (!found_user) {
-                console.log('error parsing response from request for profile with id: ' + currentUserId);
+                console.log('error parsing response from request for profile with id: ' + currentUserID);
             } else {
                 // response was valid, so parse and save the output
-                console.log(currentUserId);
+                console.log(currentUserID);
                 console.log('found current user id:' + found_user);
                 console.log(username);
                 console.log(bio);
@@ -34,7 +38,10 @@ function SettingsHomeScreen({ navigation }) {
             }
         }
         getUserProfileData();
-    }, [currentUserId]);
+    }, [currentUserID]);
+
+    // once username is updated, then re-render page
+    useEffect(() => {}, [userName]);
 
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -56,20 +63,20 @@ function SettingsHomeScreen({ navigation }) {
                 <Image
                     style={styles.logo}
                     source={{
-                        uri: userIcon,
+                        uri: userIcon, // update to be a request to the server for the photo
                     }}
                 />
             </TouchableOpacity>
             <CustomInput
                 placeholder={userName}
                 defaultValue={userName}
-                setValue={setUserName}
+                
                 label={'Username input field'}
             />
             <CustomInput
                 placeholder={bio.length == 0 ? '(optional) Bio  ' : bio}
                 defaultValue={bio.length == 0 ? '' : bio}
-                setValue={setBio}
+                
                 isMultiLine={true}
                 label={'Bio input field'}
             />

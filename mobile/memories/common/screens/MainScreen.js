@@ -22,26 +22,41 @@ function MainScreen({ navigation }) {
         console.log("hiihihihoihoihoio", currentUserID, targetUserUID);
 
 
-        //
-        const setMapInfo = () => {
+        
+        const setMapInfo = async () => {
+            
+            // temporary fix to allow backend to have most recent memory if newly created
+            await new Promise(r => setTimeout(r, 2000));
+
+              console.log('about to parse memories from ', currentUserID, targetUserUID)
 
             ParseMemoriesDetails(currentUserID, targetUserUID).then(({ memories, error }) => {
 
                 if (error) {
-                    console.log('an error happened when parsing route info')
+                    console.log('an error happened when parsing route info');
                 }
                 else {
+                    setMemoryLocations([]);
                     setMemoryLocations(memories);
                 }
             }).catch(() => { console.log('there was an error while trying to retrieve the memories from memory list parser') });
-
-
         }
-
         setMapInfo();
-
-
     }, [targetUserUID]);
+
+
+    // center to current location on first load of the page
+    useEffect(() => {
+
+        const centerOnLoad = async () => {
+            await setCurrentLocation(mapView);
+            console.log('should run before centering ---------')
+        }
+        centerOnLoad();
+
+        console.log('centering-------------------')
+
+    }, [])
 
 
     return (

@@ -41,9 +41,14 @@ const getUserData = async (userid) => {
   console.log('request made to: ' + request_address)
 
   // error handling
-  let found_user = false;
+  let found_user = true;
   let username = 'default username'; 
   let bio = 'default bio';
+
+  // basic error handling to prevent crash
+  if(userid === undefined){
+    { found_user, username, bio };
+  }
 
   axios.get(request_address)
   .then((response) => {
@@ -54,11 +59,16 @@ const getUserData = async (userid) => {
     console.log('error during retrieval response: ', err);
   });
 
-  return { found_user, username, bio, };
+  return { found_user, username, bio };
 }
 
 // send a request to follow a user
 const followUser = async (current_user, user_to_follow) => {
+
+  // error handing for valid input
+  if(!current_user || !user_to_follow){
+    return false;
+  }
 
   // create back-end request to ask to follow the user
   const query_string = `/account/${user_to_follow}/${current_user}/follow`;
@@ -141,8 +151,8 @@ const createUserSuccessful = async (userName, email, password, bio) => {
 const getMemoryDetails = async (memoryId) => {
 
   // create request to backend to get details about a memory and package it in a memory object
-  const query_string = `/memory/id/${memoryId}`
-  const request_address = endpointURL + query_string
+  let query_string = `/memory/id/${memoryId}`
+  let request_address = endpointURL + query_string
   console.log('request should be made to: ' + request_address);
 
   // error handling and return value handling:
@@ -154,7 +164,7 @@ const getMemoryDetails = async (memoryId) => {
     tags: 'error example'
   }
 
-  const response = await axios.get(request_address).catch((err) => {
+  let response = await axios.get(request_address).catch((err) => {
     // an error occured while recieving the message. Should alert user
 
     console.log('There was an error while making a request to:' + request_address);
@@ -168,22 +178,50 @@ const getMemoryDetails = async (memoryId) => {
 
   // if the request was successful parse the response 
   const response_data = response?.data?.memory;
-  const user_name = response_data?.accountName; // account id
+
+
+  // get the username of the person who made the post:
+  if(response_data?.accountID === undefined){return created_memory;}
+  query_string = `/account/${response_data.accountID}`;
+  request_address = endpointURL + query_string
+  console.log('request should be made to: ' + request_address);
+  response = await axios.get(request_address).catch((err) => {
+    // an error occurred while receiving the message. Should alert user
+
+    console.log('There was an error while making a request to:' + request_address);
+    error_during_request = true
+  });
+  let user_name = response.data.doc.username; // set username equal to username
+
+  // If there was an error, send dummy data and set up error handling
+  if (error_during_request) {
+    console.log('Since there was an error getting the details for a memory. Sending default dummy data instead');
+  }
+
+
+
+
+
+  
+  console.log(response_data)
+  // let user_name = response_data?.accountID; // account id
+  const memory_id = response_data?._id;
   const memory_description = response_data?.bodyText;
   const likes_by_people = response_data?.likedBy;
   const tags = response_data?.tags;
 
-  console.log(memory_description)
+  // console.log(memory_description)
 
   // console.log('response parsed: ', user_name, memory_description, tags);
 
-  if (user_name !== undefined &&
+  if (user_name !== undefined && memory_id !== undefined &&
     memory_description !== undefined &&
     likes_by_people !== undefined &&
     tags !== undefined && !error_during_request) {
 
     created_memory = {
       username: user_name,
+      memory_id: memory_id,
       memoryDescription: memory_description,
       numOfLikes: likes_by_people.length,
       tags: tags
@@ -199,7 +237,7 @@ const getMemoryDetails = async (memoryId) => {
 }
 
 // create a memory
-const createMemorySuccessful = async (accountID, memoryDescription, memoryVisibility, memoryTags, latitude, longitude) => {
+const createMemorySuccessful = async (accountID, memoryDescription, memoryVisibility, memoryTags, latitude, longitude, memoryImage, uploadedImage) => {
   // NOTE: requires a minium of 5 characters for memoryDescription
   const query_string = `/memory`
   const request_address = endpointURL + query_string;
@@ -209,12 +247,49 @@ const createMemorySuccessful = async (accountID, memoryDescription, memoryVisibi
   let error_during_request = false;
   let created_memory = false;
   // in the future add error checking for user-side data validation
-  console.log(accountID)
+  // console.log(accountID)
 
   // function pre-conditons check (make sure all arguments are not null)
   if (accountID && memoryDescription && memoryVisibility && memoryTags && latitude && longitude){
     return false;
   }
+
+
+  // upload a photo with an image:
+  if(uploadedImage){
+
+
+
+    var bodyFormData = new FormData();
+    //bodyFormData.append('userName', 'Fred');
+    //bodyFormData.append('image', memoryImage); 
+
+
+    bodyFormData.append('bodyText', 'memoryDescription');
+    bodyFormData.append('visibility', 'memoryVisibility');
+    bodyFormData.append('accountID', 'accountID');
+    bodyFormData.append('tags', 'Fred');
+    bodyFormData.append('userName', 'memoryTags');
+    bodyFormData.append('latitude', 'latitude');
+    bodyFormData.append('longitude', 'longitude');
+
+
+    bodyFormData.append('image', {uri: memoryImage.uri, type: memoryImage.type});
+    // bodyFormData.append('Content-Type', 'image/png');
+
+    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', memoryImage.uri)
+
+
+  fetch(request_address,{ method: 'POST',headers:{  
+    "Content-Type": "multipart/form-data",
+    "otherHeader": "foo",
+    } , body :bodyFormData} ).catch(() => {return true});
+    
+  }
+
+
+
+
 
   // send a post request to the server to create a memory
   const response = await axios.post(request_address, {
@@ -249,6 +324,15 @@ const createMemorySuccessful = async (accountID, memoryDescription, memoryVisibi
 // get memories that a user has made (that can be seen by the current user)
 const getMemoriesFromUser = async (currentuserid, memories_of_this_user) => {
 
+  // error checking to ensure arguments are valid
+  if (currentuserid === undefined || memories_of_this_user === undefined) {
+    console.log('currentuserid: ', currentuserid, ' memories_of_this_user: ', memories_of_this_user)
+    console.log('setting both to 0')
+    currentuserid = 0
+    memories_of_this_user = 0
+    return { search_worked, memories_list };
+  }
+
   // get a list of id's, lats, and longs of each memory from this user
   const query_string = `/memory/${memories_of_this_user}/${currentuserid}`
   const request_address = endpointURL + query_string
@@ -257,13 +341,7 @@ const getMemoriesFromUser = async (currentuserid, memories_of_this_user) => {
   // error checking (back-end cannot accept undefined user requests)
   let search_worked = false;
 
-  if (currentuserid === undefined || memories_of_this_user === undefined) {
-    console.log('currentuserid: ', currentuserid, ' memories_of_this_user: ', memories_of_this_user)
-    console.log('setting both to 0')
-    currentuserid = 0
-    memories_of_this_user = 0
-    return { search_worked, memories_list };
-  }
+  
   
   let memories_list = []
 
@@ -274,7 +352,7 @@ const getMemoriesFromUser = async (currentuserid, memories_of_this_user) => {
     // search_worked = false
   });
 
-  console.log(response.data);
+  // console.log(response.data);
 
   if (response && response.data?.count !== undefined) {
     memories_list = response.data.memory;

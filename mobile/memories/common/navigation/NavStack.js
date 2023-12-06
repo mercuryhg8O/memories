@@ -6,6 +6,7 @@ import SearchScreen from '../screens/SearchScreen.js';
 import SettingsHomeScreen from '../screens/SettingsHomeScreen.js';
 import CreateMemoryScreen from '../screens/CreateMemoryScreen.js';
 import SettingsScreen from '../screens/SettingsScreen.js';
+import LoadingRedirctionScreen from '../screens/LoadingRedirectionScreen.js'
 
 const Stack = createNativeStackNavigator();
 const NavStack = () => {
@@ -19,6 +20,7 @@ const NavStack = () => {
             <Stack.Screen name="CreateMemory" component={CreateMemoryScreen} />
             <Stack.Screen name="SettingsHome" component={SettingsHomeScreen} />
             <Stack.Screen name="Settings" component={SettingsScreen} />
+            <Stack.Screen name="HomeRedirectionScreen" component={LoadingRedirctionScreen} />
         </Stack.Navigator>)
 };
 

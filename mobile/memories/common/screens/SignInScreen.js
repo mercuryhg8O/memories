@@ -8,7 +8,7 @@ import { isValidUser } from '../helpers/requestHelpers';
 
 // Screen for login
 const SignInScreen = ({ navigation }) => {
-    const { setCurrentUser } = useContext(CurrentUserContext);
+    const { setCurrentUser, setTargetUserUID } = useContext(CurrentUserContext);
 
     // handle log in functionality and only pass up the user name
     [email, setemail] = useState('');
@@ -35,6 +35,7 @@ const SignInScreen = ({ navigation }) => {
                     // setCurrentUser(email); // save email for future requests (temporary solution)
                     console.log('id set:', userLoginStatus.userId);
                     setCurrentUser(userLoginStatus.userId); // set user context to MongoDB user ids instead
+                    setTargetUserUID(userLoginStatus.userId);
                     navigation.navigate('MainScreen'); // navigate to map
                 } else {
                     console.warn('no account exists with that email & password.');

@@ -1,11 +1,14 @@
 import React, {useState, useEffect, useContext} from 'react';
 import MapView, { Marker } from 'react-native-maps';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
 import { CurrentUserContext } from '../context/contexts';
 import {selectMemory, getCurrentLatLong} from '../helpers/helpers';
 
 // Map component on main screen
 const Map = ({ memory_locations, navigation }) => {
+
+    // each time memory location changes, update
+    useEffect(() => {}, [memory_locations])
 
     // check that memory_locations is not empty. If it is then display  
     // as message that there was no (item of interest as defined in the context)
@@ -22,6 +25,8 @@ const Map = ({ memory_locations, navigation }) => {
             longitudeDelta: 0.05,
         }
     }
+
+    const default_testing_address_image = 'https://www.rd.com/wp-content/uploads/2018/02/30_Adorable-Puppy-Pictures-that-Will-Make-You-Melt_124167640_YamabikaY.jpg?fit=700%2C467'
 
     const { mapView, setCurrentMemoryDetails, setDisplayMemoryDetails } = useContext(CurrentUserContext);
 
@@ -40,6 +45,10 @@ const Map = ({ memory_locations, navigation }) => {
                     key={index}
                     coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
                     title={marker.title}
+                    icon={require('../../assets/marker_image.png')}
+
+                    // image={{ uri: '../../assets/marker_image.png' }}
+                    
                     onPress={()=> {
                         selectMemory(mapView,
                             marker.id, 
@@ -47,7 +56,14 @@ const Map = ({ memory_locations, navigation }) => {
                             setDisplayMemoryDetails, 
                             marker.latitude, 
                             marker.longitude)}}
-                />))
+                > 
+                {/* <Image source={{
+                    uri: 'https://reactnative.dev/img/tiny_logo.png',
+                  }}/> */}
+                   <Image source={require('../../assets/marker_image.png')} style={{height: 35, width:35 }} />
+                  </Marker>
+                  
+                  ))
             }
         </MapView>        
     
