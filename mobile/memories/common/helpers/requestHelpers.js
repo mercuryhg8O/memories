@@ -247,15 +247,13 @@ const createMemorySuccessful = async (accountID, memoryDescription, memoryVisibi
   // console.log(accountID)
 
   // function pre-conditons check (make sure all arguments are not null)
-  if (!(accountID && memoryDescription && memoryVisibility && memoryTags && latitude && longitude)){
-    return false;
-  }
+  // if (!(accountID && memoryDescription && memoryVisibility && memoryTags && latitude && longitude)){
+  //   return false;
+  // }
 
 
   // upload a photo with an image:
   if(uploadedImage){
-
-
 
     var bodyFormData = new FormData();
     //bodyFormData.append('userName', 'Fred');
