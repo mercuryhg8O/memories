@@ -178,25 +178,40 @@ describe('requestHelpers', () => {
                 const response = {
                     data: {
                         memory: {
-                            accountName: profile.username,
+                            accountID: id,
+                            _id: memoryId,
                             bodyText: "woot",
                             likedBy: ['hook', 'line', 'sinker'],
                             tags: '^_^'
                         }
                     }
                 };
+                axios.get.mockResolvedValueOnce(response);
+                const response2 = {
+                    data: {
+                        doc: {
+                            username: profile.username,
+                            bodyText: "woot",
+                            likedBy: ['hook', 'line', 'sinker'],
+                            tags: '^_^'
+                        }
+                    }
+                };
+                axios.get.mockResolvedValueOnce(response2);
+
                 const expected = {
-                    username: response.data.memory.accountName,
+                    username: response2.data.doc.username,
                     memoryDescription: response.data.memory.bodyText,
                     numOfLikes: response.data.memory.likedBy.length,
-                    tags: response.data.memory.tags
+                    tags: response.data.memory.tags,
+                    memory_id: response.data.memory._id
                 };
-
-                axios.get.mockResolvedValueOnce(response);
-
+                
                 const result = await getMemoryDetails(memoryId);
 
                 expect(axios.get).toHaveBeenCalledWith(requestURL);
+                expect(axios.get).toHaveBeenCalledWith(BASE_URL + `/account/${response.data.memory.accountID}`);
+
                 expect(result).toEqual(expected);
             });
         });
@@ -246,7 +261,7 @@ describe('requestHelpers', () => {
 
                 const result = await createMemorySuccessful(
                     memory.accountID, memory.bodyText, memory.visibility,
-                    memory.tags, memory.latitude, memory.longitude
+                    memory.tags, memory.latitude, memory.longitude, false
                 );
 
                 expect(axios.post).toHaveBeenCalledWith(requestURL, memory);
@@ -261,7 +276,7 @@ describe('requestHelpers', () => {
 
                 const result = await createMemorySuccessful(
                     memory.accountID, memory.bodyText, memory.visibility,
-                    memory.tags, memory.latitude, memory.longitude
+                    memory.tags, memory.latitude, memory.longitude, false
                 );
 
                 expect(axios.post).toHaveBeenCalledWith(requestURL, memory);
@@ -321,28 +336,28 @@ describe('requestHelpers', () => {
                 const response = {
                     status: 200,
                     data: {
-                        user: {
-                            a: {
+                        user: [
+                            {
                                 _id: 'a person',
                                 username: 'aaaaaaaaaaaaaaa'
                             },
-                            b: {
+                            {
                                 _id: 'bee person',
                                 username: 'zzz'
                             },
-                            c: {
+                            {
                                 _id: 'sea person',
                                 username: 'swoosh'
                             },
-                        }
+                        ]
                     }
                 };
                 const expected = {
                     search_worked: true,
                     users_list: [
-                        {a: {userid: 'a person', username: 'aaaaaaaaaaaaaaa'}},
-                        {b: {userid: 'bee person', username: 'zzz'}},
-                        {c: {userid: 'sea person', username: 'swoosh'}},
+                        {userid: 'a person', username: 'aaaaaaaaaaaaaaa'},
+                        {userid: 'bee person', username: 'zzz'},
+                        {userid: 'sea person', username: 'swoosh'},
                     ]
                 };
 

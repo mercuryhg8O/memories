@@ -41,8 +41,8 @@ const getUserData = async (userid) => {
   console.log('request made to: ' + request_address)
 
   // error handling
-  let found_user = true;
-  let username = 'default username2'; 
+  let found_user = false;
+  let username = 'default username'; 
   let bio = 'default bio';
 
   // basic error handling to prevent crash
@@ -55,9 +55,11 @@ const getUserData = async (userid) => {
     console.log('error during retrieval response: ', err);
   });
 
+  if (response) {
     username = response.data.doc.username;
     bio = response.data.doc.bio;
     found_user = true
+  }
   
 
   return { found_user, username, bio };
@@ -197,11 +199,6 @@ const getMemoryDetails = async (memoryId) => {
   if (error_during_request) {
     console.log('Since there was an error getting the details for a memory. Sending default dummy data instead');
   }
-
-
-
-
-
   
   console.log(response_data)
   // let user_name = response_data?.accountID; // account id
@@ -250,7 +247,7 @@ const createMemorySuccessful = async (accountID, memoryDescription, memoryVisibi
   // console.log(accountID)
 
   // function pre-conditons check (make sure all arguments are not null)
-  if (accountID && memoryDescription && memoryVisibility && memoryTags && latitude && longitude){
+  if (!(accountID && memoryDescription && memoryVisibility && memoryTags && latitude && longitude)){
     return false;
   }
 
