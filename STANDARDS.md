@@ -12,6 +12,8 @@ Aim for low Coupling and High Cohesion.
 
 Indentations should be with tabs. 
 
+Use indentation to the beginning and end of control structures.
+
 Functions and classes should follow the implementation outline in the class diagrams and sprint documents.
 
 Use .exec, .then, .catch after function calls to check for errors.
