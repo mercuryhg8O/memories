@@ -1,6 +1,5 @@
 # MEMORIES CODING STANDARDS AND GUIDELINES
 
-
 No more than one statement per line
 
 Line length should not exceed 100 characters.
@@ -12,6 +11,8 @@ Variables should be named after their purpose.
 Aim for low Coupling and High Cohesion.
 
 Indentations should be with tabs. 
+
+Functions and classes should follow the implementation outline in the class diagrams and sprint documents.
 
 Use .exec, .then, .catch after function calls to check for errors.
 
